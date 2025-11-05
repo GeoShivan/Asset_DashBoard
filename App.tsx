@@ -6,6 +6,7 @@ import { bbox } from '@turf/turf';
 import LeftSidebar from './components/ControlPanel';
 import MapWrapper from './components/MapWrapper';
 import AssetDetailsPanel from './components/FeatureInspector';
+import AttributeTable from './components/AttributeTable';
 import type { GeoJsonLayer } from './types';
 import { getFeatureDisplayName } from './utils';
 
@@ -51,6 +52,7 @@ const App: React.FC = () => {
     const [assetSearchTerm, setAssetSearchTerm] = useState('');
     const [propertySearchKey, setPropertySearchKey] = useState('');
     const [propertySearchValue, setPropertySearchValue] = useState('');
+    const [attributeTableLayerId, setAttributeTableLayerId] = useState<string | null>(null);
 
     useEffect(() => {
         const loadInitialData = async () => {
@@ -118,6 +120,26 @@ const App: React.FC = () => {
       }
     }, [selectedAsset]);
 
+    const handleZoomToLayer = useCallback((layerId: string) => {
+        const layer = layers.find(l => l.id === layerId);
+        if (layer && layer.data.features.length > 0) {
+            try {
+                const [minX, minY, maxX, maxY] = bbox(layer.data);
+                setBoundsToFit(L.latLngBounds(L.latLng(minY, minX), L.latLng(maxY, maxX)));
+            } catch (e) {
+                console.error("Could not calculate bounds for layer:", e);
+            }
+        }
+    }, [layers]);
+
+    const handleOpenAttributeTable = (layerId: string) => {
+        setAttributeTableLayerId(layerId);
+    };
+
+    const handleCloseAttributeTable = () => {
+        setAttributeTableLayerId(null);
+    };
+
     const assetList = useMemo(() => {
         let list = layers
             .filter(layer => layerVisibility[layer.name])
@@ -170,6 +192,10 @@ const App: React.FC = () => {
         }
     }, [selectedAsset, layers]);
 
+    const layerForAttributeTable = useMemo(() => {
+        return layers.find(l => l.id === attributeTableLayerId);
+    }, [layers, attributeTableLayerId]);
+
     return (
         <div className="relative flex h-screen w-full flex-col overflow-hidden">
             <Header />
@@ -180,6 +206,8 @@ const App: React.FC = () => {
                     setActiveLayerTab={setActiveLayerTab}
                     layerVisibility={layerVisibility}
                     onVisibilityChange={handleVisibilityChange}
+                    onZoomToLayer={handleZoomToLayer}
+                    onOpenAttributeTable={handleOpenAttributeTable}
                     assets={assetList}
                     selectedAsset={selectedAsset}
                     onAssetSelect={handleAssetSelect}
@@ -210,6 +238,16 @@ const App: React.FC = () => {
                     />
                 )}
             </div>
+            {layerForAttributeTable && (
+                <AttributeTable
+                    layer={layerForAttributeTable}
+                    onClose={handleCloseAttributeTable}
+                    onFeatureSelect={(feature) => {
+                        handleAssetSelect(layerForAttributeTable.id, feature);
+                        handleCloseAttributeTable();
+                    }}
+                />
+            )}
         </div>
     );
 };

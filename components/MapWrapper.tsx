@@ -46,14 +46,14 @@ const GeoJsonRenderer: React.FC<GeoJsonRendererProps> = ({ layers, onFeatureSele
             color: isSelected ? '#3b82f6' : layer.color, // primary for selected
             weight: isSelected ? 3 : 1.5,
             opacity: 1,
-            fillColor: layer.color,
+            fillColor: isSelected ? '#3b82f6' : layer.color,
             fillOpacity: isSelected ? 0.7 : 0.4,
           };
         };
         
         return (
           <GeoJSON
-            key={`${layer.id}-${selectedFeatureId}-${layer.isVisible}-${layer.color}-${layer.data.features.length}`}
+            key={`${layer.id}-${layer.isVisible}-${layer.color}-${layer.data.features.length}`}
             data={layer.data}
             style={style}
             onEachFeature={onEachFeature}

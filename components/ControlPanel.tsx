@@ -17,6 +17,8 @@ interface LeftSidebarProps {
     setActiveLayerTab: (name: string) => void;
     layerVisibility: Record<string, boolean>;
     onVisibilityChange: (name: string, isVisible: boolean) => void;
+    onZoomToLayer: (layerId: string) => void;
+    onOpenAttributeTable: (layerId: string) => void;
     assets: Asset[];
     selectedAsset: { layerId: string; feature: Feature } | null;
     onAssetSelect: (layerId: string, feature: Feature) => void;
@@ -67,8 +69,8 @@ const AssetCard: React.FC<{ asset: Asset; isSelected: boolean; onSelect: () => v
 }
 
 const LeftSidebar: React.FC<LeftSidebarProps> = ({ 
-    layers, activeLayerTab, setActiveLayerTab, layerVisibility, onVisibilityChange, 
-    assets, selectedAsset, onAssetSelect, assetSearchTerm, onAssetSearchChange,
+    layers, activeLayerTab, setActiveLayerTab, layerVisibility, onVisibilityChange, onZoomToLayer,
+    onOpenAttributeTable, assets, selectedAsset, onAssetSelect, assetSearchTerm, onAssetSearchChange,
     propertySearchKey, onPropertySearchKeyChange, propertySearchValue, onPropertySearchValueChange,
     sidebarView, setSidebarView,
 }) => {
@@ -83,14 +85,42 @@ const LeftSidebar: React.FC<LeftSidebarProps> = ({
                         {layers.map(layer => (
                             <div 
                                 key={layer.id}
-                                onClick={() => {
-                                    setActiveLayerTab(layer.name);
-                                    setSidebarView('assets');
-                                }}
-                                className={`flex items-center gap-3 px-3 py-2.5 rounded-lg cursor-pointer ${activeLayerTab === layer.name ? 'bg-primary/20 text-white' : 'hover:bg-slate-800/50'}`}
+                                className={`group flex items-center justify-between gap-3 px-3 py-2.5 rounded-lg cursor-pointer ${activeLayerTab === layer.name ? 'bg-primary/20 text-white' : 'hover:bg-slate-800/50'}`}
                             >
-                                <span className={`material-symbols-outlined ${layerIconColors[layer.name] || 'text-slate-400'}`} style={{ fontSize: '24px' }}>{layerIcons[layer.name] || 'layers'}</span>
-                                <p className={`text-sm font-medium leading-normal`}>{layer.name}</p>
+                                <div 
+                                    className="flex items-center gap-3 flex-1"
+                                    onClick={() => {
+                                        setActiveLayerTab(layer.name);
+                                        setSidebarView('assets');
+                                    }}
+                                >
+                                    <span className={`material-symbols-outlined ${layerIconColors[layer.name] || 'text-slate-400'}`} style={{ fontSize: '24px' }}>{layerIcons[layer.name] || 'layers'}</span>
+                                    <p className={`text-sm font-medium leading-normal`}>{layer.name}</p>
+                                </div>
+                                <div className="flex items-center">
+                                    <button 
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            onOpenAttributeTable(layer.id);
+                                        }}
+                                        disabled={layer.data.features.length === 0}
+                                        title="Open attribute table"
+                                        className={`p-1 rounded-md text-slate-400 opacity-0 group-hover:opacity-100 ${activeLayerTab === layer.name ? 'opacity-100' : ''} hover:bg-slate-700 hover:text-white disabled:text-slate-600 disabled:bg-transparent disabled:cursor-not-allowed transition-all`}
+                                    >
+                                        <span className="material-symbols-outlined" style={{ fontSize: '20px' }}>table_chart</span>
+                                    </button>
+                                    <button 
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            onZoomToLayer(layer.id);
+                                        }}
+                                        disabled={layer.data.features.length === 0}
+                                        title="Zoom to layer"
+                                        className={`p-1 rounded-md text-slate-400 opacity-0 group-hover:opacity-100 ${activeLayerTab === layer.name ? 'opacity-100' : ''} hover:bg-slate-700 hover:text-white disabled:text-slate-600 disabled:bg-transparent disabled:cursor-not-allowed transition-all`}
+                                    >
+                                        <span className="material-symbols-outlined" style={{ fontSize: '20px' }}>travel_explore</span>
+                                    </button>
+                                </div>
                             </div>
                         ))}
                     </div>
