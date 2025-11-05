@@ -1,0 +1,3188 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "fid": 2,
+        "Bldg_Id": " ",
+        "Name": "Dy.Commandant Office",
+        "Floor": "G",
+        "Cons_Year": 2023,
+        "Owner": "KPL",
+        "Ele_Supply": "Yes",
+        "Water_Supp": "Yes",
+        "Fire_Safet": "No",
+        "Secu_Sys": "No",
+        "Incharge": "DGM C",
+        "Remarks": "Lift Available",
+        "Matrial": "RCC",
+        "App_Requir": "NA",
+        "Area_In_Sq": 155,
+        "Rain_Water": "Yes",
+        "Drainage_N": "Yes",
+        "Lighting_A": "No",
+        "Use_Purpos": "Office",
+        "Status": "Comp",
+        "Occupancy": "Full",
+        "Cust_Bound": "Inside",
+        "Link": " ",
+        "Shape_Length": 70.40450178857473,
+        "Shape_Area": 188.51447906956014
+      },
+      "geometry": {
+        "type": "MultiPolygon",
+        "coordinates": [
+          [
+            [
+              [
+                80.3288078181424,
+                13.267805694060183,
+                0
+              ],
+              [
+                80.32873284000013,
+                13.267804777751445,
+                0
+              ],
+              [
+                80.32873288718142,
+                13.26781516438664,
+                0
+              ],
+              [
+                80.32872908516768,
+                13.26781507842002,
+                0
+              ],
+              [
+                80.3287292840134,
+                13.267832425963144,
+                0
+              ],
+              [
+                80.32873296346199,
+                13.267832436558596,
+                0
+              ],
+              [
+                80.32873304715325,
+                13.267851380610276,
+                0
+              ],
+              [
+                80.32872935338663,
+                13.26785120541326,
+                0
+              ],
+              [
+                80.32872857316245,
+                13.267868429215152,
+                0
+              ],
+              [
+                80.32873312337165,
+                13.267868675386955,
+                0
+              ],
+              [
+                80.3287331408824,
+                13.26787272081043,
+                0
+              ],
+              [
+                80.32869186631712,
+                13.267872039737835,
+                0
+              ],
+              [
+                80.32869185139099,
+                13.267877476635011,
+                0
+              ],
+              [
+                80.32869362295683,
+                13.267877427049568,
+                0
+              ],
+              [
+                80.32869339470936,
+                13.267916183043745,
+                0
+              ],
+              [
+                80.3286917448129,
+                13.26791629805183,
+                0
+              ],
+              [
+                80.32869173404212,
+                13.267920221334178,
+                0
+              ],
+              [
+                80.32869863520393,
+                13.267920198823289,
+                0
+              ],
+              [
+                80.32869864455225,
+                13.267916793642058,
+                0
+              ],
+              [
+                80.32873283523051,
+                13.267917482277484,
+                0
+              ],
+              [
+                80.32873293462329,
+                13.26792499008688,
+                0
+              ],
+              [
+                80.32872937041608,
+                13.267925032238324,
+                0
+              ],
+              [
+                80.32872933132539,
+                13.267925821499343,
+                0
+              ],
+              [
+                80.32872922476801,
+                13.26793134767067,
+                0
+              ],
+              [
+                80.32872903307135,
+                13.267941323171131,
+                0
+              ],
+              [
+                80.32872983139377,
+                13.267941381334063,
+                0
+              ],
+              [
+                80.3287312388515,
+                13.267941479981872,
+                0
+              ],
+              [
+                80.32873417206696,
+                13.2679416251456,
+                0
+              ],
+              [
+                80.32873387544014,
+                13.267961241822187,
+                0
+              ],
+              [
+                80.32872850118642,
+                13.267961227666875,
+                0
+              ],
+              [
+                80.3287283269704,
+                13.267978285788356,
+                0
+              ],
+              [
+                80.32872833212366,
+                13.267979098675017,
+                0
+              ],
+              [
+                80.32872833721267,
+                13.26797959870935,
+                0
+              ],
+              [
+                80.32873310379809,
+                13.267979374364527,
+                0
+              ],
+              [
+                80.32873312210305,
+                13.267980104099715,
+                0
+              ],
+              [
+                80.3287333142269,
+                13.267987794801122,
+                0
+              ],
+              [
+                80.32880780542631,
+                13.2679882297012,
+                0
+              ],
+              [
+                80.3288078181424,
+                13.267805694060183,
+                0
+              ]
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "fid": 3,
+        "Bldg_Id": " ",
+        "Name": "Gym Building",
+        "Floor": "G",
+        "Cons_Year": 2023,
+        "Owner": "KPL",
+        "Ele_Supply": "Yes",
+        "Water_Supp": "Yes",
+        "Fire_Safet": "No",
+        "Secu_Sys": "No",
+        "Incharge": "DGM C",
+        "Remarks": " ",
+        "Matrial": "RCC",
+        "App_Requir": "NA",
+        "Area_In_Sq": 195,
+        "Rain_Water": "Yes",
+        "Drainage_N": "Yes",
+        "Lighting_A": "No",
+        "Use_Purpos": "Residential",
+        "Status": "Comp",
+        "Occupancy": "Full",
+        "Cust_Bound": "Inside",
+        "Link": " ",
+        "Shape_Length": 59.581572308663205,
+        "Shape_Area": 197.33017766916277
+      },
+      "geometry": {
+        "type": "MultiPolygon",
+        "coordinates": [
+          [
+            [
+              [
+                80.32938841314999,
+                13.26780870803928,
+                0
+              ],
+              [
+                80.32920522033484,
+                13.267810344471165,
+                0
+              ],
+              [
+                80.32920589076159,
+                13.267899760475986,
+                0
+              ],
+              [
+                80.32938914659957,
+                13.267899066385857,
+                0
+              ],
+              [
+                80.32938841314999,
+                13.26780870803928,
+                0
+              ]
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "fid": 4,
+        "Bldg_Id": " ",
+        "Name": "Retiring Room",
+        "Floor": "G",
+        "Cons_Year": 2023,
+        "Owner": "KPL",
+        "Ele_Supply": "Yes",
+        "Water_Supp": "Yes",
+        "Fire_Safet": "No",
+        "Secu_Sys": "No",
+        "Incharge": "DGM C",
+        "Remarks": " ",
+        "Matrial": "RCC",
+        "App_Requir": "NA",
+        "Area_In_Sq": 40,
+        "Rain_Water": "Yes",
+        "Drainage_N": "Yes",
+        "Lighting_A": "No",
+        "Use_Purpos": "Residential",
+        "Status": "Comp",
+        "Occupancy": "Full",
+        "Cust_Bound": "Inside",
+        "Link": " ",
+        "Shape_Length": 31.345081024793256,
+        "Shape_Area": 46.408904202963775
+      },
+      "geometry": {
+        "type": "MultiPolygon",
+        "coordinates": [
+          [
+            [
+              [
+                80.32979548381942,
+                13.267550365573053,
+                0
+              ],
+              [
+                80.32978414019303,
+                13.26755091442914,
+                0
+              ],
+              [
+                80.32978314602285,
+                13.267490624466902,
+                0
+              ],
+              [
+                80.32974667534972,
+                13.267489595425983,
+                0
+              ],
+              [
+                80.32974611845191,
+                13.267514952171565,
+                0
+              ],
+              [
+                80.32974727451948,
+                13.267538400140701,
+                0
+              ],
+              [
+                80.32974714796278,
+                13.2675845726371,
+                0
+              ],
+              [
+                80.3297942837317,
+                13.267585414525573,
+                0
+              ],
+              [
+                80.32979529687869,
+                13.267553233194954,
+                0
+              ],
+              [
+                80.32979548381942,
+                13.267550365573053,
+                0
+              ]
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "fid": 5,
+        "Bldg_Id": " ",
+        "Name": "Substation Building 4",
+        "Floor": "G",
+        "Cons_Year": 2023,
+        "Owner": "KPL",
+        "Ele_Supply": "Yes",
+        "Water_Supp": "Yes",
+        "Fire_Safet": "No",
+        "Secu_Sys": "No",
+        "Incharge": "DGM C",
+        "Remarks": " ",
+        "Matrial": "RCC",
+        "App_Requir": "NA",
+        "Area_In_Sq": 132,
+        "Rain_Water": "Yes",
+        "Drainage_N": "Yes",
+        "Lighting_A": "No",
+        "Use_Purpos": "Residential",
+        "Status": "Comp",
+        "Occupancy": "Full",
+        "Cust_Bound": "Inside",
+        "Link": " ",
+        "Shape_Length": 50.44751144016362,
+        "Shape_Area": 126.94874035371163
+      },
+      "geometry": {
+        "type": "MultiPolygon",
+        "coordinates": [
+          [
+            [
+              [
+                80.32927844640689,
+                13.267188662971716,
+                0
+              ],
+              [
+                80.32927506178858,
+                13.267354443128717,
+                0
+              ],
+              [
+                80.32934063725001,
+                13.267354975563414,
+                0
+              ],
+              [
+                80.32934108898623,
+                13.267190261872269,
+                0
+              ],
+              [
+                80.32927844640689,
+                13.267188662971716,
+                0
+              ]
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "fid": 15,
+        "Bldg_Id": " ",
+        "Name": "Pass Section Building",
+        "Floor": "G+1",
+        "Cons_Year": 2025,
+        "Owner": "KPL",
+        "Ele_Supply": "Yes",
+        "Water_Supp": "Yes",
+        "Fire_Safet": "No",
+        "Secu_Sys": "Yes",
+        "Incharge": "DGM C",
+        "Remarks": "Pass Section",
+        "Matrial": "RCC",
+        "App_Requir": "NA",
+        "Area_In_Sq": 662,
+        "Rain_Water": "Yes",
+        "Drainage_N": "Yes",
+        "Lighting_A": "No",
+        "Use_Purpos": "Office",
+        "Status": "Comp",
+        "Occupancy": "Full",
+        "Cust_Bound": "Inside",
+        "Link": " ",
+        "Shape_Length": 101.29791342014593,
+        "Shape_Area": 569.7932452588143
+      },
+      "geometry": {
+        "type": "MultiPolygon",
+        "coordinates": [
+          [
+            [
+              [
+                80.32796233597212,
+                13.266358987921162,
+                0
+              ],
+              [
+                80.3279733282293,
+                13.266358298971086,
+                0
+              ],
+              [
+                80.32797630475525,
+                13.266208305965339,
+                0
+              ],
+              [
+                80.32779093726796,
+                13.266205305308022,
+                0
+              ],
+              [
+                80.32778985417842,
+                13.266332694759711,
+                0
+              ],
+              [
+                80.32778252763093,
+                13.266332675437264,
+                0
+              ],
+              [
+                80.32778270569527,
+                13.266401217651763,
+                0
+              ],
+              [
+                80.32780835388392,
+                13.266400209299265,
+                0
+              ],
+              [
+                80.32781033975785,
+                13.266477007982617,
+                0
+              ],
+              [
+                80.32782169743632,
+                13.266477037935422,
+                0
+              ],
+              [
+                80.32796127170208,
+                13.266479559780601,
+                0
+              ],
+              [
+                80.32796233597212,
+                13.266358987921162,
+                0
+              ]
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "fid": 16,
+        "Bldg_Id": " ",
+        "Name": "KPL RMG Room",
+        "Floor": "G",
+        "Cons_Year": 2016,
+        "Owner": "KPL",
+        "Ele_Supply": "Yes",
+        "Water_Supp": "No",
+        "Fire_Safet": "No",
+        "Secu_Sys": "No",
+        "Incharge": "DGM C",
+        "Remarks": " ",
+        "Matrial": "RCC",
+        "App_Requir": "NA",
+        "Area_In_Sq": 70,
+        "Rain_Water": "No",
+        "Drainage_N": "No",
+        "Lighting_A": "Yes",
+        "Use_Purpos": "Office",
+        "Status": "Comp",
+        "Occupancy": "Full",
+        "Cust_Bound": "Inside",
+        "Link": " ",
+        "Shape_Length": 23.411740631561127,
+        "Shape_Area": 34.07092488651713
+      },
+      "geometry": {
+        "type": "MultiPolygon",
+        "coordinates": [
+          [
+            [
+              [
+                80.32770643706357,
+                13.26540885111533,
+                0
+              ],
+              [
+                80.32765094795677,
+                13.26542640803162,
+                0
+              ],
+              [
+                80.32766693992642,
+                13.265472623031929,
+                0
+              ],
+              [
+                80.32772193968339,
+                13.265455781850234,
+                0
+              ],
+              [
+                80.32770643706357,
+                13.26540885111533,
+                0
+              ]
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "fid": 17,
+        "Bldg_Id": " ",
+        "Name": "Level crossing Shed -4",
+        "Floor": "G",
+        "Cons_Year": 2025,
+        "Owner": "KPL",
+        "Ele_Supply": "Yes",
+        "Water_Supp": "Yes",
+        "Fire_Safet": "Yes",
+        "Secu_Sys": "Yes",
+        "Incharge": "Railway",
+        "Remarks": " ",
+        "Matrial": "RCC",
+        "App_Requir": "NA",
+        "Area_In_Sq": 54,
+        "Rain_Water": "NA",
+        "Drainage_N": "Yes",
+        "Lighting_A": "No",
+        "Use_Purpos": "Gate Man",
+        "Status": "Comp",
+        "Occupancy": "Full",
+        "Cust_Bound": "Inside",
+        "Link": " ",
+        "Shape_Length": 32.855434616755566,
+        "Shape_Area": 62.31047233152564
+      },
+      "geometry": {
+        "type": "MultiPolygon",
+        "coordinates": [
+          [
+            [
+              [
+                80.33055377172477,
+                13.264932357875512,
+                0
+              ],
+              [
+                80.33053806129583,
+                13.264983752795093,
+                0
+              ],
+              [
+                80.3306314105187,
+                13.26500941673911,
+                0
+              ],
+              [
+                80.33064681620631,
+                13.264957722627686,
+                0
+              ],
+              [
+                80.33055377172477,
+                13.264932357875512,
+                0
+              ]
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "fid": 18,
+        "Bldg_Id": " ",
+        "Name": "SS1",
+        "Floor": "G",
+        "Cons_Year": 1999,
+        "Owner": "KPL",
+        "Ele_Supply": "Yes",
+        "Water_Supp": "Yes",
+        "Fire_Safet": "Yes",
+        "Secu_Sys": "Yes",
+        "Incharge": "DGM C",
+        "Remarks": " ",
+        "Matrial": "RCC",
+        "App_Requir": "NA",
+        "Area_In_Sq": 600,
+        "Rain_Water": "NA",
+        "Drainage_N": "Yes",
+        "Lighting_A": "No",
+        "Use_Purpos": "Sub Station",
+        "Status": "Comp",
+        "Occupancy": "Full",
+        "Cust_Bound": "Inside",
+        "Link": " ",
+        "Shape_Length": 48.35069703700309,
+        "Shape_Area": 137.42153127692512
+      },
+      "geometry": {
+        "type": "MultiPolygon",
+        "coordinates": [
+          [
+            [
+              [
+                80.32978044516202,
+                13.26541001152942,
+                0
+              ],
+              [
+                80.32986110054108,
+                13.265384643842728,
+                0
+              ],
+              [
+                80.32981718883566,
+                13.265255041908805,
+                0
+              ],
+              [
+                80.32973756198675,
+                13.265281358982689,
+                0
+              ],
+              [
+                80.32978044516202,
+                13.26541001152942,
+                0
+              ]
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "fid": 19,
+        "Bldg_Id": " ",
+        "Name": "SS1",
+        "Floor": "G",
+        "Cons_Year": 1999,
+        "Owner": "KPL",
+        "Ele_Supply": "yes",
+        "Water_Supp": "No",
+        "Fire_Safet": "Yes",
+        "Secu_Sys": "Yes",
+        "Incharge": "DGM C",
+        "Remarks": " ",
+        "Matrial": "RCC",
+        "App_Requir": "NA",
+        "Area_In_Sq": 75,
+        "Rain_Water": "NA",
+        "Drainage_N": "Yes",
+        "Lighting_A": "No",
+        "Use_Purpos": "Sub Station",
+        "Status": "Comp",
+        "Occupancy": "Full",
+        "Cust_Bound": "Inside",
+        "Link": " ",
+        "Shape_Length": 34.64129659949232,
+        "Shape_Area": 74.80268794242134
+      },
+      "geometry": {
+        "type": "MultiPolygon",
+        "coordinates": [
+          [
+            [
+              [
+                80.32994417775477,
+                13.265213844156381,
+                0
+              ],
+              [
+                80.32987231286536,
+                13.265235903919281,
+                0
+              ],
+              [
+                80.32987491428695,
+                13.265244270967107,
+                0
+              ],
+              [
+                80.32989343712076,
+                13.265296120224605,
+                0
+              ],
+              [
+                80.32989809714671,
+                13.265309163767588,
+                0
+              ],
+              [
+                80.32990008499803,
+                13.265315068881154,
+                0
+              ],
+              [
+                80.32997092632914,
+                13.265292288488281,
+                0
+              ],
+              [
+                80.32994417775477,
+                13.265213844156381,
+                0
+              ]
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "fid": 20,
+        "Bldg_Id": " ",
+        "Name": "Electrical Store Room",
+        "Floor": "G",
+        "Cons_Year": 1999,
+        "Owner": "KPL",
+        "Ele_Supply": "Yes",
+        "Water_Supp": "No",
+        "Fire_Safet": "No",
+        "Secu_Sys": "No",
+        "Incharge": "DGM C",
+        "Remarks": " ",
+        "Matrial": "RCC",
+        "App_Requir": "NA",
+        "Area_In_Sq": 61,
+        "Rain_Water": "NA",
+        "Drainage_N": "NA",
+        "Lighting_A": "NA",
+        "Use_Purpos": "Office",
+        "Status": "Comp",
+        "Occupancy": "Full",
+        "Cust_Bound": "Inside",
+        "Link": " ",
+        "Shape_Length": 39.370386937785135,
+        "Shape_Area": 60.88168315394286
+      },
+      "geometry": {
+        "type": "MultiPolygon",
+        "coordinates": [
+          [
+            [
+              [
+                80.32999512862666,
+                13.265663022391353,
+                0
+              ],
+              [
+                80.3299110977891,
+                13.265690612801855,
+                0
+              ],
+              [
+                80.32992351477058,
+                13.265726829613394,
+                0
+              ],
+              [
+                80.32993164002183,
+                13.2657244015025,
+                0
+              ],
+              [
+                80.32994935551413,
+                13.265774112015531,
+                0
+              ],
+              [
+                80.32997799300077,
+                13.265765212231258,
+                0
+              ],
+              [
+                80.32996126692727,
+                13.265715549530666,
+                0
+              ],
+              [
+                80.33000784552988,
+                13.265701632493913,
+                0
+              ],
+              [
+                80.32999512862666,
+                13.265663022391353,
+                0
+              ]
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "fid": 21,
+        "Bldg_Id": " ",
+        "Name": "Car Parking",
+        "Floor": "G",
+        "Cons_Year": 1999,
+        "Owner": "KPL",
+        "Ele_Supply": "Yes",
+        "Water_Supp": "No",
+        "Fire_Safet": "No",
+        "Secu_Sys": "No",
+        "Incharge": "DGM C",
+        "Remarks": "Reconstructuion On 2010",
+        "Matrial": "MS Shed",
+        "App_Requir": "NA",
+        "Area_In_Sq": 233,
+        "Rain_Water": "NA",
+        "Drainage_N": "NA",
+        "Lighting_A": "NA",
+        "Use_Purpos": "Parking",
+        "Status": "Comp",
+        "Occupancy": "Full",
+        "Cust_Bound": "Inside",
+        "Link": " ",
+        "Shape_Length": 85.69711825915022,
+        "Shape_Area": 233.29865272680905
+      },
+      "geometry": {
+        "type": "MultiPolygon",
+        "coordinates": [
+          [
+            [
+              [
+                80.33003079568134,
+                13.265989655260134,
+                0
+              ],
+              [
+                80.32997469189205,
+                13.266008527578844,
+                0
+              ],
+              [
+                80.3300819097994,
+                13.266321371428571,
+                0
+              ],
+              [
+                80.3301372826891,
+                13.266301779236002,
+                0
+              ],
+              [
+                80.33003079568134,
+                13.265989655260134,
+                0
+              ]
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "fid": 35,
+        "Bldg_Id": " ",
+        "Name": "Ladies Hostel",
+        "Floor": "G+1",
+        "Cons_Year": 2023,
+        "Owner": "KPL",
+        "Ele_Supply": "Yes",
+        "Water_Supp": "Yes",
+        "Fire_Safet": "No",
+        "Secu_Sys": "No",
+        "Incharge": "DGM C",
+        "Remarks": " ",
+        "Matrial": "RCC",
+        "App_Requir": "NA",
+        "Area_In_Sq": 220,
+        "Rain_Water": "Yes",
+        "Drainage_N": "Yes",
+        "Lighting_A": "No",
+        "Use_Purpos": "Residential",
+        "Status": "Comp",
+        "Occupancy": "Full",
+        "Cust_Bound": "Inside",
+        "Link": " ",
+        "Shape_Length": 39.95823680542671,
+        "Shape_Area": 82.1203002372217
+      },
+      "geometry": {
+        "type": "MultiPolygon",
+        "coordinates": [
+          [
+            [
+              [
+                80.3298301892049,
+                13.268171927829517,
+                0
+              ],
+              [
+                80.32982899007904,
+                13.268300256473657,
+                0
+              ],
+              [
+                80.32988239669028,
+                13.26830073598354,
+                0
+              ],
+              [
+                80.32988359671371,
+                13.26817240643604,
+                0
+              ],
+              [
+                80.3298301892049,
+                13.268171927829517,
+                0
+              ]
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "fid": 36,
+        "Bldg_Id": " ",
+        "Name": "CPC Subsidiary Canteen Building",
+        "Floor": "G",
+        "Cons_Year": 2023,
+        "Owner": "KPL",
+        "Ele_Supply": "Yes",
+        "Water_Supp": "Yes",
+        "Fire_Safet": "No",
+        "Secu_Sys": "No",
+        "Incharge": "DGM C",
+        "Remarks": " ",
+        "Matrial": "RCC",
+        "App_Requir": "NA",
+        "Area_In_Sq": 125,
+        "Rain_Water": "Yes",
+        "Drainage_N": "Yes",
+        "Lighting_A": "No",
+        "Use_Purpos": "Office",
+        "Status": "Comp",
+        "Occupancy": "Full",
+        "Cust_Bound": "Inside",
+        "Link": " ",
+        "Shape_Length": 44.16432899930927,
+        "Shape_Area": 115.07495399701716
+      },
+      "geometry": {
+        "type": "MultiPolygon",
+        "coordinates": [
+          [
+            [
+              [
+                80.32984038971816,
+                13.268125360469163,
+                0
+              ],
+              [
+                80.32989705297635,
+                13.268125509463937,
+                0
+              ],
+              [
+                80.32989753990562,
+                13.268036753845548,
+                0
+              ],
+              [
+                80.32979520629536,
+                13.268036246046252,
+                0
+              ],
+              [
+                80.32979420058226,
+                13.268135765669793,
+                0
+              ],
+              [
+                80.32983938292261,
+                13.268136362805338,
+                0
+              ],
+              [
+                80.32984038971816,
+                13.268125360469163,
+                0
+              ]
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "fid": 37,
+        "Bldg_Id": " ",
+        "Name": "Sabha Hall",
+        "Floor": "G",
+        "Cons_Year": 2023,
+        "Owner": "KPL",
+        "Ele_Supply": "Yes",
+        "Water_Supp": "Yes",
+        "Fire_Safet": "No",
+        "Secu_Sys": "No",
+        "Incharge": "DGM C",
+        "Remarks": " ",
+        "Matrial": "RCC",
+        "App_Requir": "NA",
+        "Area_In_Sq": 155,
+        "Rain_Water": "Yes",
+        "Drainage_N": "Yes",
+        "Lighting_A": "No",
+        "Use_Purpos": "Office",
+        "Status": "Comp",
+        "Occupancy": "Full",
+        "Cust_Bound": "Inside",
+        "Link": " ",
+        "Shape_Length": 50.96446810336547,
+        "Shape_Area": 150.32643274624954
+      },
+      "geometry": {
+        "type": "MultiPolygon",
+        "coordinates": [
+          [
+            [
+              [
+                80.32977462881138,
+                13.2678802097837,
+                0
+              ],
+              [
+                80.32977506142589,
+                13.267989781533583,
+                0
+              ],
+              [
+                80.329884721883,
+                13.2679905482176,
+                0
+              ],
+              [
+                80.32988506550069,
+                13.26795442463542,
+                0
+              ],
+              [
+                80.32989874364516,
+                13.267954220987871,
+                0
+              ],
+              [
+                80.32989933161396,
+                13.267917858435702,
+                0
+              ],
+              [
+                80.32988541147319,
+                13.267917104806463,
+                0
+              ],
+              [
+                80.32988624013107,
+                13.2678821778481,
+                0
+              ],
+              [
+                80.32977462881138,
+                13.2678802097837,
+                0
+              ]
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "fid": 38,
+        "Bldg_Id": " ",
+        "Name": "Stores Building",
+        "Floor": "G",
+        "Cons_Year": 2023,
+        "Owner": "KPL",
+        "Ele_Supply": "Yes",
+        "Water_Supp": "Yes",
+        "Fire_Safet": "No",
+        "Secu_Sys": "No",
+        "Incharge": "DGM C",
+        "Remarks": " ",
+        "Matrial": "RCC",
+        "App_Requir": "NA",
+        "Area_In_Sq": 185,
+        "Rain_Water": "Yes",
+        "Drainage_N": "Yes",
+        "Lighting_A": "No",
+        "Use_Purpos": "Office",
+        "Status": "Comp",
+        "Occupancy": "Full",
+        "Cust_Bound": "Inside",
+        "Link": " ",
+        "Shape_Length": 58.02224496676741,
+        "Shape_Area": 142.76498260808174
+      },
+      "geometry": {
+        "type": "MultiPolygon",
+        "coordinates": [
+          [
+            [
+              [
+                80.32984513491458,
+                13.267820036412436,
+                0
+              ],
+              [
+                80.3298863492048,
+                13.267820144782661,
+                0
+              ],
+              [
+                80.3298861321681,
+                13.26778784719254,
+                0
+              ],
+              [
+                80.32991605065922,
+                13.267788225146159,
+                0
+              ],
+              [
+                80.32991705651143,
+                13.267755332192513,
+                0
+              ],
+              [
+                80.32988774910977,
+                13.26775495675015,
+                0
+              ],
+              [
+                80.32988692272797,
+                13.267722358268438,
+                0
+              ],
+              [
+                80.3297880076303,
+                13.267721798879313,
+                0
+              ],
+              [
+                80.3297863932369,
+                13.267754091652934,
+                0
+              ],
+              [
+                80.32976227382977,
+                13.267754327513467,
+                0
+              ],
+              [
+                80.32976218366812,
+                13.267787221969483,
+                0
+              ],
+              [
+                80.32978660851721,
+                13.26778668852727,
+                0
+              ],
+              [
+                80.32978712944667,
+                13.267819584590379,
+                0
+              ],
+              [
+                80.32981979588818,
+                13.267819670492589,
+                0
+              ],
+              [
+                80.32981914638289,
+                13.267834022914824,
+                0
+              ],
+              [
+                80.32984448366992,
+                13.267834687215315,
+                0
+              ],
+              [
+                80.32984513491458,
+                13.267820036412436,
+                0
+              ]
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "fid": 39,
+        "Bldg_Id": " ",
+        "Name": "Mess Building",
+        "Floor": "G",
+        "Cons_Year": 2023,
+        "Owner": "KPL",
+        "Ele_Supply": "Yes",
+        "Water_Supp": "Yes",
+        "Fire_Safet": "No",
+        "Secu_Sys": "No",
+        "Incharge": "DGM C",
+        "Remarks": " ",
+        "Matrial": "RCC",
+        "App_Requir": "NA",
+        "Area_In_Sq": 245,
+        "Rain_Water": "Yes",
+        "Drainage_N": "Yes",
+        "Lighting_A": "No",
+        "Use_Purpos": "Mess",
+        "Status": "Comp",
+        "Occupancy": "Full",
+        "Cust_Bound": "Inside",
+        "Link": " ",
+        "Shape_Length": 69.04050900290864,
+        "Shape_Area": 256.4625541513258
+      },
+      "geometry": {
+        "type": "MultiPolygon",
+        "coordinates": [
+          [
+            [
+              [
+                80.32964016274768,
+                13.26764007027779,
+                0
+              ],
+              [
+                80.32969816899147,
+                13.267640222844166,
+                0
+              ],
+              [
+                80.32970006548129,
+                13.267505358685503,
+                0
+              ],
+              [
+                80.32966526540258,
+                13.267504070905161,
+                0
+              ],
+              [
+                80.3296649967485,
+                13.267490613032006,
+                0
+              ],
+              [
+                80.32963110992111,
+                13.267490224612699,
+                0
+              ],
+              [
+                80.32962954623466,
+                13.267503677666204,
+                0
+              ],
+              [
+                80.32955932597407,
+                13.26750438991963,
+                0
+              ],
+              [
+                80.32955886475285,
+                13.267561506840636,
+                0
+              ],
+              [
+                80.32954420973276,
+                13.267561468288866,
+                0
+              ],
+              [
+                80.3295443021009,
+                13.267639219540404,
+                0
+              ],
+              [
+                80.32958551400154,
+                13.267640524204465,
+                0
+              ],
+              [
+                80.32958547792771,
+                13.267653681986518,
+                0
+              ],
+              [
+                80.32963951487379,
+                13.26765382412511,
+                0
+              ],
+              [
+                80.32964016274768,
+                13.26764007027779,
+                0
+              ]
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "fid": 40,
+        "Bldg_Id": " ",
+        "Name": "Shop Building",
+        "Floor": "G",
+        "Cons_Year": 2023,
+        "Owner": "KPL",
+        "Ele_Supply": "Yes",
+        "Water_Supp": "Yes",
+        "Fire_Safet": "No",
+        "Secu_Sys": "No",
+        "Incharge": "DGM C",
+        "Remarks": " ",
+        "Matrial": "RCC",
+        "App_Requir": "NA",
+        "Area_In_Sq": 140,
+        "Rain_Water": "Yes",
+        "Drainage_N": "Yes",
+        "Lighting_A": "No",
+        "Use_Purpos": "Shopes",
+        "Status": "Comp",
+        "Occupancy": "Full",
+        "Cust_Bound": "Inside",
+        "Link": " ",
+        "Shape_Length": 48.22785131766872,
+        "Shape_Area": 121.86300271162004
+      },
+      "geometry": {
+        "type": "MultiPolygon",
+        "coordinates": [
+          [
+            [
+              [
+                80.32990323896787,
+                13.267561514647497,
+                0
+              ],
+              [
+                80.32994720044219,
+                13.267561929518187,
+                0
+              ],
+              [
+                80.32994922196147,
+                13.26749255668438,
+                0
+              ],
+              [
+                80.32981306201859,
+                13.267491899388034,
+                0
+              ],
+              [
+                80.3298122591489,
+                13.26756187400214,
+                0
+              ],
+              [
+                80.32985622226275,
+                13.267561690314293,
+                0
+              ],
+              [
+                80.32985709545808,
+                13.267577542283055,
+                0
+              ],
+              [
+                80.32990258198963,
+                13.26757825955666,
+                0
+              ],
+              [
+                80.32990323896787,
+                13.267561514647497,
+                0
+              ]
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "fid": 41,
+        "Bldg_Id": " ",
+        "Name": "SO’s (Sub officer) Barracks Unit",
+        "Floor": "G+1",
+        "Cons_Year": 2023,
+        "Owner": "KPL",
+        "Ele_Supply": "Yes",
+        "Water_Supp": "Yes",
+        "Fire_Safet": "No",
+        "Secu_Sys": "No",
+        "Incharge": "DGM C",
+        "Remarks": " ",
+        "Matrial": "RCC",
+        "App_Requir": "NA",
+        "Area_In_Sq": 526,
+        "Rain_Water": "Yes",
+        "Drainage_N": "Yes",
+        "Lighting_A": "No",
+        "Use_Purpos": "Residential",
+        "Status": "Comp",
+        "Occupancy": "Full",
+        "Cust_Bound": "Inside",
+        "Link": " ",
+        "Shape_Length": 106.16564037958621,
+        "Shape_Area": 243.79497093008862
+      },
+      "geometry": {
+        "type": "MultiPolygon",
+        "coordinates": [
+          [
+            [
+              [
+                80.32940321478303,
+                13.26754255587556,
+                0
+              ],
+              [
+                80.32942427985915,
+                13.267542910590308,
+                0
+              ],
+              [
+                80.3294242503378,
+                13.267553675883681,
+                0
+              ],
+              [
+                80.32941783525564,
+                13.267554855257567,
+                0
+              ],
+              [
+                80.3294170676387,
+                13.267612269755476,
+                0
+              ],
+              [
+                80.32942500367302,
+                13.267612889214803,
+                0
+              ],
+              [
+                80.32942372255727,
+                13.267634715875245,
+                0
+              ],
+              [
+                80.32941761629722,
+                13.267634699808786,
+                0
+              ],
+              [
+                80.32941814783742,
+                13.267663708755254,
+                0
+              ],
+              [
+                80.32949477656435,
+                13.267663910366247,
+                0
+              ],
+              [
+                80.32949698732335,
+                13.26763700185048,
+                0
+              ],
+              [
+                80.32949088362508,
+                13.267636388118195,
+                0
+              ],
+              [
+                80.32949247181747,
+                13.267613664397278,
+                0
+              ],
+              [
+                80.32949613557324,
+                13.267613674036077,
+                0
+              ],
+              [
+                80.32949629874689,
+                13.267554164730527,
+                0
+              ],
+              [
+                80.32949111075864,
+                13.267553553407414,
+                0
+              ],
+              [
+                80.32949086261299,
+                13.267532619686525,
+                0
+              ],
+              [
+                80.32949727595303,
+                13.267531738691236,
+                0
+              ],
+              [
+                80.32949643814116,
+                13.267503327516968,
+                0
+              ],
+              [
+                80.32944942073486,
+                13.267504100781665,
+                0
+              ],
+              [
+                80.32944824130418,
+                13.267488846585412,
+                0
+              ],
+              [
+                80.32942534645616,
+                13.267487889384242,
+                0
+              ],
+              [
+                80.32942432824231,
+                13.26752526711895,
+                0
+              ],
+              [
+                80.32940387097445,
+                13.267526110256345,
+                0
+              ],
+              [
+                80.32940394560065,
+                13.267498897735852,
+                0
+              ],
+              [
+                80.32935662265214,
+                13.267499670179498,
+                0
+              ],
+              [
+                80.32935403871377,
+                13.267662643102243,
+                0
+              ],
+              [
+                80.32940105040964,
+                13.267663963057856,
+                0
+              ],
+              [
+                80.32940321478303,
+                13.26754255587556,
+                0
+              ]
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "fid": 42,
+        "Bldg_Id": " ",
+        "Name": "Water Tank",
+        "Floor": "G",
+        "Cons_Year": 2023,
+        "Owner": "KPL",
+        "Ele_Supply": "Yes",
+        "Water_Supp": "Yes",
+        "Fire_Safet": "No",
+        "Secu_Sys": "No",
+        "Incharge": "DGM C",
+        "Remarks": "50000Ltrs",
+        "Matrial": "RCC",
+        "App_Requir": "NA",
+        "Area_In_Sq": 24,
+        "Rain_Water": "Yes",
+        "Drainage_N": "Yes",
+        "Lighting_A": "No",
+        "Use_Purpos": "Residential",
+        "Status": "Comp",
+        "Occupancy": "Full",
+        "Cust_Bound": "Inside",
+        "Link": " ",
+        "Shape_Length": 19.534268982508358,
+        "Shape_Area": 23.587828719286673
+      },
+      "geometry": {
+        "type": "MultiPolygon",
+        "coordinates": [
+          [
+            [
+              [
+                80.32951425673394,
+                13.267278430033475,
+                0
+              ],
+              [
+                80.32947317964246,
+                13.267278481106825,
+                0
+              ],
+              [
+                80.3294732426387,
+                13.267327212978328,
+                0
+              ],
+              [
+                80.32951296554778,
+                13.26732716376803,
+                0
+              ],
+              [
+                80.32951425673394,
+                13.267278430033475,
+                0
+              ]
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "fid": 43,
+        "Bldg_Id": " ",
+        "Name": "Quarter Guard Building",
+        "Floor": "G",
+        "Cons_Year": 2023,
+        "Owner": "KPL",
+        "Ele_Supply": "Yes",
+        "Water_Supp": "Yes",
+        "Fire_Safet": "No",
+        "Secu_Sys": "No",
+        "Incharge": "DGM C",
+        "Remarks": " ",
+        "Matrial": "RCC",
+        "App_Requir": "NA",
+        "Area_In_Sq": 150,
+        "Rain_Water": "Yes",
+        "Drainage_N": "Yes",
+        "Lighting_A": "No",
+        "Use_Purpos": "Office",
+        "Status": "Comp",
+        "Occupancy": "Full",
+        "Cust_Bound": "Inside",
+        "Link": " ",
+        "Shape_Length": 61.36445285788635,
+        "Shape_Area": 142.62623588211457
+      },
+      "geometry": {
+        "type": "MultiPolygon",
+        "coordinates": [
+          [
+            [
+              [
+                80.32896578682521,
+                13.267602374548261,
+                0
+              ],
+              [
+                80.32890228460904,
+                13.267602505728817,
+                0
+              ],
+              [
+                80.32890201692025,
+                13.267589047859381,
+                0
+              ],
+              [
+                80.3288662985654,
+                13.267588356130053,
+                0
+              ],
+              [
+                80.32886473411895,
+                13.267602406849079,
+                0
+              ],
+              [
+                80.32883573300674,
+                13.267601433514736,
+                0
+              ],
+              [
+                80.32883615181854,
+                13.26756016616093,
+                0
+              ],
+              [
+                80.32879921478312,
+                13.267558872634659,
+                0
+              ],
+              [
+                80.32879954422435,
+                13.26766114722756,
+                0
+              ],
+              [
+                80.32896531797806,
+                13.26766188304262,
+                0
+              ],
+              [
+                80.32896578682521,
+                13.267602374548261,
+                0
+              ]
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "fid": 44,
+        "Bldg_Id": " ",
+        "Name": "OR's (other rank) Barracks Unit",
+        "Floor": "G+2",
+        "Cons_Year": 2023,
+        "Owner": "KPL",
+        "Ele_Supply": "Yes",
+        "Water_Supp": "Yes",
+        "Fire_Safet": "No",
+        "Secu_Sys": "No",
+        "Incharge": "DGM C",
+        "Remarks": " ",
+        "Matrial": "RCC",
+        "App_Requir": "NA",
+        "Area_In_Sq": 1110,
+        "Rain_Water": "Yes",
+        "Drainage_N": "Yes",
+        "Lighting_A": "No",
+        "Use_Purpos": "Residential",
+        "Status": "Comp",
+        "Occupancy": "Full",
+        "Cust_Bound": "Inside",
+        "Link": " ",
+        "Shape_Length": 78.59075816371518,
+        "Shape_Area": 383.2337728319974
+      },
+      "geometry": {
+        "type": "MultiPolygon",
+        "coordinates": [
+          [
+            [
+              [
+                80.32907750862582,
+                13.267497404768134,
+                0
+              ],
+              [
+                80.32907850446722,
+                13.267690589998038,
+                0
+              ],
+              [
+                80.3292461073093,
+                13.267692526699179,
+                0
+              ],
+              [
+                80.32924266298913,
+                13.267501128947112,
+                0
+              ],
+              [
+                80.32907750862582,
+                13.267497404768134,
+                0
+              ]
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "fid": 56,
+        "Bldg_Id": " ",
+        "Name": "Port Administrative building",
+        "Floor": "G+1",
+        "Cons_Year": 1999,
+        "Owner": "KPL",
+        "Ele_Supply": "Yes",
+        "Water_Supp": "Yes",
+        "Fire_Safet": "Yes",
+        "Secu_Sys": "Yes",
+        "Incharge": "DGM C",
+        "Remarks": " ",
+        "Matrial": "RCC",
+        "App_Requir": "NA",
+        "Area_In_Sq": 2400,
+        "Rain_Water": "Yes",
+        "Drainage_N": "Yes",
+        "Lighting_A": "Yes",
+        "Use_Purpos": "Office",
+        "Status": "Comp",
+        "Occupancy": "Full",
+        "Cust_Bound": "Inside",
+        "Link": " ",
+        "Shape_Length": 263.08794849580653,
+        "Shape_Area": 1389.7096982137155
+      },
+      "geometry": {
+        "type": "MultiPolygon",
+        "coordinates": [
+          [
+            [
+              [
+                80.32971081298545,
+                13.265940042503331,
+                0
+              ],
+              [
+                80.32970113483395,
+                13.265906523776483,
+                0
+              ],
+              [
+                80.32968586083932,
+                13.26591007236862,
+                0
+              ],
+              [
+                80.3296695089376,
+                13.265860985705142,
+                0
+              ],
+              [
+                80.32964628748933,
+                13.265868102153371,
+                0
+              ],
+              [
+                80.32964083662067,
+                13.265851938854356,
+                0
+              ],
+              [
+                80.32967872353392,
+                13.265840675445009,
+                0
+              ],
+              [
+                80.32963814371126,
+                13.265720352078231,
+                0
+              ],
+              [
+                80.32959781268947,
+                13.265732207632777,
+                0
+              ],
+              [
+                80.32959236018584,
+                13.265716642907131,
+                0
+              ],
+              [
+                80.32961680778055,
+                13.265707735760525,
+                0
+              ],
+              [
+                80.32960230206962,
+                13.265660676638042,
+                0
+              ],
+              [
+                80.32957208172918,
+                13.265670832667919,
+                0
+              ],
+              [
+                80.32956139147136,
+                13.26563780587031,
+                0
+              ],
+              [
+                80.32959509644422,
+                13.265627999888808,
+                0
+              ],
+              [
+                80.32960596724891,
+                13.265659482791085,
+                0
+              ],
+              [
+                80.3296161820804,
+                13.265656154180299,
+                0
+              ],
+              [
+                80.32960238823212,
+                13.26562217162287,
+                0
+              ],
+              [
+                80.3295607324293,
+                13.265635768788787,
+                0
+              ],
+              [
+                80.329251596446,
+                13.265736679500078,
+                0
+              ],
+              [
+                80.32926250889271,
+                13.265765417381758,
+                0
+              ],
+              [
+                80.3292411139285,
+                13.265774331622339,
+                0
+              ],
+              [
+                80.32925563177038,
+                13.265824012061833,
+                0
+              ],
+              [
+                80.32928129899047,
+                13.265815705832294,
+                0
+              ],
+              [
+                80.3292861347546,
+                13.265833661446672,
+                0
+              ],
+              [
+                80.32924702237783,
+                13.265846118729216,
+                0
+              ],
+              [
+                80.32926217591483,
+                13.265886828492125,
+                0
+              ],
+              [
+                80.32920961765353,
+                13.26590403449338,
+                0
+              ],
+              [
+                80.32922233854082,
+                13.265941150001897,
+                0
+              ],
+              [
+                80.32927366972305,
+                13.265925734696742,
+                0
+              ],
+              [
+                80.32929066123414,
+                13.26596405678874,
+                0
+              ],
+              [
+                80.32930349367258,
+                13.265960501796263,
+                0
+              ],
+              [
+                80.3293258950353,
+                13.266029939792913,
+                0
+              ],
+              [
+                80.32934362137085,
+                13.266022808916661,
+                0
+              ],
+              [
+                80.32935452728137,
+                13.266053938379303,
+                0
+              ],
+              [
+                80.32971081298545,
+                13.265940042503331,
+                0
+              ]
+            ],
+            [
+              [
+                80.32937982079893,
+                13.265803206836281,
+                0
+              ],
+              [
+                80.32949618104495,
+                13.265765235567066,
+                0
+              ],
+              [
+                80.32953308879337,
+                13.265873754040948,
+                0
+              ],
+              [
+                80.32941672942287,
+                13.265911725326935,
+                0
+              ],
+              [
+                80.32937982079893,
+                13.265803206836281,
+                0
+              ]
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "fid": 58,
+        "Bldg_Id": " ",
+        "Name": "Court Yard",
+        "Floor": "G",
+        "Cons_Year": 2015,
+        "Owner": "KPL",
+        "Ele_Supply": "Yes",
+        "Water_Supp": "No",
+        "Fire_Safet": "No",
+        "Secu_Sys": "Yes",
+        "Incharge": "DGM C",
+        "Remarks": " ",
+        "Matrial": "Structural Shed",
+        "App_Requir": "NA",
+        "Area_In_Sq": 168,
+        "Rain_Water": " ",
+        "Drainage_N": " ",
+        "Lighting_A": " ",
+        "Use_Purpos": "Office",
+        "Status": "Comp",
+        "Occupancy": "ICCC",
+        "Cust_Bound": "Inside",
+        "Link": " ",
+        "Shape_Length": 51.87353469281565,
+        "Shape_Area": 168.07772056285944
+      },
+      "geometry": {
+        "type": "MultiPolygon",
+        "coordinates": [
+          [
+            [
+              [
+                80.32953308879337,
+                13.265873754040948,
+                0
+              ],
+              [
+                80.32949618104495,
+                13.265765235567066,
+                0
+              ],
+              [
+                80.32937982079893,
+                13.265803206836281,
+                0
+              ],
+              [
+                80.32941672942287,
+                13.265911725326935,
+                0
+              ],
+              [
+                80.32953308879337,
+                13.265873754040948,
+                0
+              ]
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "fid": 59,
+        "Bldg_Id": " ",
+        "Name": "KPL Cateen",
+        "Floor": "G",
+        "Cons_Year": 2015,
+        "Owner": "KPL",
+        "Ele_Supply": "Yes",
+        "Water_Supp": "Yes",
+        "Fire_Safet": "No",
+        "Secu_Sys": "No",
+        "Incharge": "DGM C",
+        "Remarks": " ",
+        "Matrial": "Pre Engg Building",
+        "App_Requir": "NA",
+        "Area_In_Sq": 660,
+        "Rain_Water": "Yes",
+        "Drainage_N": "Yes",
+        "Lighting_A": "No",
+        "Use_Purpos": "Cateen",
+        "Status": "Comp",
+        "Occupancy": "Full",
+        "Cust_Bound": "Inside",
+        "Link": "D:\\Projects\\06_Vijaysagar\\KPL\\Canteen partition drawing-Model.pdf",
+        "Shape_Length": 129.21232166499908,
+        "Shape_Area": 733.3287463497572
+      },
+      "geometry": {
+        "type": "MultiPolygon",
+        "coordinates": [
+          [
+            [
+              [
+                80.32962762939269,
+                13.266222568940465,
+                0
+              ],
+              [
+                80.32964620657812,
+                13.266216876146556,
+                0
+              ],
+              [
+                80.32974898069165,
+                13.26650231577314,
+                0
+              ],
+              [
+                80.32989271346908,
+                13.266457717118122,
+                0
+              ],
+              [
+                80.32977449738125,
+                13.266103337104411,
+                0
+              ],
+              [
+                80.32973049076409,
+                13.266119489703788,
+                0
+              ],
+              [
+                80.3297169235342,
+                13.266079262457174,
+                0
+              ],
+              [
+                80.32965824979549,
+                13.266100160581345,
+                0
+              ],
+              [
+                80.32967377551364,
+                13.266138479699784,
+                0
+              ],
+              [
+                80.32960532485329,
+                13.266162222924823,
+                0
+              ],
+              [
+                80.32962762939269,
+                13.266222568940465,
+                0
+              ]
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "fid": 60,
+        "Bldg_Id": " ",
+        "Name": "Customs & Immigration building",
+        "Floor": "G+1",
+        "Cons_Year": 2018,
+        "Owner": "KPL",
+        "Ele_Supply": "Yes",
+        "Water_Supp": "Yes",
+        "Fire_Safet": "No",
+        "Secu_Sys": "No",
+        "Incharge": "DGM C",
+        "Remarks": " ",
+        "Matrial": "RCC",
+        "App_Requir": "NA",
+        "Area_In_Sq": 870,
+        "Rain_Water": "Yes",
+        "Drainage_N": "Yes",
+        "Lighting_A": "No",
+        "Use_Purpos": "Office",
+        "Status": "Comp",
+        "Occupancy": "Full",
+        "Cust_Bound": "Inside",
+        "Link": " ",
+        "Shape_Length": 99.48244534724309,
+        "Shape_Area": 402.6694837388386
+      },
+      "geometry": {
+        "type": "MultiPolygon",
+        "coordinates": [
+          [
+            [
+              [
+                80.3292206198601,
+                13.266642135197399,
+                0
+              ],
+              [
+                80.32918670404788,
+                13.266540968449464,
+                0
+              ],
+              [
+                80.32908708985609,
+                13.266573003276925,
+                0
+              ],
+              [
+                80.32908346713552,
+                13.266558041936996,
+                0
+              ],
+              [
+                80.32903213324558,
+                13.266574054863758,
+                0
+              ],
+              [
+                80.32903819025012,
+                13.266592013696544,
+                0
+              ],
+              [
+                80.3289899148511,
+                13.26660624073854,
+                0
+              ],
+              [
+                80.32898388574849,
+                13.266578114281536,
+                0
+              ],
+              [
+                80.32888792869335,
+                13.266612551162746,
+                0
+              ],
+              [
+                80.32891519199886,
+                13.266690374856344,
+                0
+              ],
+              [
+                80.32895613337323,
+                13.26667852012205,
+                0
+              ],
+              [
+                80.3289725032281,
+                13.266721027933297,
+                0
+              ],
+              [
+                80.3292206198601,
+                13.266642135197399,
+                0
+              ]
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "fid": 61,
+        "Bldg_Id": " ",
+        "Name": "SS1",
+        "Floor": "G",
+        "Cons_Year": 2016,
+        "Owner": "KPL",
+        "Ele_Supply": "Yes",
+        "Water_Supp": "Yes",
+        "Fire_Safet": "Yes",
+        "Secu_Sys": "Yes",
+        "Incharge": "DGM C",
+        "Remarks": " ",
+        "Matrial": "RCC",
+        "App_Requir": "NA",
+        "Area_In_Sq": 600,
+        "Rain_Water": " ",
+        "Drainage_N": " ",
+        "Lighting_A": " ",
+        "Use_Purpos": "Sub Station",
+        "Status": "Comp",
+        "Occupancy": "Full",
+        "Cust_Bound": "Inside",
+        "Link": " ",
+        "Shape_Length": 46.464984501722626,
+        "Shape_Area": 124.10894363762466
+      },
+      "geometry": {
+        "type": "MultiPolygon",
+        "coordinates": [
+          [
+            [
+              [
+                80.32973756198675,
+                13.265281358982689,
+                0
+              ],
+              [
+                80.32966460033795,
+                13.26530547285018,
+                0
+              ],
+              [
+                80.32970740537371,
+                13.265432984104915,
+                0
+              ],
+              [
+                80.32978044516202,
+                13.26541001152942,
+                0
+              ],
+              [
+                80.32973756198675,
+                13.265281358982689,
+                0
+              ]
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "fid": 62,
+        "Bldg_Id": " ",
+        "Name": "Drives Rest Room & Recreation Hall",
+        "Floor": "G",
+        "Cons_Year": 1999,
+        "Owner": "KPL",
+        "Ele_Supply": "Yes",
+        "Water_Supp": "Yes",
+        "Fire_Safet": "No",
+        "Secu_Sys": "No",
+        "Incharge": "DGM C",
+        "Remarks": " ",
+        "Matrial": "RCC",
+        "App_Requir": "NA",
+        "Area_In_Sq": 74,
+        "Rain_Water": " ",
+        "Drainage_N": " ",
+        "Lighting_A": " ",
+        "Use_Purpos": "Office",
+        "Status": "Comp",
+        "Occupancy": "Full",
+        "Cust_Bound": "Inside",
+        "Link": " ",
+        "Shape_Length": 36.54253144549067,
+        "Shape_Area": 73.5473321077496
+      },
+      "geometry": {
+        "type": "MultiPolygon",
+        "coordinates": [
+          [
+            [
+              [
+                80.32989668687334,
+                13.265854199370908,
+                0
+              ],
+              [
+                80.3299140483398,
+                13.2659071179516,
+                0
+              ],
+              [
+                80.33002160541268,
+                13.265872712057861,
+                0
+              ],
+              [
+                80.33000556604235,
+                13.265822398334358,
+                0
+              ],
+              [
+                80.32989668687334,
+                13.265854199370908,
+                0
+              ]
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "fid": 63,
+        "Bldg_Id": " ",
+        "Name": "Civil Store Room",
+        "Floor": "G",
+        "Cons_Year": 1999,
+        "Owner": "KPL",
+        "Ele_Supply": "Yes",
+        "Water_Supp": "No",
+        "Fire_Safet": "No",
+        "Secu_Sys": "No",
+        "Incharge": "DGM C",
+        "Remarks": " ",
+        "Matrial": "RCC",
+        "App_Requir": "NA",
+        "Area_In_Sq": 84,
+        "Rain_Water": " ",
+        "Drainage_N": " ",
+        "Lighting_A": " ",
+        "Use_Purpos": "Office",
+        "Status": "Comp",
+        "Occupancy": "Full",
+        "Cust_Bound": "Inside",
+        "Link": " ",
+        "Shape_Length": 38.320124770055,
+        "Shape_Area": 84.17704089613893
+      },
+      "geometry": {
+        "type": "MultiPolygon",
+        "coordinates": [
+          [
+            [
+              [
+                80.32998649361286,
+                13.265762570810558,
+                0
+              ],
+              [
+                80.32987771605661,
+                13.265796375808629,
+                0
+              ],
+              [
+                80.32989668687334,
+                13.265854199370908,
+                0
+              ],
+              [
+                80.33000556604235,
+                13.265822398334358,
+                0
+              ],
+              [
+                80.32998649361286,
+                13.265762570810558,
+                0
+              ]
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "fid": 64,
+        "Bldg_Id": " ",
+        "Name": "RO Plant",
+        "Floor": "Roof",
+        "Cons_Year": 1999,
+        "Owner": "KPL",
+        "Ele_Supply": "Yes",
+        "Water_Supp": "Yes",
+        "Fire_Safet": "Yes",
+        "Secu_Sys": "Yes",
+        "Incharge": "DGM C",
+        "Remarks": "200LPH",
+        "Matrial": "Structural Shed",
+        "App_Requir": "NA",
+        "Area_In_Sq": 14,
+        "Rain_Water": " ",
+        "Drainage_N": " ",
+        "Lighting_A": " ",
+        "Use_Purpos": "Office",
+        "Status": "Comp",
+        "Occupancy": "Full",
+        "Cust_Bound": "Inside",
+        "Link": " ",
+        "Shape_Length": 15.196019798020274,
+        "Shape_Area": 14.419476898879077
+      },
+      "geometry": {
+        "type": "MultiPolygon",
+        "coordinates": [
+          [
+            [
+              [
+                80.32959509644422,
+                13.265627999888808,
+                0
+              ],
+              [
+                80.32956139147136,
+                13.26563780587031,
+                0
+              ],
+              [
+                80.32957208172918,
+                13.265670832667919,
+                0
+              ],
+              [
+                80.32960230206962,
+                13.265660676638042,
+                0
+              ],
+              [
+                80.32960596724891,
+                13.265659482791085,
+                0
+              ],
+              [
+                80.32959509644422,
+                13.265627999888808,
+                0
+              ]
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "fid": 65,
+        "Bldg_Id": " ",
+        "Name": "STP Plant",
+        "Floor": "G",
+        "Cons_Year": 2022,
+        "Owner": "KPL",
+        "Ele_Supply": "Yes",
+        "Water_Supp": "No",
+        "Fire_Safet": "No",
+        "Secu_Sys": "No",
+        "Incharge": "DGM C",
+        "Remarks": " ",
+        "Matrial": "RCC",
+        "App_Requir": "NA",
+        "Area_In_Sq": 8,
+        "Rain_Water": "No",
+        "Drainage_N": "No",
+        "Lighting_A": "No",
+        "Use_Purpos": "STP",
+        "Status": "Comp",
+        "Occupancy": "Full",
+        "Cust_Bound": "Inside",
+        "Link": " ",
+        "Shape_Length": 11.146253047482215,
+        "Shape_Area": 7.744804180204473
+      },
+      "geometry": {
+        "type": "MultiPolygon",
+        "coordinates": [
+          [
+            [
+              [
+                80.33023433644088,
+                13.266157674654174,
+                0
+              ],
+              [
+                80.33022659010884,
+                13.266132295179917,
+                0
+              ],
+              [
+                80.33020287744796,
+                13.26614012741602,
+                0
+              ],
+              [
+                80.33021160171438,
+                13.266165031140277,
+                0
+              ],
+              [
+                80.33023433644088,
+                13.266157674654174,
+                0
+              ]
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "fid": 66,
+        "Bldg_Id": " ",
+        "Name": "Sewage Treatment Plant",
+        "Floor": "G",
+        "Cons_Year": 2023,
+        "Owner": "KPL",
+        "Ele_Supply": "Yes",
+        "Water_Supp": "Yes",
+        "Fire_Safet": "No",
+        "Secu_Sys": "Yes",
+        "Incharge": " ",
+        "Remarks": "30KLD",
+        "Matrial": "RCC",
+        "App_Requir": "NA",
+        "Area_In_Sq": 16,
+        "Rain_Water": "Yes",
+        "Drainage_N": "Yes",
+        "Lighting_A": "No",
+        "Use_Purpos": "STP",
+        "Status": "Comp",
+        "Occupancy": "Full",
+        "Cust_Bound": "Inside",
+        "Link": " ",
+        "Shape_Length": 16.036628841957782,
+        "Shape_Area": 16.063935568439607
+      },
+      "geometry": {
+        "type": "MultiPolygon",
+        "coordinates": [
+          [
+            [
+              [
+                80.32975380640926,
+                13.268506269047167,
+                0
+              ],
+              [
+                80.32975280733385,
+                13.268469663615974,
+                0
+              ],
+              [
+                80.32971653894555,
+                13.268469209261418,
+                0
+              ],
+              [
+                80.32971643958935,
+                13.268505453741438,
+                0
+              ],
+              [
+                80.32975380640926,
+                13.268506269047167,
+                0
+              ]
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "fid": 67,
+        "Bldg_Id": " ",
+        "Name": "Water Softner Plant",
+        "Floor": "G",
+        "Cons_Year": 2023,
+        "Owner": "KPL",
+        "Ele_Supply": "Yes",
+        "Water_Supp": "Yes",
+        "Fire_Safet": "No",
+        "Secu_Sys": "No",
+        "Incharge": "DGM C",
+        "Remarks": "3500LPH",
+        "Matrial": "RCC",
+        "App_Requir": "NA",
+        "Area_In_Sq": 24,
+        "Rain_Water": "Yes",
+        "Drainage_N": "Yes",
+        "Lighting_A": "No",
+        "Use_Purpos": "Residential",
+        "Status": "Comp",
+        "Occupancy": "Full",
+        "Cust_Bound": "Inside",
+        "Link": " ",
+        "Shape_Length": 19.532967810337823,
+        "Shape_Area": 23.58432969521147
+      },
+      "geometry": {
+        "type": "MultiPolygon",
+        "coordinates": [
+          [
+            [
+              [
+                80.32951296554778,
+                13.26732716376803,
+                0
+              ],
+              [
+                80.32955403618361,
+                13.267327113575844,
+                0
+              ],
+              [
+                80.32955397409438,
+                13.267278381706024,
+                0
+              ],
+              [
+                80.32951425673394,
+                13.267278430033475,
+                0
+              ],
+              [
+                80.32951296554778,
+                13.26732716376803,
+                0
+              ]
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "fid": 68,
+        "Bldg_Id": " ",
+        "Name": "UG-SUMP",
+        "Floor": "UG",
+        "Cons_Year": 2023,
+        "Owner": "KPL",
+        "Ele_Supply": "No",
+        "Water_Supp": "Yes",
+        "Fire_Safet": "No",
+        "Secu_Sys": "No",
+        "Incharge": "DGM C",
+        "Remarks": "300000Ltrs",
+        "Matrial": "RCC",
+        "App_Requir": "NA",
+        "Area_In_Sq": 253,
+        "Rain_Water": "No",
+        "Drainage_N": "No",
+        "Lighting_A": "No",
+        "Use_Purpos": "Water",
+        "Status": "Comp",
+        "Occupancy": "Full",
+        "Cust_Bound": "Inside",
+        "Link": " ",
+        "Shape_Length": 70.32858019069543,
+        "Shape_Area": 253.42823410466116
+      },
+      "geometry": {
+        "type": "MultiPolygon",
+        "coordinates": [
+          [
+            [
+              [
+                80.32989308175408,
+                13.26734807569783,
+                0
+              ],
+              [
+                80.3298925985944,
+                13.267256925017655,
+                0
+              ],
+              [
+                80.32966106807315,
+                13.267254881205844,
+                0
+              ],
+              [
+                80.32966228119291,
+                13.267346750830852,
+                0
+              ],
+              [
+                80.32989308175408,
+                13.26734807569783,
+                0
+              ]
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "fid": 88,
+        "Bldg_Id": " ",
+        "Name": "Sub-sectioning post",
+        "Floor": "G",
+        "Cons_Year": 2018,
+        "Owner": "KPL",
+        "Ele_Supply": "Yes",
+        "Water_Supp": "No",
+        "Fire_Safet": "Yes",
+        "Secu_Sys": "No",
+        "Incharge": "Railway",
+        "Remarks": " ",
+        "Matrial": "RCC",
+        "App_Requir": "NA",
+        "Area_In_Sq": 0,
+        "Rain_Water": "No",
+        "Drainage_N": "No",
+        "Lighting_A": "No",
+        "Use_Purpos": "OHESwitching Station",
+        "Status": "Comp",
+        "Occupancy": "Full",
+        "Cust_Bound": "Inside",
+        "Link": " ",
+        "Shape_Length": 21.170290797511186,
+        "Shape_Area": 27.390397368399423
+      },
+      "geometry": {
+        "type": "MultiPolygon",
+        "coordinates": [
+          [
+            [
+              [
+                80.32994054982072,
+                13.264816322319312,
+                0
+              ],
+              [
+                80.3299510372037,
+                13.264777174629067,
+                0
+              ],
+              [
+                80.32989612369856,
+                13.264762975436366,
+                0
+              ],
+              [
+                80.32988685508813,
+                13.264803023291762,
+                0
+              ],
+              [
+                80.32994054982072,
+                13.264816322319312,
+                0
+              ]
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "fid": 123,
+        "Bldg_Id": " ",
+        "Name": "New Gate Complex",
+        "Floor": "G",
+        "Cons_Year": 2019,
+        "Owner": "KPL",
+        "Ele_Supply": "Yes",
+        "Water_Supp": "Yes",
+        "Fire_Safet": "Yes",
+        "Secu_Sys": "Yes",
+        "Incharge": "DGM C",
+        "Remarks": " ",
+        "Matrial": "RCC",
+        "App_Requir": "NA",
+        "Area_In_Sq": 604,
+        "Rain_Water": "Yes",
+        "Drainage_N": "Yes",
+        "Lighting_A": "No",
+        "Use_Purpos": "Security",
+        "Status": "Comp",
+        "Occupancy": "Full",
+        "Cust_Bound": "Inside",
+        "Link": " ",
+        "Shape_Length": 162.92693930795514,
+        "Shape_Area": 331.6734683773109
+      },
+      "geometry": {
+        "type": "MultiPolygon",
+        "coordinates": [
+          [
+            [
+              [
+                80.33209409762219,
+                13.264179480903374,
+                0
+              ],
+              [
+                80.33200799943666,
+                13.264205511405239,
+                0
+              ],
+              [
+                80.33203025960799,
+                13.264272127733761,
+                0
+              ],
+              [
+                80.33211511240233,
+                13.264245482724888,
+                0
+              ],
+              [
+                80.33209409762219,
+                13.264179480903374,
+                0
+              ]
+            ]
+          ],
+          [
+            [
+              [
+                80.33185950963158,
+                13.264251530214922,
+                0
+              ],
+              [
+                80.33177714930828,
+                13.264278792004317,
+                0
+              ],
+              [
+                80.33180004084029,
+                13.264342357433428,
+                0
+              ],
+              [
+                80.33188115243618,
+                13.264315701794148,
+                0
+              ],
+              [
+                80.33185950963158,
+                13.264251530214922,
+                0
+              ]
+            ]
+          ],
+          [
+            [
+              [
+                80.33198597471564,
+                13.264281171214225,
+                0
+              ],
+              [
+                80.33192544901192,
+                13.264302384220123,
+                0
+              ],
+              [
+                80.33194276512202,
+                13.264353111693648,
+                0
+              ],
+              [
+                80.33200266442385,
+                13.2643331177098,
+                0
+              ],
+              [
+                80.33198597471564,
+                13.264281171214225,
+                0
+              ]
+            ]
+          ],
+          [
+            [
+              [
+                80.33212994605489,
+                13.26429192954051,
+                0
+              ],
+              [
+                80.33204446849919,
+                13.264319183250052,
+                0
+              ],
+              [
+                80.33206735343595,
+                13.2643851908792,
+                0
+              ],
+              [
+                80.33214971302456,
+                13.264358539328011,
+                0
+              ],
+              [
+                80.33212994605489,
+                13.26429192954051,
+                0
+              ]
+            ]
+          ],
+          [
+            [
+              [
+                80.33189722571491,
+                13.264365204441843,
+                0
+              ],
+              [
+                80.33181237786017,
+                13.264390018387502,
+                0
+              ],
+              [
+                80.3318365114917,
+                13.264455418069875,
+                0
+              ],
+              [
+                80.33191823878506,
+                13.26443181751017,
+                0
+              ],
+              [
+                80.33189722571491,
+                13.264365204441843,
+                0
+              ]
+            ]
+          ]
+        ]
+      }
+    }
+  ]
+}

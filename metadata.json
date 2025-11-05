@@ -1,0 +1,5 @@
+{
+  "name": "Asset Feature Dashboard",
+  "description": "Upload, visualize, and manage multiple GeoJSON layers on an interactive map. Customize layer styles and inspect feature properties on the fly.",
+  "requestFramePermissions": []
+}

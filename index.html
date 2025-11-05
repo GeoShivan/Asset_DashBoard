@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>GeoAsset Dashboard</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+    <script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#3b82f6",
+                        "background-dark": "#0f172a",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                },
+            },
+        }
+    </script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+    <style>
+        body {
+            --checkbox-tick-svg: url('data:image/svg+xml,%3csvg viewBox=%270 0 16 16%27 fill=%27rgb(255, 255, 255)%27 xmlns=%27http://www.w3.org/2000/svg%27%3e%3cpath d=%27M12.207 4.793a1 1 0 010 1.414l-5 5a1 1 0 01-1.414 0l-2-2a1 1 0 011.414-1.414L6.5 9.086l4.293-4.293a1 1 0 011.414 0z%27/%3e%3c/svg%3e');
+            font-family: 'Inter', sans-serif;
+        }
+        #root, body {
+            height: 100vh;
+            width: 100vw;
+            overflow: hidden;
+        }
+        .leaflet-container {
+            height: 100%;
+            width: 100%;
+            background-color: #0f172a;
+        }
+        .leaflet-control-zoom {
+            border: none !important;
+            
+        }
+        .leaflet-control-zoom-in, .leaflet-control-zoom-out {
+            background-color: rgb(15 23 42 / 0.8) !important; /* slate-900/80 */
+            color: #e2e8f0 !important; /* slate-200 */
+            border: none !important;
+            backdrop-filter: blur(4px);
+        }
+         .leaflet-control-zoom-in {
+            border-top-left-radius: 0.5rem !important;
+            border-top-right-radius: 0.5rem !important;
+        }
+        .leaflet-control-zoom-out {
+            border-bottom-left-radius: 0.5rem !important;
+            border-bottom-right-radius: 0.5rem !important;
+        }
+        .leaflet-control-zoom-in:hover, .leaflet-control-zoom-out:hover {
+            background-color: rgb(30 41 59 / 0.8) !important; /* slate-800/80 */
+        }
+        .leaflet-control-attribution {
+            display: none;
+        }
+        .leaflet-bar a.leaflet-disabled {
+            background-color: rgb(15 23 42 / 0.6) !important;
+            color: #475569 !important;
+        }
+    </style>
+     <script type="importmap">
+    {
+      "imports": {
+        "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.0/",
+        "@google/genai": "https://aistudiocdn.com/@google/genai@^1.28.0",
+        "react/": "https://aistudiocdn.com/react@^19.2.0/",
+        "react": "https://aistudiocdn.com/react@^19.2.0",
+        "leaflet": "https://aistudiocdn.com/leaflet@^1.9.4",
+        "react-leaflet": "https://aistudiocdn.com/react-leaflet@^5.0.0",
+        "geojson": "https://aistudiocdn.com/geojson@^0.5.0",
+        "leaflet/": "https://aistudiocdn.com/leaflet@^1.9.4/",
+        "@turf/turf": "https://aistudiocdn.com/@turf/turf@^7.2.0"
+      }
+    }
+    </script>
+</head>
+<body class="bg-background-dark font-display text-gray-200">
+<div id="root"></div>
+<script type="module" src="/index.tsx"></script>
+</body>
+</html>
