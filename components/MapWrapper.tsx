@@ -3,7 +3,8 @@ import { MapContainer, TileLayer, GeoJSON, useMap } from 'react-leaflet';
 import L from 'leaflet';
 import type { GeoJsonLayer } from '../types';
 import type { Feature } from 'geojson';
-import { getFeatureDisplayName } from '../utils';
+import { area } from '@turf/turf';
+import { getFeatureDisplayName, getFeatureStatus } from '../utils';
 
 delete (L.Icon.Default.prototype as any)._getIconUrl;
 L.Icon.Default.mergeOptions({
@@ -40,6 +41,7 @@ interface GeoJsonRendererProps {
 }
 
 const GeoJsonRenderer: React.FC<GeoJsonRendererProps> = ({ layers, onFeatureSelect, selectedFeature }) => {
+  const map = useMap();
   const selectedFeatureId = useMemo(() => {
     if (!selectedFeature) return null;
     return getFeatureDisplayName(selectedFeature.feature) + selectedFeature.layer.id;
@@ -51,7 +53,62 @@ const GeoJsonRenderer: React.FC<GeoJsonRendererProps> = ({ layers, onFeatureSele
         if (!layer.isVisible) return null;
 
         const onEachFeature = (feature: Feature, mapLayer: L.Layer) => {
-          mapLayer.on({ click: () => onFeatureSelect(layer, feature) });
+           mapLayer.on({ 
+            click: (e: L.LeafletMouseEvent) => {
+              const displayName = getFeatureDisplayName(feature);
+              const { status, color: statusColorClass } = getFeatureStatus(feature);
+              
+              let featureArea = 0;
+              try {
+                  if (feature.geometry && (feature.geometry.type === "Polygon" || feature.geometry.type === "MultiPolygon")) {
+                      featureArea = area(feature);
+                  }
+              } catch (err) { console.warn("Could not calculate area:", err) }
+              const formattedArea = featureArea > 0 ? `${featureArea.toLocaleString(undefined, { maximumFractionDigits: 2 })} sq. m` : 'N/A';
+
+              const container = L.DomUtil.create('div', 'font-display text-gray-200');
+              
+              const header = L.DomUtil.create('h3', 'text-lg font-bold text-white mb-2 border-b border-slate-700 pb-2', container);
+              header.innerText = displayName;
+
+              const detailsContainerWrapper = L.DomUtil.create('div', 'space-y-2 text-sm max-h-64 overflow-y-auto pr-2 -mr-2', container);
+              
+              const createDetailRow = (label: string, value: string, valueClass = 'text-gray-200') => {
+                const row = L.DomUtil.create('div', 'flex justify-between items-start gap-4', detailsContainerWrapper);
+                const labelEl = L.DomUtil.create('span', 'font-medium text-slate-400 shrink-0', row);
+                labelEl.innerText = label;
+                const valueEl = L.DomUtil.create('span', `font-semibold ${valueClass} text-right break-words`, row);
+                valueEl.innerText = value;
+              };
+              
+              createDetailRow('Status', status, statusColorClass);
+              createDetailRow('Asset Type', layer.name);
+              createDetailRow('Area', formattedArea);
+              
+              if (feature.properties) {
+                const separator = L.DomUtil.create('div', 'border-t border-slate-700 my-2', detailsContainerWrapper);
+                const propertiesToShow = Object.entries(feature.properties)
+                    .filter(([key]) => !['Name', 'name', 'Status', 'fid', 'Shape_Length', 'Shape_Area', 'Bldg_Id', 'Link'].includes(key))
+                    .sort(([keyA], [keyB]) => keyA.localeCompare(keyB));
+
+                for (const [key, value] of propertiesToShow) {
+                    if (value !== null && value !== undefined && String(value).trim() !== "" && String(value).trim() !== " ") {
+                        createDetailRow(key, String(value));
+                    }
+                }
+              }
+
+              L.popup({
+                className: 'custom-leaflet-popup',
+                minWidth: 300,
+                maxWidth: 350,
+              })
+              .setLatLng(e.latlng)
+              .setContent(container)
+              .openOn(map);
+            }
+          });
+
           const displayName = getFeatureDisplayName(feature);
           mapLayer.bindTooltip(displayName, {
             permanent: false,

@@ -152,14 +152,15 @@ const App: React.FC = () => {
     };
 
     const assetList = useMemo(() => {
-        let list = layers
-            .filter(layer => layerVisibility[layer.name])
-            .flatMap(layer => layer.data.features.map(feature => ({
-                layerId: layer.id,
-                feature,
-                layerName: layer.name,
-                layerColor: layer.color
-            })));
+        const activeLayer = layers.find(l => l.name === activeLayerTab);
+        if (!activeLayer) return [];
+
+        let list = activeLayer.data.features.map(feature => ({
+            layerId: activeLayer.id,
+            feature,
+            layerName: activeLayer.name,
+            layerColor: activeLayer.color
+        }));
         
         // Apply property search first
         if (propertySearchKey.trim() && propertySearchValue.trim()) {
@@ -191,7 +192,7 @@ const App: React.FC = () => {
         }
 
         return list;
-    }, [layers, layerVisibility, assetSearchTerm, propertySearchKey, propertySearchValue]);
+    }, [layers, activeLayerTab, assetSearchTerm, propertySearchKey, propertySearchValue]);
     
     const displayedAsset = useMemo(() => {
         if (!selectedAsset) return null;
