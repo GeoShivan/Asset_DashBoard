@@ -12,6 +12,27 @@ L.Icon.Default.mergeOptions({
   shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
 });
 
+const BASEMAPS = {
+    satellite: {
+        name: 'Satellite',
+        url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+        attribution: 'Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community',
+        icon: 'satellite_alt'
+    },
+    street: {
+        name: 'Street',
+        url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+        icon: 'map'
+    },
+    topo: {
+        name: 'Topographic',
+        url: 'https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png',
+        attribution: 'Map data: &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, <a href="http://viewfinderpanoramas.org">SRTM</a> | Map style: &copy; <a href="https://opentopomap.org">OpenTopoMap</a> (<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC-BY-SA</a>)',
+        icon: 'terrain'
+    }
+};
+
 interface GeoJsonRendererProps {
   layers: GeoJsonLayer[];
   onFeatureSelect: (layer: GeoJsonLayer, feature: Feature) => void;
@@ -103,6 +124,50 @@ const MapControls: React.FC<{map: L.Map | null}> = ({ map }) => {
     )
 }
 
+const BasemapControl: React.FC<{ onBasemapChange: (key: string) => void, activeBasemapKey: string }> = ({ onBasemapChange, activeBasemapKey }) => {
+    const [isOpen, setIsOpen] = useState(false);
+    const dropdownRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+                setIsOpen(false);
+            }
+        };
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => document.removeEventListener("mousedown", handleClickOutside);
+    }, []);
+
+    return (
+        <div ref={dropdownRef} className="absolute top-4 right-4 z-[1000]">
+            <button
+                onClick={() => setIsOpen(!isOpen)}
+                className="flex size-10 items-center justify-center rounded-lg bg-slate-900/80 backdrop-blur-sm shadow-md text-gray-200 hover:bg-slate-800/80 transition-colors"
+                title="Change Basemap"
+            >
+                <span className="material-symbols-outlined" style={{ fontSize: '24px' }}>layers</span>
+            </button>
+            {isOpen && (
+                <div className="absolute top-full right-0 mt-2 w-48 rounded-lg bg-slate-900/80 backdrop-blur-sm shadow-lg border border-slate-700 p-2">
+                    {Object.entries(BASEMAPS).map(([key, basemap]) => (
+                        <button
+                            key={key}
+                            onClick={() => {
+                                onBasemapChange(key);
+                                setIsOpen(false);
+                            }}
+                            className={`w-full flex items-center gap-3 p-2 rounded-md text-left text-sm transition-colors ${activeBasemapKey === key ? 'bg-primary/20 text-white' : 'text-slate-300 hover:bg-slate-700/50'}`}
+                        >
+                            <span className="material-symbols-outlined" style={{ fontSize: '20px' }}>{basemap.icon}</span>
+                            <span>{basemap.name}</span>
+                        </button>
+                    ))}
+                </div>
+            )}
+        </div>
+    );
+};
+
 interface MapWrapperProps {
   center: [number, number];
   zoom: number;
@@ -113,20 +178,24 @@ interface MapWrapperProps {
 }
 
 const MapWrapper: React.FC<MapWrapperProps> = ({ center, zoom, layers, boundsToFit, onFeatureSelect, selectedFeature }) => {
-  // Fix: Add useState to component state.
   const [map, setMap] = useState<L.Map | null>(null);
+  const [activeBasemapKey, setActiveBasemapKey] = useState<string>('satellite');
+
+  const activeBasemap = BASEMAPS[activeBasemapKey as keyof typeof BASEMAPS];
   
   return (
     <div className="relative flex-1 h-full rounded-xl overflow-hidden shadow-sm">
       <MapContainer center={center} zoom={zoom} scrollWheelZoom={true} zoomControl={false} ref={setMap}>
         <TileLayer
-          attribution='Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
-          url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
+          key={activeBasemapKey}
+          attribution={activeBasemap.attribution}
+          url={activeBasemap.url}
         />
         <MapUpdater boundsToFit={boundsToFit} />
         <GeoJsonRenderer layers={layers} onFeatureSelect={onFeatureSelect} selectedFeature={selectedFeature} />
       </MapContainer>
         <MapControls map={map} />
+        <BasemapControl activeBasemapKey={activeBasemapKey} onBasemapChange={setActiveBasemapKey} />
     </div>
   );
 };

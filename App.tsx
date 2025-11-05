@@ -11,7 +11,7 @@ import type { GeoJsonLayer } from './types';
 import { getFeatureDisplayName } from './utils';
 
 const Header: React.FC = () => (
-    <header className="flex shrink-0 items-center justify-between whitespace-nowrap border-b border-slate-800 bg-slate-900 px-6 py-3 z-10">
+    <header className="flex shrink-0 items-center justify-between whitespace-nowrap border-b border-slate-800 bg-slate-900 px-6 py-3 z-[1200]">
         <div className="flex items-center gap-8">
             <div className="flex items-center gap-3 text-white">
                 <div className="size-8 text-primary">
@@ -140,6 +140,17 @@ const App: React.FC = () => {
         setAttributeTableLayerId(null);
     };
 
+    const handleCategoryFilter = (layerId: string, key: string, value: string) => {
+        const layer = layers.find(l => l.id === layerId);
+        if (layer) {
+            setActiveLayerTab(layer.name);
+        }
+        setPropertySearchKey(key);
+        setPropertySearchValue(value);
+        setSidebarView('assets');
+        setAssetSearchTerm('');
+    };
+
     const assetList = useMemo(() => {
         let list = layers
             .filter(layer => layerVisibility[layer.name])
@@ -208,15 +219,18 @@ const App: React.FC = () => {
                     onVisibilityChange={handleVisibilityChange}
                     onZoomToLayer={handleZoomToLayer}
                     onOpenAttributeTable={handleOpenAttributeTable}
+                    onCategoryFilter={handleCategoryFilter}
                     assets={assetList}
                     selectedAsset={selectedAsset}
                     onAssetSelect={handleAssetSelect}
                     assetSearchTerm={assetSearchTerm}
                     onAssetSearchChange={setAssetSearchTerm}
                     propertySearchKey={propertySearchKey}
-                    onPropertySearchKeyChange={setPropertySearchKey}
                     propertySearchValue={propertySearchValue}
-                    onPropertySearchValueChange={setPropertySearchValue}
+                    onPropertyFilterClear={() => {
+                        setPropertySearchKey('');
+                        setPropertySearchValue('');
+                    }}
                     sidebarView={sidebarView}
                     setSidebarView={setSidebarView}
                 />
@@ -230,13 +244,11 @@ const App: React.FC = () => {
                         selectedFeature={displayedAsset}
                     />
                 </main>
-                {displayedAsset && (
-                    <AssetDetailsPanel
-                        layer={displayedAsset.layer}
-                        feature={displayedAsset.feature}
-                        onClose={() => setSelectedAsset(null)}
-                    />
-                )}
+                <AssetDetailsPanel
+                    layer={displayedAsset?.layer}
+                    feature={displayedAsset?.feature}
+                    onClose={() => setSelectedAsset(null)}
+                />
             </div>
             {layerForAttributeTable && (
                 <AttributeTable

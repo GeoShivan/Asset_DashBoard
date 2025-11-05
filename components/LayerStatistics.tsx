@@ -1,10 +1,13 @@
 import React, { useMemo } from 'react';
 import { area } from '@turf/turf';
 import type { GeoJsonLayer } from '../types';
+import { Feature } from 'geojson';
 
 interface LayerStatisticsProps {
   layer: GeoJsonLayer;
   onClose: () => void;
+  onCategoryFilter: (propertyKey: string, propertyValue: string) => void;
+  onFeatureSelect: (feature: Feature) => void;
 }
 
 type CategoricalStats = {
@@ -19,7 +22,7 @@ const formatArea = (meters: number): string => {
   return `${meters.toLocaleString(undefined, { maximumFractionDigits: 0 })} m²`;
 };
 
-const LayerStatistics: React.FC<LayerStatisticsProps> = ({ layer, onClose }) => {
+const LayerStatistics: React.FC<LayerStatisticsProps> = ({ layer, onClose, onCategoryFilter, onFeatureSelect }) => {
   const { categoricalStats, areaStats } = useMemo(() => {
     const categorical: { [key: string]: CategoricalStats } = {};
 
@@ -35,7 +38,7 @@ const LayerStatistics: React.FC<LayerStatisticsProps> = ({ layer, onClose }) => 
         }
         totalArea += featureArea;
         const featureName = feature.properties?.Name || feature.properties?.name || `Feature ${feature.properties?.fid || index + 1}`;
-        return { name: featureName, area: featureArea };
+        return { name: featureName, area: featureArea, feature };
     }).filter(f => f.area > 0).sort((a, b) => b.area - a.area);
 
     for (const feature of layer.data.features) {
@@ -99,17 +102,21 @@ const LayerStatistics: React.FC<LayerStatisticsProps> = ({ layer, onClose }) => 
                     <p className="text-white font-bold text-2xl tracking-tight">{formatArea(areaStats.totalArea)}</p>
                 </div>
                  <div className="space-y-2 text-xs">
-                    {areaStats.featuresWithArea.slice(0, 15).map(({ name, area }, index) => {
+                    {areaStats.featuresWithArea.slice(0, 15).map(({ name, area, feature }, index) => {
                        const maxArea = areaStats.featuresWithArea[0]?.area || 1;
                        const percentage = Math.max(1, (area / maxArea) * 100);
                        return (
-                          <div key={`${name}-${index}`} className="grid grid-cols-6 items-center gap-2 group">
+                          <button
+                            key={`${name}-${index}`}
+                            onClick={() => onFeatureSelect(feature)}
+                            className="grid grid-cols-6 items-center gap-2 group w-full text-left p-1 rounded-md hover:bg-slate-700/50 transition-colors"
+                           >
                             <span className="col-span-2 text-slate-300 truncate" title={name}>{name}</span>
                             <div className="col-span-3 bg-slate-700 rounded-full h-2">
                                 <div className="bg-primary h-2 rounded-full transition-all duration-300 group-hover:bg-blue-400" style={{ width: `${percentage}%` }}></div>
                             </div>
                             <span className="text-slate-200 font-medium text-right tabular-nums">{formatArea(area)}</span>
-                          </div>
+                          </button>
                        )
                     })}
                     {areaStats.featuresWithArea.length > 15 && (
@@ -126,18 +133,22 @@ const LayerStatistics: React.FC<LayerStatisticsProps> = ({ layer, onClose }) => 
               {categoricalEntries.map(([key, valueCounts]) => (
                 <div key={key}>
                   <p className="font-bold text-white mb-2 text-sm truncate">{key}</p>
-                  <div className="space-y-2 text-xs">
+                  <div className="space-y-1 text-xs">
                     {Object.entries(valueCounts).slice(0, 10).map(([value, count]) => {
                        const totalCount = layer.data.features.length;
                        const percentage = Math.max(1, (count / totalCount) * 100);
                        return (
-                          <div key={value} className="grid grid-cols-5 items-center gap-2 group">
+                          <button
+                            key={value}
+                            onClick={() => onCategoryFilter(key, value)}
+                            className="grid grid-cols-5 items-center gap-2 group w-full text-left p-1 rounded-md hover:bg-slate-700/50 transition-colors"
+                          >
                             <span className="col-span-2 text-slate-300 truncate" title={value}>{value}</span>
                             <div className="col-span-2 bg-slate-700 rounded-full h-2">
                                 <div className="bg-primary h-2 rounded-full transition-all duration-300 group-hover:bg-blue-400" style={{ width: `${percentage}%` }}></div>
                             </div>
                             <span className="text-slate-200 font-medium text-right tabular-nums">{count.toLocaleString()}</span>
-                          </div>
+                          </button>
                        )
                     })}
                      {Object.keys(valueCounts).length > 10 && (

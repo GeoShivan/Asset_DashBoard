@@ -19,15 +19,15 @@ interface LeftSidebarProps {
     onVisibilityChange: (name: string, isVisible: boolean) => void;
     onZoomToLayer: (layerId: string) => void;
     onOpenAttributeTable: (layerId: string) => void;
+    onCategoryFilter: (layerId: string, key: string, value: string) => void;
     assets: Asset[];
     selectedAsset: { layerId: string; feature: Feature } | null;
     onAssetSelect: (layerId: string, feature: Feature) => void;
     assetSearchTerm: string;
     onAssetSearchChange: (term: string) => void;
     propertySearchKey: string;
-    onPropertySearchKeyChange: (key: string) => void;
     propertySearchValue: string;
-    onPropertySearchValueChange: (value: string) => void;
+    onPropertyFilterClear: () => void;
     sidebarView: 'assets' | 'statistics';
     setSidebarView: (view: 'assets' | 'statistics') => void;
 }
@@ -70,14 +70,14 @@ const AssetCard: React.FC<{ asset: Asset; isSelected: boolean; onSelect: () => v
 
 const LeftSidebar: React.FC<LeftSidebarProps> = ({ 
     layers, activeLayerTab, setActiveLayerTab, layerVisibility, onVisibilityChange, onZoomToLayer,
-    onOpenAttributeTable, assets, selectedAsset, onAssetSelect, assetSearchTerm, onAssetSearchChange,
-    propertySearchKey, onPropertySearchKeyChange, propertySearchValue, onPropertySearchValueChange,
+    onOpenAttributeTable, onCategoryFilter, assets, selectedAsset, onAssetSelect, assetSearchTerm, onAssetSearchChange,
+    propertySearchKey, propertySearchValue, onPropertyFilterClear,
     sidebarView, setSidebarView,
 }) => {
     const activeLayer = layers.find(l => l.name === activeLayerTab);
     
     return (
-        <aside className="flex w-80 shrink-0 flex-col border-r border-slate-800 bg-slate-900">
+        <aside className="flex w-80 shrink-0 flex-col border-r border-slate-800 bg-slate-900 z-10">
             <div className="p-4 space-y-6 shrink-0">
                 <div>
                     <h3 className="text-lg font-bold leading-tight tracking-[-0.015em] px-2 text-white">Layers</h3>
@@ -98,6 +98,18 @@ const LeftSidebar: React.FC<LeftSidebarProps> = ({
                                     <p className={`text-sm font-medium leading-normal`}>{layer.name}</p>
                                 </div>
                                 <div className="flex items-center">
+                                    <button
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            onVisibilityChange(layer.name, !layerVisibility[layer.name]);
+                                        }}
+                                        title={layerVisibility[layer.name] ? "Hide layer" : "Show layer"}
+                                        className={`p-1 rounded-md ${layerVisibility[layer.name] ? 'text-slate-300' : 'text-slate-600'} hover:bg-slate-700 hover:text-white transition-all`}
+                                    >
+                                        <span className="material-symbols-outlined" style={{ fontSize: '20px' }}>
+                                            {layerVisibility[layer.name] ? 'visibility' : 'visibility_off'}
+                                        </span>
+                                    </button>
                                     <button 
                                         onClick={(e) => {
                                             e.stopPropagation();
@@ -122,22 +134,6 @@ const LeftSidebar: React.FC<LeftSidebarProps> = ({
                                     </button>
                                 </div>
                             </div>
-                        ))}
-                    </div>
-                </div>
-                <div>
-                    <h3 className="text-lg font-bold leading-tight tracking-[-0.015em] px-2 text-white">Layer Visibility</h3>
-                    <div className="px-2 mt-3">
-                        {layers.map(layer => (
-                             <label key={layer.id} className="flex gap-x-3 py-2 flex-row items-center">
-                                <input 
-                                    checked={layerVisibility[layer.name] ?? false} 
-                                    onChange={(e) => onVisibilityChange(layer.name, e.target.checked)}
-                                    className="h-5 w-5 rounded border-slate-600 border-2 bg-transparent text-primary checked:bg-primary checked:border-primary checked:bg-[image:var(--checkbox-tick-svg)] focus:ring-0 focus:ring-offset-0 focus:border-slate-600 focus:outline-none" 
-                                    type="checkbox"
-                                />
-                                <p className="text-sm font-normal leading-normal">{layer.name}</p>
-                            </label>
                         ))}
                     </div>
                 </div>
@@ -172,24 +168,17 @@ const LeftSidebar: React.FC<LeftSidebarProps> = ({
                                     />
                                 </div>
                             </label>
-                            
-                            <div>
-                                <p className="text-xs text-slate-400 mb-1.5">Filter by property</p>
-                                <div className="flex gap-2">
-                                    <input 
-                                        className="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-lg text-white focus:outline-0 focus:ring-2 focus:ring-primary/50 border-none bg-slate-800 h-9 placeholder:text-slate-400 px-3 text-sm font-normal leading-normal" 
-                                        placeholder="Property Name"
-                                        value={propertySearchKey}
-                                        onChange={(e) => onPropertySearchKeyChange(e.target.value)}
-                                    />
-                                    <input 
-                                        className="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-lg text-white focus:outline-0 focus:ring-2 focus:ring-primary/50 border-none bg-slate-800 h-9 placeholder:text-slate-400 px-3 text-sm font-normal leading-normal" 
-                                        placeholder="Value"
-                                        value={propertySearchValue}
-                                        onChange={(e) => onPropertySearchValueChange(e.target.value)}
-                                    />
+
+                             {propertySearchKey && propertySearchValue && (
+                                <div className="flex items-center justify-between text-xs bg-primary/10 text-primary-300 p-2 rounded-md">
+                                    <span className="font-medium truncate">
+                                        Filter: {propertySearchKey} = "{propertySearchValue}"
+                                    </span>
+                                    <button onClick={onPropertyFilterClear} className="p-1 rounded-full hover:bg-primary/20">
+                                         <span className="material-symbols-outlined" style={{ fontSize: '16px' }}>close</span>
+                                    </button>
                                 </div>
-                            </div>
+                            )}
                         </div>
                         <div className="space-y-2 px-2 flex-1 overflow-y-auto -mr-4 pr-3 pt-2 pb-2">
                            {assets.map((asset, index) => (
@@ -205,7 +194,15 @@ const LeftSidebar: React.FC<LeftSidebarProps> = ({
                 )}
                  {sidebarView === 'statistics' && activeLayer && (
                     <div className="p-4 h-full">
-                        <LayerStatistics layer={activeLayer} onClose={() => setSidebarView('assets')} />
+                        <LayerStatistics 
+                            layer={activeLayer} 
+                            onClose={() => setSidebarView('assets')} 
+                            onCategoryFilter={(key, value) => onCategoryFilter(activeLayer.id, key, value)}
+                            onFeatureSelect={(feature) => {
+                                onAssetSelect(activeLayer.id, feature);
+                                setSidebarView('assets');
+                            }}
+                        />
                     </div>
                 )}
             </div>
