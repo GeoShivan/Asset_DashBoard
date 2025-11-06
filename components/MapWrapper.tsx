@@ -246,6 +246,15 @@ const MeasureToolIcon = () => (
         <path d="M17 6L20 8L17 10" stroke="#111827" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
     </svg>
 );
+const CalculateIcon = () => (
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="text-cyan-500 group-hover:text-cyan-600 transition-colors group-disabled:text-slate-400">
+        <path d="M17 3H7C5.89543 3 5 3.89543 5 5V19C5 20.1046 5.89543 21 7 21H17C18.1046 21 19 20.1046 19 19V5C19 3.89543 18.1046 3 17 3Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+        <path d="M9 8H15" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+        <path d="M9 12H12" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+        <path d="M9 16H15" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+        <path d="M12 16V12" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+    </svg>
+);
 // --- End Icons ---
 
 
@@ -790,9 +799,10 @@ interface MapWrapperProps {
   selectedAssets: { layer: GeoJsonLayer; feature: Feature }[];
   onClearSelection: () => void;
   onAreaSelect: (assets: { layerId: string; feature: Feature }[], isCtrlPressed: boolean) => void;
+  onCalculateArea: () => void;
 }
 
-const MapWrapper: React.FC<MapWrapperProps> = ({ center, zoom, layers, boundsToFit, onFeatureSelect, selectedAssets, onClearSelection, onAreaSelect }) => {
+const MapWrapper: React.FC<MapWrapperProps> = ({ center, zoom, layers, boundsToFit, onFeatureSelect, selectedAssets, onClearSelection, onAreaSelect, onCalculateArea }) => {
   const [map, setMap] = useState<L.Map | null>(null);
   const [activeBasemapKey, setActiveBasemapKey] = useState<string>('street');
   const [measureMode, setMeasureMode] = useState<'distance' | 'area' | null>(null);
@@ -801,6 +811,10 @@ const MapWrapper: React.FC<MapWrapperProps> = ({ center, zoom, layers, boundsToF
   const [northArrowIcon, setNorthArrowIcon] = useState<string>(NORTH_ARROW_SVGS[0].name);
   const [isZooming, setIsZooming] = useState(false);
   const [isSelecting, setIsSelecting] = useState(false);
+
+  const selectedPolygons = useMemo(() => selectedAssets.filter(
+    a => a.feature.geometry?.type === 'Polygon' || a.feature.geometry?.type === 'MultiPolygon'
+  ), [selectedAssets]);
 
   const toolStateRef = useRef({
       zoomRect: null as L.Rectangle | null,
@@ -981,6 +995,14 @@ const MapWrapper: React.FC<MapWrapperProps> = ({ center, zoom, layers, boundsToF
                 className={`${controlButtonClasses} ${isSelecting ? '!bg-purple-100 !ring-purple-400' : ''}`}
             >
                 <SelectFeaturesIcon />
+            </button>
+             <button
+                onClick={onCalculateArea}
+                disabled={selectedPolygons.length === 0}
+                title="Calculate Area of Selected"
+                className={`group ${controlButtonClasses} disabled:opacity-50 disabled:cursor-not-allowed`}
+            >
+                <CalculateIcon />
             </button>
             <BasemapControl activeBasemapKey={activeBasemapKey} onBasemapChange={setActiveBasemapKey} />
         </div>

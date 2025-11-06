@@ -24,7 +24,7 @@ const Highlight: React.FC<{ text: string; highlight: string }> = ({ text, highli
     <>
       {parts.map((part, i) =>
         part.toLowerCase() === highlight.toLowerCase() ? (
-          <mark key={i} className="bg-yellow-200 text-slate-900 px-0.5 py-0 rounded-sm">
+          <mark key={i} className="bg-amber-200 text-amber-900 px-1 py-0.5 rounded">
             {part}
           </mark>
         ) : (
@@ -41,7 +41,7 @@ const ValueDisplay: React.FC<{ value: any; searchTerm: string }> = ({ value, sea
     }
     const lowerValue = String(value).toLowerCase();
     if (typeof value === 'number') {
-        return <span className="text-sky-600 font-mono"><Highlight text={value.toLocaleString()} highlight={searchTerm} /></span>;
+        return <span className="text-sky-700 font-mono"><Highlight text={value.toLocaleString()} highlight={searchTerm} /></span>;
     }
     if (lowerValue === 'yes') {
         return <span className="text-emerald-600 font-semibold"><Highlight text="Yes" highlight={searchTerm} /></span>;
@@ -50,7 +50,7 @@ const ValueDisplay: React.FC<{ value: any; searchTerm: string }> = ({ value, sea
         return <span className="text-rose-600 font-semibold"><Highlight text="No" highlight={searchTerm} /></span>;
     }
 
-    return <span className="text-slate-700"><Highlight text={String(value)} highlight={searchTerm} /></span>;
+    return <span className="text-slate-800"><Highlight text={String(value)} highlight={searchTerm} /></span>;
 };
 
 
@@ -181,10 +181,10 @@ const AttributeTable: React.FC<AttributeTableProps> = ({ layer, onClose, onFeatu
 
   const getSortIcon = (key: string) => {
     if (!sortConfig || sortConfig.key !== key) {
-        return <span className="material-symbols-outlined text-slate-400 group-hover:text-slate-600" style={{ fontSize: '16px' }}>unfold_more</span>;
+        return <span className="material-symbols-outlined text-slate-400 group-hover:text-slate-600" style={{ fontSize: '20px' }}>unfold_more</span>;
     }
     const icon = sortConfig.direction === 'ascending' ? 'expand_less' : 'expand_more';
-    return <span className="material-symbols-outlined text-indigo-500" style={{ fontSize: '16px' }}>{icon}</span>;
+    return <span className="material-symbols-outlined text-indigo-500" style={{ fontSize: '20px' }}>{icon}</span>;
   };
   
   const panelClasses = `absolute top-0 left-0 bg-white border border-slate-200 rounded-xl shadow-2xl w-[80vw] max-w-6xl h-[70vh] flex flex-col overflow-hidden z-[2000] ring-1 ring-black/5 ${!isDragging ? 'transition-transform duration-300 ease-out' : ''}`;
@@ -227,11 +227,11 @@ const AttributeTable: React.FC<AttributeTableProps> = ({ layer, onClose, onFeatu
         </header>
 
         <div className="flex-1 overflow-auto">
-            <table className="w-full text-sm text-left text-slate-800">
-                <thead className="text-xs text-slate-600 uppercase bg-slate-100 sticky top-0 z-10">
+            <table className="w-full text-base text-left text-slate-800">
+                <thead className="text-sm text-slate-700 uppercase bg-slate-100 sticky top-0 z-10">
                     <tr>
                         {headers.map((header, idx) => (
-                            <th key={header} scope="col" className={`px-4 py-3 whitespace-nowrap font-semibold border-b-2 ${sortConfig?.key === header ? 'border-indigo-400' : 'border-slate-200'} ${idx === 0 ? 'sticky left-0 bg-slate-100 border-r border-slate-200' : ''}`}>
+                            <th key={header} scope="col" className={`px-5 py-4 whitespace-nowrap font-semibold border-b-2 ${sortConfig?.key === header ? 'border-indigo-400' : 'border-slate-200'} ${idx === 0 ? 'sticky left-0 bg-slate-100 border-r border-slate-200' : ''}`}>
                                 <div className="flex items-center gap-1 cursor-pointer group" onClick={() => requestSort(header)}>
                                     {header}
                                     {getSortIcon(header)}
@@ -248,7 +248,7 @@ const AttributeTable: React.FC<AttributeTableProps> = ({ layer, onClose, onFeatu
                             onClick={() => onFeatureSelect(feature)}
                         >
                            {headers.map((header, idx) => (
-                                <td key={header} className={`px-4 py-3 whitespace-nowrap max-w-xs truncate ${idx === 0 ? 'sticky left-0 bg-white group-even:bg-slate-50/50 group-hover:bg-indigo-50 border-r border-slate-200 font-semibold text-indigo-600' : ''}`} title={String(header === 'Display Name' ? getFeatureDisplayName(feature) : (feature.properties?.[header] || ''))}>
+                                <td key={header} className={`px-5 py-4 whitespace-nowrap max-w-xs truncate ${idx === 0 ? 'sticky left-0 bg-white group-even:bg-slate-50/50 group-hover:bg-indigo-50 border-r border-slate-200 font-semibold text-indigo-700' : ''}`} title={String(header === 'Display Name' ? getFeatureDisplayName(feature) : (feature.properties?.[header] || ''))}>
                                     {header === 'Display Name' 
                                         ? <Highlight text={getFeatureDisplayName(feature)} highlight={searchTerm} />
                                         : <ValueDisplay value={feature.properties?.[header]} searchTerm={searchTerm} />
@@ -261,9 +261,9 @@ const AttributeTable: React.FC<AttributeTableProps> = ({ layer, onClose, onFeatu
             </table>
             {rows.length === 0 && (
                 <div className="text-center py-16 text-slate-500">
-                     <span className="material-symbols-outlined text-4xl text-slate-400 mb-2">table_view</span>
-                    <p className="font-semibold text-slate-700">No Matching Features</p>
-                    <p className="text-xs">Your search or filter did not return any results.</p>
+                     <span className="material-symbols-outlined text-5xl text-slate-400 mb-2">table_view</span>
+                    <p className="font-semibold text-slate-700 text-lg">No Matching Features</p>
+                    <p className="text-sm">Your search or filter did not return any results.</p>
                 </div>
             )}
         </div>

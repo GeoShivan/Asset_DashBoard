@@ -239,7 +239,6 @@ const App: React.FC = () => {
                     assets={assetList}
                     selectedAssets={selectedAssets}
                     onAssetSelect={handleAssetSelect}
-                    onCalculateArea={handleCalculateArea}
                     assetSearchTerm={assetSearchTerm}
                     onAssetSearchChange={setAssetSearchTerm}
                     propertySearchKey={propertySearchKey}
@@ -261,6 +260,7 @@ const App: React.FC = () => {
                         selectedAssets={mappedSelectedAssets as { layer: GeoJsonLayer; feature: Feature }[]}
                         onClearSelection={handleClearSelection}
                         onAreaSelect={handleAreaSelect}
+                        onCalculateArea={handleCalculateArea}
                     />
                 </main>
             </div>

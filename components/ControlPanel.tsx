@@ -20,7 +20,6 @@ interface LeftSidebarProps {
     onZoomToLayer: (layerId: string) => void;
     onOpenAttributeTable: (layerId: string) => void;
     onCategoryFilter: (layerId: string, key: string, value: string) => void;
-    onCalculateArea: () => void;
     assets: Asset[];
     selectedAssets: { layerId: string; feature: Feature }[];
     onAssetSelect: (layerId: string, feature: Feature, isCtrlPressed: boolean) => void;
@@ -71,15 +70,11 @@ const AssetCard: React.FC<{ asset: Asset; isSelected: boolean; onSelect: (e: Rea
 
 const LeftSidebar: React.FC<LeftSidebarProps> = ({ 
     layers, activeLayerTab, setActiveLayerTab, layerVisibility, onVisibilityChange, onZoomToLayer,
-    onOpenAttributeTable, onCategoryFilter, onCalculateArea, assets, selectedAssets, onAssetSelect, assetSearchTerm, onAssetSearchChange,
+    onOpenAttributeTable, onCategoryFilter, assets, selectedAssets, onAssetSelect, assetSearchTerm, onAssetSearchChange,
     propertySearchKey, propertySearchValue, onPropertyFilterClear,
     sidebarView, setSidebarView,
 }) => {
     const activeLayer = layers.find(l => l.name === activeLayerTab);
-
-    const selectedPolygons = selectedAssets.filter(
-        a => a.feature.geometry?.type === 'Polygon' || a.feature.geometry?.type === 'MultiPolygon'
-    );
     
     return (
         <aside className="flex w-80 shrink-0 flex-col border-r border-slate-200 bg-white z-10 shadow-xl">
@@ -150,14 +145,6 @@ const LeftSidebar: React.FC<LeftSidebarProps> = ({
                         <div className="px-2 flex justify-between items-center shrink-0">
                             <h3 className="text-lg font-bold leading-tight tracking-[-0.015em] text-slate-900">Assets ({assets.length})</h3>
                             <div className="flex items-center gap-2">
-                                <button
-                                    onClick={onCalculateArea}
-                                    disabled={selectedPolygons.length === 0}
-                                    title="Calculate Area of Selected"
-                                    className="p-2 rounded-lg text-white bg-gradient-to-br from-cyan-500 to-blue-500 shadow-md hover:shadow-lg hover:from-cyan-400 hover:to-blue-400 disabled:from-slate-200 disabled:to-slate-300 disabled:text-slate-400 disabled:shadow-none disabled:cursor-not-allowed transition-all transform hover:-translate-y-px"
-                                >
-                                    <span className="material-symbols-outlined" style={{ fontSize: '22px' }}>calculate</span>
-                                </button>
                                 <button 
                                     onClick={() => setSidebarView('statistics')} 
                                     title="Analyze Layer"
