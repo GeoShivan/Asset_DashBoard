@@ -20,6 +20,7 @@ interface LeftSidebarProps {
     onZoomToLayer: (layerId: string) => void;
     onOpenAttributeTable: (layerId: string) => void;
     onCategoryFilter: (layerId: string, key: string, value: string) => void;
+    onViewFilteredTable: (key: string, value: string) => void;
     assets: Asset[];
     selectedAssets: { layerId: string; feature: Feature }[];
     onAssetSelect: (layerId: string, feature: Feature, isCtrlPressed: boolean) => void;
@@ -70,7 +71,7 @@ const AssetCard: React.FC<{ asset: Asset; isSelected: boolean; onSelect: (e: Rea
 
 const LeftSidebar: React.FC<LeftSidebarProps> = ({ 
     layers, activeLayerTab, setActiveLayerTab, layerVisibility, onVisibilityChange, onZoomToLayer,
-    onOpenAttributeTable, onCategoryFilter, assets, selectedAssets, onAssetSelect, assetSearchTerm, onAssetSearchChange,
+    onOpenAttributeTable, onCategoryFilter, onViewFilteredTable, assets, selectedAssets, onAssetSelect, assetSearchTerm, onAssetSearchChange,
     propertySearchKey, propertySearchValue, onPropertyFilterClear,
     sidebarView, setSidebarView,
 }) => {
@@ -210,6 +211,7 @@ const LeftSidebar: React.FC<LeftSidebarProps> = ({
                             layer={activeLayer} 
                             onClose={() => setSidebarView('assets')} 
                             onCategoryFilter={(key, value) => onCategoryFilter(activeLayer.id, key, value)}
+                            onViewFilteredTable={onViewFilteredTable}
                             onFeatureSelect={(feature) => {
                                 onAssetSelect(activeLayer.id, feature, false);
                                 setSidebarView('assets');

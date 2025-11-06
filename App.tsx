@@ -47,6 +47,7 @@ const App: React.FC = () => {
     const [propertySearchKey, setPropertySearchKey] = useState('');
     const [propertySearchValue, setPropertySearchValue] = useState('');
     const [attributeTableLayerId, setAttributeTableLayerId] = useState<string | null>(null);
+    const [attributeTableFilter, setAttributeTableFilter] = useState<{ key: string; value: string } | null>(null);
     const [isAreaModalOpen, setAreaModalOpen] = useState(false);
 
     const calculateBounds = useCallback((geojson: Feature | FeatureCollection) => {
@@ -164,7 +165,10 @@ const App: React.FC = () => {
     }, [layers, calculateBounds]);
 
     const handleOpenAttributeTable = (layerId: string) => { setAttributeTableLayerId(layerId); };
-    const handleCloseAttributeTable = () => { setAttributeTableLayerId(null); };
+    const handleCloseAttributeTable = () => { 
+        setAttributeTableLayerId(null); 
+        setAttributeTableFilter(null);
+    };
     const handleCalculateArea = () => { setAreaModalOpen(true); };
 
     const handleCategoryFilter = (layerId: string, key: string, value: string) => {
@@ -174,6 +178,14 @@ const App: React.FC = () => {
         setPropertySearchValue(value);
         setSidebarView('assets');
         setAssetSearchTerm('');
+    };
+    
+    const handleViewFilteredTable = (key: string, value: string) => {
+        const activeLayer = layers.find(l => l.name === activeLayerTab);
+        if (activeLayer) {
+            setAttributeTableFilter({ key, value });
+            setAttributeTableLayerId(activeLayer.id);
+        }
     };
 
     const assetList = useMemo(() => {
@@ -213,8 +225,25 @@ const App: React.FC = () => {
     }, [layers, activeLayerTab, assetSearchTerm, propertySearchKey, propertySearchValue]);
     
     const layerForAttributeTable = useMemo(() => {
-        return layers.find(l => l.id === attributeTableLayerId);
-    }, [layers, attributeTableLayerId]);
+        const originalLayer = layers.find(l => l.id === attributeTableLayerId);
+        if (!originalLayer) return null;
+
+        if (attributeTableFilter) {
+            const filteredFeatures = originalLayer.data.features.filter(f =>
+                f.properties && String(f.properties[attributeTableFilter.key]) === attributeTableFilter.value
+            );
+            return {
+                ...originalLayer,
+                name: `${originalLayer.name} (Filter: ${attributeTableFilter.key} = "${attributeTableFilter.value}")`,
+                data: {
+                    ...originalLayer.data,
+                    features: filteredFeatures,
+                },
+            };
+        }
+
+        return originalLayer;
+    }, [layers, attributeTableLayerId, attributeTableFilter]);
 
     const mappedSelectedAssets = useMemo(() => {
         return selectedAssets.map(asset => {
@@ -236,6 +265,7 @@ const App: React.FC = () => {
                     onZoomToLayer={handleZoomToLayer}
                     onOpenAttributeTable={handleOpenAttributeTable}
                     onCategoryFilter={handleCategoryFilter}
+                    onViewFilteredTable={handleViewFilteredTable}
                     assets={assetList}
                     selectedAssets={selectedAssets}
                     onAssetSelect={handleAssetSelect}

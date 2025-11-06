@@ -7,6 +7,7 @@ interface LayerStatisticsProps {
   layer: GeoJsonLayer;
   onClose: () => void;
   onCategoryFilter: (propertyKey: string, propertyValue: string) => void;
+  onViewFilteredTable: (propertyKey: string, propertyValue: string) => void;
   onFeatureSelect: (feature: Feature) => void;
 }
 
@@ -22,7 +23,7 @@ const formatArea = (meters: number): string => {
   return `${meters.toLocaleString(undefined, { maximumFractionDigits: 0 })} m²`;
 };
 
-const LayerStatistics: React.FC<LayerStatisticsProps> = ({ layer, onClose, onCategoryFilter, onFeatureSelect }) => {
+const LayerStatistics: React.FC<LayerStatisticsProps> = ({ layer, onClose, onCategoryFilter, onViewFilteredTable, onFeatureSelect }) => {
   const { categoricalStats, areaStats } = useMemo(() => {
     const categorical: { [key: string]: CategoricalStats } = {};
 
@@ -138,17 +139,26 @@ const LayerStatistics: React.FC<LayerStatisticsProps> = ({ layer, onClose, onCat
                        const totalCount = Object.values(valueCounts).reduce((sum, current) => sum + current, 0);
                        const percentage = Math.max(1, (count / totalCount) * 100);
                        return (
-                          <button
-                            key={value}
-                            onClick={() => onCategoryFilter(key, value)}
-                            className="grid grid-cols-5 items-center gap-3 group w-full text-left p-1 rounded-md hover:bg-slate-100/70 transition-all transform hover:scale-[1.02] hover:shadow-sm"
-                          >
-                            <span className="col-span-2 font-medium text-slate-700 truncate" title={value}>{value}</span>
-                            <div className="col-span-2 bg-slate-200 rounded-full h-2">
-                                <div className="bg-gradient-to-r from-indigo-400 to-purple-400 h-2 rounded-full transition-all duration-300 group-hover:from-indigo-300 group-hover:to-purple-300" style={{ width: `${percentage}%` }}></div>
-                            </div>
-                            <span className="font-semibold text-slate-800 text-right tabular-nums">{count.toLocaleString()}</span>
-                          </button>
+                          <div key={value} className="flex items-center justify-between gap-2 group/row w-full text-left p-1 rounded-md hover:bg-slate-100/70 transition-colors">
+                            <button
+                                onClick={() => onCategoryFilter(key, value)}
+                                className="flex-grow grid grid-cols-5 items-center gap-3"
+                                title={`Filter assets where ${key} is "${value}"`}
+                            >
+                                <span className="col-span-2 font-medium text-slate-700 truncate" title={value}>{value}</span>
+                                <div className="col-span-2 bg-slate-200 rounded-full h-2">
+                                    <div className="bg-gradient-to-r from-indigo-400 to-purple-400 h-2 rounded-full transition-all duration-300" style={{ width: `${percentage}%` }}></div>
+                                </div>
+                                <span className="font-semibold text-slate-800 text-right tabular-nums">{count.toLocaleString()}</span>
+                            </button>
+                             <button
+                                title={`View ${count} features in attribute table`}
+                                onClick={() => onViewFilteredTable(key, value)}
+                                className="p-1 rounded-md text-slate-400 hover:bg-indigo-100 hover:text-indigo-600 opacity-0 group-hover/row:opacity-100 transition-opacity"
+                            >
+                                <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>table_chart</span>
+                            </button>
+                          </div>
                        )
                     })}
                      {Object.keys(valueCounts).length > 10 && (
