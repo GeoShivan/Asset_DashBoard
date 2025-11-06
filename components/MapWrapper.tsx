@@ -112,7 +112,7 @@ const GeoJsonRenderer: React.FC<GeoJsonRendererProps> = ({ layers, onFeatureSele
             feature &&
             feature.properties &&
             selectedFeature.layer.id === layer.id &&
-            selectedFeature.feature.properties?.fid === feature.properties.fid
+            String(selectedFeature.feature.properties?.fid) === String(feature.properties?.fid)
           );
           return {
             color: isSelected ? '#3b82f6' : layer.color,

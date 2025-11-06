@@ -10,9 +10,9 @@ import type { GeoJsonLayer } from './types';
 import { getFeatureDisplayName } from './utils';
 
 const Header: React.FC = () => (
-    <header className="flex shrink-0 items-center justify-between whitespace-nowrap border-b border-slate-200 bg-white px-6 py-3 z-[1200]">
+    <header className="flex shrink-0 items-center justify-between whitespace-nowrap bg-gradient-to-r from-white to-blue-50 px-6 py-3 z-[1200] shadow-sm">
         <div className="flex items-center gap-8">
-            <div className="flex items-center gap-3 text-slate-800">
+            <div className="flex items-center gap-3 text-slate-900">
                 <div className="size-8 text-primary">
                     <svg fill="none" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
                         <g clipPath="url(#clip0_6_543)">
@@ -24,14 +24,8 @@ const Header: React.FC = () => (
                 </div>
                 <h2 className="text-lg font-bold leading-tight tracking-[-0.015em]">GeoAsset Dashboard</h2>
             </div>
-            <div className="flex items-center gap-9 text-slate-600">
-                <a className="text-sm font-medium leading-normal text-primary" href="#">Dashboard</a>
-            </div>
         </div>
         <div className="flex flex-1 justify-end gap-4">
-            <button className="flex max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 w-10 bg-slate-100 text-slate-600 hover:bg-slate-200 gap-2 text-sm font-bold leading-normal tracking-[0.015em] min-w-0">
-                <span className="material-symbols-outlined" style={{ fontSize: '20px' }}>notifications</span>
-            </button>
             <div className="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10" style={{ backgroundImage: `url("https://lh3.googleusercontent.com/a/ACg8ocK_gS2g_2YUN2a-wYp5c_NslloT2Sg_Nl4K6s5i-w=s96-c")` }}></div>
         </div>
     </header>
@@ -147,7 +141,7 @@ const App: React.FC = () => {
     }, []);
 
     const handleAssetSelect = useCallback((layerId: string, feature: Feature) => {
-        if (selectedAsset && selectedAsset.layerId === layerId && selectedAsset.feature.properties?.fid === feature.properties?.fid) {
+        if (selectedAsset && selectedAsset.layerId === layerId && String(selectedAsset.feature.properties?.fid) === String(feature.properties?.fid)) {
             // do nothing if same asset is clicked
         } else {
             setSelectedAsset({ layerId, feature });

@@ -77,15 +77,15 @@ const LeftSidebar: React.FC<LeftSidebarProps> = ({
     const activeLayer = layers.find(l => l.name === activeLayerTab);
     
     return (
-        <aside className="flex w-80 shrink-0 flex-col border-r border-slate-200 bg-slate-50 z-10">
+        <aside className="flex w-80 shrink-0 flex-col border-r border-slate-200 bg-white z-10">
             <div className="p-4 space-y-6 shrink-0">
                 <div>
-                    <h3 className="text-lg font-bold leading-tight tracking-[-0.015em] px-2 text-slate-800">Layers</h3>
+                    <h3 className="text-lg font-bold leading-tight tracking-[-0.015em] px-2 text-slate-900">Layers</h3>
                     <div className="flex flex-col gap-1 mt-3 px-2 text-slate-700">
                         {layers.map(layer => (
                             <div 
                                 key={layer.id}
-                                className={`group flex items-center justify-between gap-3 px-3 py-2.5 rounded-lg cursor-pointer ${activeLayerTab === layer.name ? 'bg-primary/10 text-slate-800' : 'hover:bg-slate-200/50'}`}
+                                className={`group flex items-center justify-between gap-3 px-3 py-2.5 rounded-lg cursor-pointer transition-colors ${activeLayerTab === layer.name ? 'bg-blue-100 text-blue-800 font-semibold' : 'hover:bg-slate-100'}`}
                             >
                                 <div 
                                     className="flex items-center gap-3 flex-1"
@@ -95,7 +95,7 @@ const LeftSidebar: React.FC<LeftSidebarProps> = ({
                                     }}
                                 >
                                     <span className={`material-symbols-outlined ${layerIconColors[layer.name] || 'text-slate-500'}`} style={{ fontSize: '24px' }}>{layerIcons[layer.name] || 'layers'}</span>
-                                    <p className={`text-sm font-medium leading-normal`}>{layer.name}</p>
+                                    <p className={`text-sm leading-normal`}>{layer.name}</p>
                                 </div>
                                 <div className="flex items-center">
                                     <button
@@ -143,7 +143,7 @@ const LeftSidebar: React.FC<LeftSidebarProps> = ({
                 {sidebarView === 'assets' && (
                     <div className="p-4 flex flex-col gap-4 h-full">
                         <div className="px-2 flex justify-between items-center shrink-0">
-                            <h3 className="text-lg font-bold leading-tight tracking-[-0.015em] text-slate-800">Assets ({assets.length})</h3>
+                            <h3 className="text-lg font-bold leading-tight tracking-[-0.015em] text-slate-900">Assets ({assets.length})</h3>
                              <button 
                                 onClick={() => setSidebarView('statistics')} 
                                 title="Analyze Layer"
@@ -185,7 +185,7 @@ const LeftSidebar: React.FC<LeftSidebarProps> = ({
                                 <AssetCard 
                                     key={`${asset.layerId}-${asset.feature.properties?.fid || index}`} 
                                     asset={asset}
-                                    isSelected={selectedAsset?.layerId === asset.layerId && selectedAsset?.feature.properties?.fid === asset.feature.properties?.fid}
+                                    isSelected={selectedAsset?.layerId === asset.layerId && String(selectedAsset?.feature.properties?.fid) === String(asset.feature.properties?.fid)}
                                     onSelect={() => onAssetSelect(asset.layerId, asset.feature)}
                                 />
                            ))}
