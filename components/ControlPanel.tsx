@@ -149,22 +149,22 @@ const LeftSidebar: React.FC<LeftSidebarProps> = ({
                     <div className="p-4 flex flex-col gap-4 h-full">
                         <div className="px-2 flex justify-between items-center shrink-0">
                             <h3 className="text-lg font-bold leading-tight tracking-[-0.015em] text-slate-900">Assets ({assets.length})</h3>
-                            <div className="flex items-center gap-1">
+                            <div className="flex items-center gap-2">
                                 <button
                                     onClick={onCalculateArea}
                                     disabled={selectedPolygons.length === 0}
                                     title="Calculate Area of Selected"
-                                    className="p-1.5 rounded-md text-cyan-600 hover:bg-cyan-100 disabled:text-slate-400 disabled:hover:bg-transparent disabled:cursor-not-allowed transition-colors"
+                                    className="p-2 rounded-lg text-white bg-gradient-to-br from-cyan-500 to-blue-500 shadow-md hover:shadow-lg hover:from-cyan-400 hover:to-blue-400 disabled:from-slate-200 disabled:to-slate-300 disabled:text-slate-400 disabled:shadow-none disabled:cursor-not-allowed transition-all transform hover:-translate-y-px"
                                 >
-                                    <span className="material-symbols-outlined" style={{ fontSize: '24px' }}>square_foot</span>
+                                    <span className="material-symbols-outlined" style={{ fontSize: '22px' }}>calculate</span>
                                 </button>
                                 <button 
                                     onClick={() => setSidebarView('statistics')} 
                                     title="Analyze Layer"
                                     disabled={!activeLayer || activeLayer.data.features.length === 0}
-                                    className="p-1.5 rounded-md text-slate-500 hover:bg-slate-200 hover:text-slate-800 disabled:text-slate-400 disabled:bg-transparent disabled:cursor-not-allowed transition-colors"
+                                    className="p-2 rounded-lg text-white bg-gradient-to-br from-indigo-500 to-purple-500 shadow-md hover:shadow-lg hover:from-indigo-400 hover:to-purple-400 disabled:from-slate-200 disabled:to-slate-300 disabled:text-slate-400 disabled:shadow-none disabled:cursor-not-allowed transition-all transform hover:-translate-y-px"
                                 >
-                                    <span className="material-symbols-outlined" style={{ fontSize: '24px' }}>bar_chart</span>
+                                    <span className="material-symbols-outlined" style={{ fontSize: '22px' }}>query_stats</span>
                                 </button>
                             </div>
                         </div>
