@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState, useCallback } from 'react';
-import { MapContainer, TileLayer, GeoJSON, useMap } from 'react-leaflet';
+import { MapContainer, TileLayer, GeoJSON, useMap, useMapEvents } from 'react-leaflet';
 import L from 'leaflet';
 import type { GeoJsonLayer } from '../types';
 import type { Feature } from 'geojson';
@@ -36,12 +36,12 @@ const BASEMAPS = {
 
 interface GeoJsonRendererProps {
   layers: GeoJsonLayer[];
-  onFeatureSelect: (layer: GeoJsonLayer, feature: Feature) => void;
-  selectedFeature: { layer: GeoJsonLayer; feature: Feature } | null;
+  onFeatureSelect: (layer: GeoJsonLayer, feature: Feature, isCtrlPressed: boolean) => void;
+  selectedAssets: { layer: GeoJsonLayer; feature: Feature }[];
   isToolActive: boolean;
 }
 
-const GeoJsonRenderer: React.FC<GeoJsonRendererProps> = ({ layers, onFeatureSelect, selectedFeature, isToolActive }) => {
+const GeoJsonRenderer: React.FC<GeoJsonRendererProps> = ({ layers, onFeatureSelect, selectedAssets, isToolActive }) => {
   const map = useMap();
   
   return (
@@ -53,46 +53,44 @@ const GeoJsonRenderer: React.FC<GeoJsonRendererProps> = ({ layers, onFeatureSele
            if (!isToolActive) {
                 mapLayer.on({ 
                     click: (e: L.LeafletMouseEvent) => {
-                    L.DomEvent.stop(e);
-                    onFeatureSelect(layer, feature);
-                    
-                    const displayName = getFeatureDisplayName(feature);
-                    
-                    const container = L.DomUtil.create('div', 'font-display text-slate-800');
-                    
-                    const header = L.DomUtil.create('h3', 'text-lg font-bold text-slate-900 mb-2 border-b border-slate-200 pb-2', container);
-                    header.innerText = displayName;
+                        L.DomEvent.stop(e);
+                        const isCtrlPressed = e.originalEvent.ctrlKey || e.originalEvent.metaKey;
+                        onFeatureSelect(layer, feature, isCtrlPressed);
+                        
+                        const displayName = getFeatureDisplayName(feature);
+                        const container = L.DomUtil.create('div', 'font-display text-slate-800');
+                        const header = L.DomUtil.create('h3', 'text-lg font-bold text-slate-900 mb-2 border-b border-slate-200 pb-2', container);
+                        header.innerText = displayName;
 
-                    const detailsContainerWrapper = L.DomUtil.create('div', 'space-y-2 text-sm max-h-64 overflow-y-auto pr-2 -mr-2 pt-2', container);
-                    
-                    const createDetailRow = (label: string, value: string, valueClass = 'text-slate-800') => {
-                        const row = L.DomUtil.create('div', 'flex justify-between items-start gap-4', detailsContainerWrapper);
-                        const labelEl = L.DomUtil.create('span', 'font-medium text-slate-500 shrink-0', row);
-                        labelEl.innerText = label;
-                        const valueEl = L.DomUtil.create('span', `font-semibold ${valueClass} text-right break-words`, row);
-                        valueEl.innerText = value;
-                    };
-                    
-                    if (feature.properties) {
-                        const propertiesToShow = Object.entries(feature.properties)
-                            .filter(([key]) => !['Name', 'name', 'fid', 'Shape_Length', 'Shape_Area', 'Bldg_Id', 'Link'].includes(key))
-                            .sort(([keyA], [keyB]) => keyA.localeCompare(keyB));
+                        const detailsContainerWrapper = L.DomUtil.create('div', 'space-y-2 text-sm max-h-64 overflow-y-auto pr-2 -mr-2 pt-2', container);
+                        const createDetailRow = (label: string, value: string, valueClass = 'text-slate-800') => {
+                            const row = L.DomUtil.create('div', 'flex justify-between items-start gap-4', detailsContainerWrapper);
+                            const labelEl = L.DomUtil.create('span', 'font-medium text-slate-500 shrink-0', row);
+                            labelEl.innerText = label;
+                            const valueEl = L.DomUtil.create('span', `font-semibold ${valueClass} text-right break-words`, row);
+                            valueEl.innerText = value;
+                        };
+                        
+                        if (feature.properties) {
+                            const propertiesToShow = Object.entries(feature.properties)
+                                .filter(([key]) => !['Name', 'name', 'fid', 'Shape_Length', 'Shape_Area', 'Bldg_Id', 'Link'].includes(key))
+                                .sort(([keyA], [keyB]) => keyA.localeCompare(keyB));
 
-                        for (const [key, value] of propertiesToShow) {
-                            if (value !== null && value !== undefined && String(value).trim() !== "" && String(value).trim() !== " ") {
-                                createDetailRow(key, String(value));
+                            for (const [key, value] of propertiesToShow) {
+                                if (value !== null && value !== undefined && String(value).trim() !== "" && String(value).trim() !== " ") {
+                                    createDetailRow(key, String(value));
+                                }
                             }
                         }
-                    }
 
-                    L.popup({
-                        className: 'custom-leaflet-popup',
-                        minWidth: 300,
-                        maxWidth: 350,
-                    })
-                    .setLatLng(e.latlng)
-                    .setContent(container)
-                    .openOn(map);
+                        L.popup({
+                            className: 'custom-leaflet-popup',
+                            minWidth: 300,
+                            maxWidth: 350,
+                        })
+                        .setLatLng(e.latlng)
+                        .setContent(container)
+                        .openOn(map);
                     }
                 });
            }
@@ -107,12 +105,10 @@ const GeoJsonRenderer: React.FC<GeoJsonRendererProps> = ({ layers, onFeatureSele
         };
 
         const style = (feature?: Feature): L.PathOptions => {
-          const isSelected = !!(
-            selectedFeature &&
-            feature &&
-            feature.properties &&
-            selectedFeature.layer.id === layer.id &&
-            String(selectedFeature.feature.properties?.fid) === String(feature.properties?.fid)
+          const isSelected = selectedAssets.some(
+            asset => asset.layer.id === layer.id &&
+                     feature?.properties &&
+                     String(asset.feature.properties?.fid) === String(feature.properties?.fid)
           );
           return {
             color: isSelected ? '#3b82f6' : layer.color,
@@ -124,8 +120,8 @@ const GeoJsonRenderer: React.FC<GeoJsonRendererProps> = ({ layers, onFeatureSele
           };
         };
         
-        const selectedId = selectedFeature ? `${selectedFeature.layer.id}-${selectedFeature.feature.properties?.fid}` : 'none';
-        const key = `${layer.id}-${layer.isVisible}-${layer.color}-${layer.strokeOpacity}-${layer.fillOpacity}-${layer.dashArray}-${layer.data.features.length}-${selectedId}-${isToolActive}`;
+        const selectedIds = selectedAssets.map(a => `${a.layer.id}-${a.feature.properties?.fid}`).join(',');
+        const key = `${layer.id}-${layer.isVisible}-${layer.color}-${layer.strokeOpacity}-${layer.fillOpacity}-${layer.dashArray}-${layer.data.features.length}-${selectedIds}-${isToolActive}`;
 
         return (
           <GeoJSON
@@ -152,6 +148,15 @@ const MapUpdater: React.FC<MapUpdaterProps> = ({ boundsToFit }) => {
     }
   }, [boundsToFit, map]);
   return null;
+};
+
+const MapEventsHandler: React.FC<{ onClearSelection: () => void }> = ({ onClearSelection }) => {
+    useMapEvents({
+        click: () => {
+            onClearSelection();
+        },
+    });
+    return null;
 };
 
 type DistanceUnit = 'm' | 'km' | 'ft' | 'mi';
@@ -216,6 +221,14 @@ const ZoomWindowIcon = () => (
         <rect x="6" y="6" width="8" height="8" fill="#3B82F6" fillOpacity="0.2" stroke="#3B82F6" strokeWidth="1.5" strokeDasharray="2 2"/>
     </svg>
 );
+const SelectFeaturesIcon = () => (
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M9.6875 9.6875L4 12.5V4L12.5 4L9.6875 9.6875Z" stroke="#8B5CF6" strokeWidth="2" strokeLinejoin="round"/>
+        <path d="M13 4H20V11" stroke="#8B5CF6" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" strokeDasharray="3 3"/>
+        <path d="M11 20H4V13" stroke="#8B5CF6" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" strokeDasharray="3 3"/>
+        <path d="M20 13V20H13" stroke="#8B5CF6" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" strokeDasharray="3 3"/>
+    </svg>
+);
 const MeasureToolIcon = () => (
     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
         {/* Ruler */}
@@ -245,9 +258,10 @@ interface MapControlsProps {
     areaUnit: AreaUnit;
     setAreaUnit: (unit: AreaUnit) => void;
     setIsZooming: (isZooming: boolean) => void;
+    setIsSelecting: (isSelecting: boolean) => void;
 }
 
-const MapControls: React.FC<MapControlsProps> = ({ map, measureMode, setMeasureMode, distanceUnit, setDistanceUnit, areaUnit, setAreaUnit, setIsZooming }) => {
+const MapControls: React.FC<MapControlsProps> = ({ map, measureMode, setMeasureMode, distanceUnit, setDistanceUnit, areaUnit, setAreaUnit, setIsZooming, setIsSelecting }) => {
     const [isMeasurePanelOpen, setMeasurePanelOpen] = useState(false);
     const [points, setPoints] = useState<L.LatLng[]>([]);
     const pointsRef = useRef<L.LatLng[]>([]);
@@ -361,8 +375,9 @@ const MapControls: React.FC<MapControlsProps> = ({ map, measureMode, setMeasureM
     const startMeasure = useCallback((mode: 'distance' | 'area') => {
         clearAllMeasurements();
         setIsZooming(false);
+        setIsSelecting(false);
         setMeasureMode(mode);
-    }, [clearAllMeasurements, setMeasureMode, setIsZooming]);
+    }, [clearAllMeasurements, setMeasureMode, setIsZooming, setIsSelecting]);
     
     const toggleMeasurePanel = useCallback(() => {
         setMeasurePanelOpen(prev => {
@@ -371,10 +386,11 @@ const MapControls: React.FC<MapControlsProps> = ({ map, measureMode, setMeasureM
                 setMeasureMode(null);
             } else {
                 setIsZooming(false);
+                setIsSelecting(false);
             }
             return !prev;
         });
-    }, [clearAllMeasurements, setMeasureMode, setIsZooming]);
+    }, [clearAllMeasurements, setMeasureMode, setIsZooming, setIsSelecting]);
 
     const handleMeasureButtonClick = (mode: 'distance' | 'area') => {
         if (measureMode === mode) {
@@ -502,7 +518,7 @@ const MapControls: React.FC<MapControlsProps> = ({ map, measureMode, setMeasureM
     const currentUnit = measureMode === 'distance' ? distanceUnit : areaUnit;
     const unitSet = measureMode === 'distance' ? DISTANCE_UNITS : AREA_UNITS;
     
-    const controlButtonClasses = "flex size-10 items-center justify-center rounded-xl bg-white/80 backdrop-blur-md shadow-lg shadow-sky-200/50 border border-slate-200 hover:bg-sky-100/80 hover:border-sky-300 hover:shadow-sky-300/80 transition-all duration-200 ease-in-out";
+    const controlButtonClasses = "flex size-10 items-center justify-center rounded-xl bg-white/90 backdrop-blur-lg shadow-md shadow-black/5 ring-2 ring-slate-900/10 hover:shadow-lg hover:shadow-sky-500/20 hover:bg-sky-50/90 hover:ring-sky-500/50 transition-all duration-300 ease-in-out";
 
     return (
          <div className="flex items-end gap-3">
@@ -583,7 +599,7 @@ const MapControls: React.FC<MapControlsProps> = ({ map, measureMode, setMeasureM
 const BasemapControl: React.FC<{ onBasemapChange: (key: string) => void, activeBasemapKey: string }> = ({ onBasemapChange, activeBasemapKey }) => {
     const [isOpen, setIsOpen] = useState(false);
     const dropdownRef = useRef<HTMLDivElement>(null);
-    const controlButtonClasses = "flex size-10 items-center justify-center rounded-xl bg-white/80 backdrop-blur-md shadow-lg shadow-sky-200/50 border border-slate-200 hover:bg-sky-100/80 hover:border-sky-300 hover:shadow-sky-300/80 transition-all duration-200 ease-in-out";
+    const controlButtonClasses = "flex size-10 items-center justify-center rounded-xl bg-white/90 backdrop-blur-lg shadow-md shadow-black/5 ring-2 ring-slate-900/10 hover:shadow-lg hover:shadow-sky-500/20 hover:bg-sky-50/90 hover:ring-sky-500/50 transition-all duration-300 ease-in-out";
 
 
     useEffect(() => {
@@ -698,7 +714,7 @@ const NorthArrowControl: React.FC<{
     const [isSelectorOpen, setSelectorOpen] = useState(false);
     const selectorRef = useRef<HTMLDivElement>(null);
     const selectedIconData = NORTH_ARROW_SVGS.find(icon => icon.name === selectedIcon) || NORTH_ARROW_SVGS[0];
-    const controlButtonClasses = "flex size-10 items-center justify-center rounded-xl bg-white/80 backdrop-blur-md shadow-lg shadow-sky-200/50 border border-slate-200 hover:bg-sky-100/80 hover:border-sky-300 hover:shadow-sky-300/80 transition-all duration-200 ease-in-out";
+    const controlButtonClasses = "flex size-10 items-center justify-center rounded-xl bg-white/90 backdrop-blur-lg shadow-md shadow-black/5 ring-2 ring-slate-900/10 hover:shadow-lg hover:shadow-sky-500/20 hover:bg-sky-50/90 hover:ring-sky-500/50 transition-all duration-300 ease-in-out";
 
     const handleRightClick = (e: React.MouseEvent) => {
         e.preventDefault();
@@ -753,12 +769,12 @@ const MapZoomControl: React.FC<{ map: L.Map | null }> = ({ map }) => {
     const handleZoomOut = () => map?.zoomOut();
 
     return (
-        <div className="flex flex-col rounded-xl bg-white/95 backdrop-blur-md shadow-lg border border-slate-200 overflow-hidden">
-            <button onClick={handleZoomIn} title="Zoom In" className="group flex size-10 items-center justify-center hover:bg-slate-100 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 ease-in-out" disabled={!map}>
+        <div className="flex flex-col rounded-xl bg-white/90 backdrop-blur-lg shadow-md shadow-black/5 ring-2 ring-slate-900/10 overflow-hidden transition-all duration-300 ease-in-out hover:shadow-lg hover:shadow-sky-500/20 hover:ring-sky-500/50">
+            <button onClick={handleZoomIn} title="Zoom In" className="group flex size-10 items-center justify-center hover:bg-sky-50 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 ease-in-out" disabled={!map}>
                 <ZoomInIcon />
             </button>
             <div className="h-px bg-slate-200"></div>
-            <button onClick={handleZoomOut} title="Zoom Out" className="group flex size-10 items-center justify-center hover:bg-slate-100 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 ease-in-out" disabled={!map}>
+            <button onClick={handleZoomOut} title="Zoom Out" className="group flex size-10 items-center justify-center hover:bg-sky-50 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 ease-in-out" disabled={!map}>
                 <ZoomOutIcon />
             </button>
         </div>
@@ -770,11 +786,13 @@ interface MapWrapperProps {
   zoom: number;
   layers: GeoJsonLayer[];
   boundsToFit: L.LatLngBounds | null;
-  onFeatureSelect: (layer: GeoJsonLayer, feature: Feature) => void;
-  selectedFeature: { layer: GeoJsonLayer; feature: Feature } | null;
+  onFeatureSelect: (layerId: string, feature: Feature, isCtrlPressed: boolean) => void;
+  selectedAssets: { layer: GeoJsonLayer; feature: Feature }[];
+  onClearSelection: () => void;
+  onAreaSelect: (assets: { layerId: string; feature: Feature }[], isCtrlPressed: boolean) => void;
 }
 
-const MapWrapper: React.FC<MapWrapperProps> = ({ center, zoom, layers, boundsToFit, onFeatureSelect, selectedFeature }) => {
+const MapWrapper: React.FC<MapWrapperProps> = ({ center, zoom, layers, boundsToFit, onFeatureSelect, selectedAssets, onClearSelection, onAreaSelect }) => {
   const [map, setMap] = useState<L.Map | null>(null);
   const [activeBasemapKey, setActiveBasemapKey] = useState<string>('street');
   const [measureMode, setMeasureMode] = useState<'distance' | 'area' | null>(null);
@@ -782,9 +800,14 @@ const MapWrapper: React.FC<MapWrapperProps> = ({ center, zoom, layers, boundsToF
   const [areaUnit, setAreaUnit] = useState<AreaUnit>('m²');
   const [northArrowIcon, setNorthArrowIcon] = useState<string>(NORTH_ARROW_SVGS[0].name);
   const [isZooming, setIsZooming] = useState(false);
+  const [isSelecting, setIsSelecting] = useState(false);
 
-  const zoomRectRef = useRef<L.Rectangle | null>(null);
-  const zoomStartPointRef = useRef<L.LatLng | null>(null);
+  const toolStateRef = useRef({
+      zoomRect: null as L.Rectangle | null,
+      zoomStartPoint: null as L.LatLng | null,
+      selectRect: null as L.Rectangle | null,
+      selectStartPoint: null as L.LatLng | null,
+  });
 
   useEffect(() => {
     const savedIcon = localStorage.getItem('northArrowIcon');
@@ -806,79 +829,123 @@ const MapWrapper: React.FC<MapWrapperProps> = ({ center, zoom, layers, boundsToF
         map.flyTo(center, zoom);
     }
   };
+  
+  const deactivateAllTools = () => {
+    setMeasureMode(null);
+    setIsZooming(false);
+    setIsSelecting(false);
+  };
 
   const toggleZoomWindow = useCallback(() => {
-        if (!isZooming) {
-            setMeasureMode(null);
-        }
-        setIsZooming(prev => !prev);
-    }, [isZooming]);
+    const nextState = !isZooming;
+    deactivateAllTools();
+    setIsZooming(nextState);
+  }, [isZooming]);
 
+  const toggleSelectMode = useCallback(() => {
+    const nextState = !isSelecting;
+    deactivateAllTools();
+    setIsSelecting(nextState);
+  }, [isSelecting]);
+
+  // Effect for Zoom Window Tool
   useEffect(() => {
       if (!map) return;
 
-      if (isZooming) {
-          map.dragging.disable();
-          (map.getContainer().style.cursor = 'crosshair');
-          
-          const handleMouseDown = (e: L.LeafletMouseEvent) => {
-              zoomStartPointRef.current = e.latlng;
-              zoomRectRef.current = L.rectangle([e.latlng, e.latlng], {
-                  color: '#3b82f6',
-                  weight: 2,
-                  fillOpacity: 0.1,
-                  dashArray: '5, 5'
-              }).addTo(map);
-          };
-
-          const handleMouseMove = (e: L.LeafletMouseEvent) => {
-              if (zoomRectRef.current && zoomStartPointRef.current) {
-                  zoomRectRef.current.setBounds(L.latLngBounds(zoomStartPointRef.current, e.latlng));
-              }
-          };
-
-          const handleMouseUp = () => {
-              if (zoomRectRef.current) {
-                  const bounds = zoomRectRef.current.getBounds();
-                  if (bounds.getNorthEast().distanceTo(bounds.getSouthWest()) > 10) {
-                        map.flyToBounds(bounds);
-                  }
-                  map.removeLayer(zoomRectRef.current);
-              }
-              zoomRectRef.current = null;
-              zoomStartPointRef.current = null;
-              setIsZooming(false);
-          };
-
-          const handleKeyDown = (e: KeyboardEvent) => {
-              if (e.key === 'Escape') {
-                  setIsZooming(false);
-              }
-          };
-          
-          map.on('mousedown', handleMouseDown);
-          map.on('mousemove', handleMouseMove);
-          map.on('mouseup', handleMouseUp);
-          document.addEventListener('keydown', handleKeyDown);
-
-          return () => {
-              map.off('mousedown', handleMouseDown);
-              map.off('mousemove', handleMouseMove);
-              map.off('mouseup', handleMouseUp);
-              document.removeEventListener('keydown', handleKeyDown);
-          };
-      } else {
-            map.dragging.enable();
-          (map.getContainer().style.cursor = '');
-            if (zoomRectRef.current) {
-              map.removeLayer(zoomRectRef.current);
-              zoomRectRef.current = null;
-            }
-            zoomStartPointRef.current = null;
+      if (!isZooming) {
+        map.dragging.enable();
+        (map.getContainer() as HTMLElement).style.cursor = '';
+        return;
       }
-  }, [map, isZooming, setIsZooming]);
+
+      map.dragging.disable();
+      (map.getContainer() as HTMLElement).style.cursor = 'crosshair';
+      
+      const handleMouseDown = (e: L.LeafletMouseEvent) => {
+          toolStateRef.current.zoomStartPoint = e.latlng;
+          toolStateRef.current.zoomRect = L.rectangle([e.latlng, e.latlng], {
+              color: '#3b82f6', weight: 2, fillOpacity: 0.1, dashArray: '5, 5'
+          }).addTo(map);
+      };
+      const handleMouseMove = (e: L.LeafletMouseEvent) => {
+          if (toolStateRef.current.zoomRect && toolStateRef.current.zoomStartPoint) {
+              toolStateRef.current.zoomRect.setBounds(L.latLngBounds(toolStateRef.current.zoomStartPoint, e.latlng));
+          }
+      };
+      const handleMouseUp = () => {
+          if (toolStateRef.current.zoomRect) {
+              const bounds = toolStateRef.current.zoomRect.getBounds();
+              if (bounds.getNorthEast().distanceTo(bounds.getSouthWest()) > 10) map.flyToBounds(bounds);
+              map.removeLayer(toolStateRef.current.zoomRect);
+          }
+          toolStateRef.current.zoomRect = null;
+          toolStateRef.current.zoomStartPoint = null;
+          setIsZooming(false);
+      };
+      
+      map.on('mousedown', handleMouseDown).on('mousemove', handleMouseMove).on('mouseup', handleMouseUp);
+      return () => { map.off('mousedown', handleMouseDown).off('mousemove', handleMouseMove).off('mouseup', handleMouseUp); };
+  }, [map, isZooming]);
+
+  // Effect for Select by Rectangle Tool
+  useEffect(() => {
+    if (!map) return;
+
+    if (!isSelecting) {
+        map.dragging.enable();
+        (map.getContainer() as HTMLElement).style.cursor = '';
+        return;
+    }
+
+    map.dragging.disable();
+    (map.getContainer() as HTMLElement).style.cursor = 'crosshair';
+
+    const handleMouseDown = (e: L.LeafletMouseEvent) => {
+        toolStateRef.current.selectStartPoint = e.latlng;
+        toolStateRef.current.selectRect = L.rectangle([e.latlng, e.latlng], {
+            color: '#8B5CF6', weight: 2, fillOpacity: 0.1, dashArray: '5, 5'
+        }).addTo(map);
+    };
+
+    const handleMouseMove = (e: L.LeafletMouseEvent) => {
+        if (toolStateRef.current.selectRect && toolStateRef.current.selectStartPoint) {
+            toolStateRef.current.selectRect.setBounds(L.latLngBounds(toolStateRef.current.selectStartPoint, e.latlng));
+        }
+    };
+
+    const handleMouseUp = (e: L.LeafletMouseEvent) => {
+        if (toolStateRef.current.selectRect) {
+            const selectionBounds = toolStateRef.current.selectRect.getBounds();
+            const foundAssets: { layerId: string, feature: Feature }[] = [];
+            
+            layers.forEach(layer => {
+                if (layer.isVisible && layer.data.features) {
+                    layer.data.features.forEach(feature => {
+                        try {
+                            const featureBounds = L.geoJSON(feature.geometry).getBounds();
+                            if (selectionBounds.intersects(featureBounds)) {
+                                foundAssets.push({ layerId: layer.id, feature });
+                            }
+                        } catch (err) {
+                            // Ignore features with invalid geometry for bounds calculation
+                        }
+                    });
+                }
+            });
+
+            onAreaSelect(foundAssets, e.originalEvent.ctrlKey || e.originalEvent.metaKey);
+            map.removeLayer(toolStateRef.current.selectRect);
+        }
+        toolStateRef.current.selectRect = null;
+        toolStateRef.current.selectStartPoint = null;
+        setIsSelecting(false);
+    };
+    
+    map.on('mousedown', handleMouseDown).on('mousemove', handleMouseMove).on('mouseup', handleMouseUp);
+    return () => { map.off('mousedown', handleMouseDown).off('mousemove', handleMouseMove).off('mouseup', handleMouseUp); };
+  }, [map, isSelecting, layers, onAreaSelect]);
   
-  const controlButtonClasses = "flex size-10 items-center justify-center rounded-xl bg-white/80 backdrop-blur-md shadow-lg shadow-sky-200/50 border border-slate-200 hover:bg-sky-100/80 hover:border-sky-300 hover:shadow-sky-300/80 transition-all duration-200 ease-in-out";
+  const controlButtonClasses = "flex size-10 items-center justify-center rounded-xl bg-white/90 backdrop-blur-lg shadow-md shadow-black/5 ring-2 ring-slate-900/10 hover:shadow-lg hover:shadow-sky-500/20 hover:bg-sky-50/90 hover:ring-sky-500/50 transition-all duration-300 ease-in-out";
 
 
   return (
@@ -890,7 +957,8 @@ const MapWrapper: React.FC<MapWrapperProps> = ({ center, zoom, layers, boundsToF
           url={activeBasemap.url}
         />
         <MapUpdater boundsToFit={boundsToFit} />
-        <GeoJsonRenderer layers={layers} onFeatureSelect={onFeatureSelect} selectedFeature={selectedFeature} isToolActive={!!measureMode || isZooming} />
+        <GeoJsonRenderer layers={layers} onFeatureSelect={(layer, feature, isCtrl) => onFeatureSelect(layer.id, feature, isCtrl)} selectedAssets={selectedAssets} isToolActive={!!measureMode || isZooming || isSelecting} />
+        <MapEventsHandler onClearSelection={onClearSelection} />
       </MapContainer>
         
         <div className="absolute top-4 right-4 z-[1000] flex flex-col gap-3">
@@ -903,9 +971,16 @@ const MapWrapper: React.FC<MapWrapperProps> = ({ center, zoom, layers, boundsToF
             <button 
                 onClick={toggleZoomWindow} 
                 title="Zoom to Area" 
-                className={`${controlButtonClasses} ${isZooming ? '!bg-sky-100 !border-sky-400' : ''}`}
+                className={`${controlButtonClasses} ${isZooming ? '!bg-sky-100 !ring-sky-400' : ''}`}
             >
                 <ZoomWindowIcon />
+            </button>
+             <button 
+                onClick={toggleSelectMode} 
+                title="Select Features" 
+                className={`${controlButtonClasses} ${isSelecting ? '!bg-purple-100 !ring-purple-400' : ''}`}
+            >
+                <SelectFeaturesIcon />
             </button>
             <BasemapControl activeBasemapKey={activeBasemapKey} onBasemapChange={setActiveBasemapKey} />
         </div>
@@ -920,6 +995,7 @@ const MapWrapper: React.FC<MapWrapperProps> = ({ center, zoom, layers, boundsToF
                 areaUnit={areaUnit}
                 setAreaUnit={setAreaUnit}
                 setIsZooming={setIsZooming}
+                setIsSelecting={setIsSelecting}
             />
         </div>
     </div>

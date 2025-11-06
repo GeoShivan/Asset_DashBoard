@@ -6,11 +6,12 @@ import { bbox, BBox } from '@turf/turf';
 import LeftSidebar from './components/ControlPanel';
 import MapWrapper from './components/MapWrapper';
 import AttributeTable from './components/AttributeTable';
+import AreaCalculationModal from './components/AreaCalculationModal';
 import type { GeoJsonLayer } from './types';
 import { getFeatureDisplayName } from './utils';
 
 const Header: React.FC = () => (
-    <header className="flex shrink-0 items-center justify-between whitespace-nowrap bg-gradient-to-r from-white to-blue-50 px-6 py-3 z-[1200] shadow-sm">
+    <header className="flex shrink-0 items-center justify-between whitespace-nowrap bg-gradient-to-r from-white to-blue-50 px-6 py-3 z-[1200] shadow-lg transition-shadow duration-300 hover:shadow-xl">
         <div className="flex items-center gap-8">
             <div className="flex items-center gap-3 text-slate-900">
                 <div className="size-8 text-primary">
@@ -40,53 +41,39 @@ const App: React.FC = () => {
         'Horticulture': true,
         'Roads': false,
     });
-    const [selectedAsset, setSelectedAsset] = useState<{ layerId: string; feature: Feature } | null>(null);
+    const [selectedAssets, setSelectedAssets] = useState<{ layerId: string; feature: Feature }[]>([]);
     const [boundsToFit, setBoundsToFit] = useState<L.LatLngBounds | null>(null);
     const [assetSearchTerm, setAssetSearchTerm] = useState('');
     const [propertySearchKey, setPropertySearchKey] = useState('');
     const [propertySearchValue, setPropertySearchValue] = useState('');
     const [attributeTableLayerId, setAttributeTableLayerId] = useState<string | null>(null);
+    const [isAreaModalOpen, setAreaModalOpen] = useState(false);
 
     const calculateBounds = useCallback((geojson: Feature | FeatureCollection) => {
         try {
             const features = ('features' in geojson) ? geojson.features : [geojson];
             
-            // A more robust filter to find features with actual, valid coordinate data.
             const validFeatures = features.filter(f => {
-                if (!f?.geometry?.coordinates || f.geometry.coordinates.length === 0) {
-                    return false;
-                }
-                // Flatten the coordinates array completely. If it results in an empty array,
-                // or contains non-numeric/infinite values, the geometry is considered invalid.
+                if (!f?.geometry?.coordinates || f.geometry.coordinates.length === 0) return false;
                 const coords = f.geometry.coordinates.flat(Infinity);
                 return coords.length > 0 && coords.every(c => typeof c === 'number' && isFinite(c));
             });
     
             if (validFeatures.length === 0) {
-                // No valid features to calculate bounds for.
                 console.warn("No valid features found to calculate bounds from.");
                 return;
             }
     
             const tempFc: FeatureCollection = { type: 'FeatureCollection', features: validFeatures as Feature[] };
             const boundingBox = bbox(tempFc) as BBox;
-            
             const [minX, minY, maxX, maxY] = boundingBox;
     
-            // Rigorous validation: ensure all bbox coordinates are valid, finite numbers.
             if (boundingBox.length === 4 && isFinite(minX) && isFinite(minY) && isFinite(maxX) && isFinite(maxY)) {
-                // Additional check for valid bounds range
                 if (minX <= maxX && minY <= maxY) {
                      setBoundsToFit(L.latLngBounds(L.latLng(minY, minX), L.latLng(maxY, maxX)));
-                } else {
-                    console.warn("Calculated bounds are inverted:", boundingBox);
-                }
-            } else {
-                console.warn("Calculated bounds from turf.js are not valid:", boundingBox);
-            }
-        } catch (error) {
-            console.error("Error calculating bounds:", error);
-        }
+                } else { console.warn("Calculated bounds are inverted:", boundingBox); }
+            } else { console.warn("Calculated bounds from turf.js are not valid:", boundingBox); }
+        } catch (error) { console.error("Error calculating bounds:", error); }
     }, []);
 
     useEffect(() => {
@@ -109,13 +96,12 @@ const App: React.FC = () => {
                     { id: 'horticulture-1', name: 'Horticulture', data: horticultureData, isVisible: true, color: '#22c55e', strokeOpacity: 1, fillOpacity: 0.5, dashArray: '' },
                     { id: 'roads-1', name: 'Roads', data: { type: 'FeatureCollection', features: [] }, isVisible: false, color: '#64748b', strokeOpacity: 1, fillOpacity: 0.5, dashArray: '' },
                 ];
-                
                 setLayers(initialLayers);
 
                 if (buildingData.features.length > 0) {
                   const firstBuildingLayer = initialLayers.find(l => l.name === 'Buildings');
                   if(firstBuildingLayer) {
-                    setSelectedAsset({ layerId: firstBuildingLayer.id, feature: buildingData.features[0] });
+                    setSelectedAssets([{ layerId: firstBuildingLayer.id, feature: buildingData.features[0] }]);
                   }
                 }
                 
@@ -124,14 +110,9 @@ const App: React.FC = () => {
                     features: [...buildingData.features, ...horticultureData.features]
                 };
                 
-                if (combinedData.features.length > 0) {
-                    calculateBounds(combinedData);
-                }
-            } catch (error) {
-                console.error("Error loading initial data:", error);
-            }
+                if (combinedData.features.length > 0) calculateBounds(combinedData);
+            } catch (error) { console.error("Error loading initial data:", error); }
         };
-
         loadInitialData();
     }, [calculateBounds]);
 
@@ -140,37 +121,55 @@ const App: React.FC = () => {
         setLayers(prev => prev.map(l => l.name === layerName ? { ...l, isVisible } : l));
     }, []);
 
-    const handleAssetSelect = useCallback((layerId: string, feature: Feature) => {
-        if (selectedAsset && selectedAsset.layerId === layerId && String(selectedAsset.feature.properties?.fid) === String(feature.properties?.fid)) {
-            // do nothing if same asset is clicked
-        } else {
-            setSelectedAsset({ layerId, feature });
-            if (feature.geometry) {
-                calculateBounds(feature);
-            }
-        }
-    }, [selectedAsset, calculateBounds]);
+    const handleAssetSelect = useCallback((layerId: string, feature: Feature, isCtrlPressed: boolean) => {
+        const newSelection = { layerId, feature };
+        const fid = String(feature.properties?.fid);
 
+        setSelectedAssets(prev => {
+            const isAlreadySelected = prev.some(item => item.layerId === layerId && String(item.feature.properties?.fid) === fid);
+
+            if (isCtrlPressed) {
+                return isAlreadySelected
+                    ? prev.filter(item => !(item.layerId === layerId && String(item.feature.properties?.fid) === fid))
+                    : [...prev, newSelection];
+            } else {
+                return isAlreadySelected && prev.length === 1 ? [] : [newSelection];
+            }
+        });
+
+        if (feature.geometry) calculateBounds(feature);
+    }, [calculateBounds]);
+
+    const handleAreaSelect = useCallback((assets: { layerId: string, feature: Feature }[], isCtrlPressed: boolean) => {
+        setSelectedAssets(prev => {
+            if (isCtrlPressed) {
+                const existingSelectionMap = new Map(prev.map(a => [`${a.layerId}-${a.feature.properties?.fid}`, a]));
+                for(const asset of assets) {
+                    const key = `${asset.layerId}-${asset.feature.properties?.fid}`;
+                    if (!existingSelectionMap.has(key)) {
+                        existingSelectionMap.set(key, asset);
+                    }
+                }
+                return Array.from(existingSelectionMap.values());
+            } else {
+                return assets;
+            }
+        });
+    }, []);
+
+    const handleClearSelection = useCallback(() => { setSelectedAssets([]); }, []);
     const handleZoomToLayer = useCallback((layerId: string) => {
         const layer = layers.find(l => l.id === layerId);
-        if (layer && layer.data.features.length > 0) {
-            calculateBounds(layer.data);
-        }
+        if (layer && layer.data.features.length > 0) calculateBounds(layer.data);
     }, [layers, calculateBounds]);
 
-    const handleOpenAttributeTable = (layerId: string) => {
-        setAttributeTableLayerId(layerId);
-    };
-
-    const handleCloseAttributeTable = () => {
-        setAttributeTableLayerId(null);
-    };
+    const handleOpenAttributeTable = (layerId: string) => { setAttributeTableLayerId(layerId); };
+    const handleCloseAttributeTable = () => { setAttributeTableLayerId(null); };
+    const handleCalculateArea = () => { setAreaModalOpen(true); };
 
     const handleCategoryFilter = (layerId: string, key: string, value: string) => {
         const layer = layers.find(l => l.id === layerId);
-        if (layer) {
-            setActiveLayerTab(layer.name);
-        }
+        if (layer) setActiveLayerTab(layer.name);
         setPropertySearchKey(key);
         setPropertySearchValue(value);
         setSidebarView('assets');
@@ -188,26 +187,20 @@ const App: React.FC = () => {
             layerColor: activeLayer.color
         }));
         
-        // Apply property search first
         if (propertySearchKey.trim() && propertySearchValue.trim()) {
             const lowerKey = propertySearchKey.toLowerCase().trim();
             const lowerValue = propertySearchValue.toLowerCase().trim();
             list = list.filter(asset => {
                 if (!asset.feature.properties) return false;
-                
                 const matchingPropKey = Object.keys(asset.feature.properties).find(k => k.toLowerCase() === lowerKey);
-
                 if (matchingPropKey) {
                     const propValue = asset.feature.properties[matchingPropKey];
-                    if (propValue !== null && propValue !== undefined) {
-                        return String(propValue).toLowerCase().includes(lowerValue);
-                    }
+                    return propValue !== null && propValue !== undefined && String(propValue).toLowerCase().includes(lowerValue);
                 }
                 return false;
             });
         }
 
-        // Then apply general search
         if (assetSearchTerm.trim()) {
             const lowercasedFilter = assetSearchTerm.toLowerCase();
             list = list.filter(asset => {
@@ -216,23 +209,19 @@ const App: React.FC = () => {
                 return displayName.includes(lowercasedFilter) || id.includes(lowercasedFilter);
             });
         }
-
         return list;
     }, [layers, activeLayerTab, assetSearchTerm, propertySearchKey, propertySearchValue]);
     
-    const displayedAsset = useMemo(() => {
-        if (!selectedAsset) return null;
-        const layer = layers.find(l => l.id === selectedAsset.layerId);
-        if (!layer) return null;
-        return {
-            layer,
-            feature: selectedAsset.feature
-        }
-    }, [selectedAsset, layers]);
-
     const layerForAttributeTable = useMemo(() => {
         return layers.find(l => l.id === attributeTableLayerId);
     }, [layers, attributeTableLayerId]);
+
+    const mappedSelectedAssets = useMemo(() => {
+        return selectedAssets.map(asset => {
+            const layer = layers.find(l => l.id === asset.layerId);
+            return { layer, feature: asset.feature };
+        }).filter(item => item.layer);
+    }, [selectedAssets, layers]);
 
     return (
         <div className="relative flex h-screen w-full flex-col overflow-hidden">
@@ -248,8 +237,9 @@ const App: React.FC = () => {
                     onOpenAttributeTable={handleOpenAttributeTable}
                     onCategoryFilter={handleCategoryFilter}
                     assets={assetList}
-                    selectedAsset={selectedAsset}
+                    selectedAssets={selectedAssets}
                     onAssetSelect={handleAssetSelect}
+                    onCalculateArea={handleCalculateArea}
                     assetSearchTerm={assetSearchTerm}
                     onAssetSearchChange={setAssetSearchTerm}
                     propertySearchKey={propertySearchKey}
@@ -267,8 +257,10 @@ const App: React.FC = () => {
                         zoom={15}
                         layers={layers}
                         boundsToFit={boundsToFit}
-                        onFeatureSelect={(layer, feature) => handleAssetSelect(layer.id, feature)}
-                        selectedFeature={displayedAsset}
+                        onFeatureSelect={handleAssetSelect}
+                        selectedAssets={mappedSelectedAssets as { layer: GeoJsonLayer; feature: Feature }[]}
+                        onClearSelection={handleClearSelection}
+                        onAreaSelect={handleAreaSelect}
                     />
                 </main>
             </div>
@@ -277,11 +269,16 @@ const App: React.FC = () => {
                     layer={layerForAttributeTable}
                     onClose={handleCloseAttributeTable}
                     onFeatureSelect={(feature) => {
-                        handleAssetSelect(layerForAttributeTable.id, feature);
+                        handleAssetSelect(layerForAttributeTable.id, feature, false);
                         handleCloseAttributeTable();
                     }}
                 />
             )}
+            <AreaCalculationModal 
+                isOpen={isAreaModalOpen}
+                onClose={() => setAreaModalOpen(false)}
+                assets={selectedAssets}
+            />
         </div>
     );
 };

@@ -84,10 +84,10 @@ const LayerStatistics: React.FC<LayerStatisticsProps> = ({ layer, onClose, onCat
       </div>
 
       <div className="mt-4 flex-shrink-0">
-        <h2 className="text-xl font-bold text-slate-800">Layer Statistics</h2>
+        <h2 className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-indigo-500 to-sky-500">Layer Statistics</h2>
         <div className="flex items-center gap-2 mt-2 text-xs text-slate-500">
             <span>For layer:</span>
-            <span className="font-semibold truncate bg-slate-100 px-2 py-1 rounded-md" title={layer.name}>
+            <span className="font-semibold truncate bg-slate-100 px-2 py-1 rounded-md text-slate-700" title={layer.name}>
                 {layer.name}
             </span>
         </div>
@@ -96,10 +96,10 @@ const LayerStatistics: React.FC<LayerStatisticsProps> = ({ layer, onClose, onCat
       <div className="mt-4 flex-grow overflow-y-auto -mr-4 pr-3 space-y-6">
         {areaStats.featuresWithArea.length > 0 && (
             <div>
-                <h3 className="text-sm font-bold text-primary mb-3 uppercase tracking-wider">Area Analysis</h3>
+                <h3 className="text-sm font-bold text-slate-800 mb-3">Area Analysis</h3>
                 <div className="bg-slate-100 p-3 rounded-lg text-center mb-4">
                     <p className="text-slate-600 text-xs">Total Calculated Area</p>
-                    <p className="text-slate-800 font-bold text-2xl tracking-tight">{formatArea(areaStats.totalArea)}</p>
+                    <p className="text-slate-900 font-bold text-2xl tracking-tight">{formatArea(areaStats.totalArea)}</p>
                 </div>
                  <div className="space-y-2 text-xs">
                     {areaStats.featuresWithArea.slice(0, 15).map(({ name, area, feature }, index) => {
@@ -109,13 +109,13 @@ const LayerStatistics: React.FC<LayerStatisticsProps> = ({ layer, onClose, onCat
                           <button
                             key={`${name}-${index}`}
                             onClick={() => onFeatureSelect(feature)}
-                            className="grid grid-cols-6 items-center gap-2 group w-full text-left p-1 rounded-md hover:bg-slate-100 transition-colors"
+                            className="grid grid-cols-6 items-center gap-3 group w-full text-left p-1 rounded-md hover:bg-slate-100/70 transition-all transform hover:scale-[1.02] hover:shadow-sm"
                            >
-                            <span className="col-span-2 text-slate-600 truncate" title={name}>{name}</span>
+                            <span className="col-span-2 font-medium text-slate-700 truncate" title={name}>{name}</span>
                             <div className="col-span-3 bg-slate-200 rounded-full h-2">
-                                <div className="bg-primary h-2 rounded-full transition-all duration-300 group-hover:bg-blue-400" style={{ width: `${percentage}%` }}></div>
+                                <div className="bg-gradient-to-r from-sky-400 to-cyan-400 h-2 rounded-full transition-all duration-300 group-hover:from-sky-300 group-hover:to-cyan-300" style={{ width: `${percentage}%` }}></div>
                             </div>
-                            <span className="text-slate-700 font-medium text-right tabular-nums">{formatArea(area)}</span>
+                            <span className="font-semibold text-slate-800 text-right tabular-nums">{formatArea(area)}</span>
                           </button>
                        )
                     })}
@@ -128,26 +128,26 @@ const LayerStatistics: React.FC<LayerStatisticsProps> = ({ layer, onClose, onCat
 
         {categoricalEntries.length > 0 && (
           <div>
-            <h3 className="text-sm font-bold text-primary mb-3 uppercase tracking-wider">Categorical Fields</h3>
+            <h3 className="text-sm font-bold text-slate-800 mb-3">Categorical Fields</h3>
             <div className="space-y-4">
               {categoricalEntries.map(([key, valueCounts]) => (
                 <div key={key}>
                   <p className="font-bold text-slate-800 mb-2 text-sm truncate">{key}</p>
                   <div className="space-y-1 text-xs">
                     {Object.entries(valueCounts).slice(0, 10).map(([value, count]) => {
-                       const totalCount = layer.data.features.length;
+                       const totalCount = Object.values(valueCounts).reduce((sum, current) => sum + current, 0);
                        const percentage = Math.max(1, (count / totalCount) * 100);
                        return (
                           <button
                             key={value}
                             onClick={() => onCategoryFilter(key, value)}
-                            className="grid grid-cols-5 items-center gap-2 group w-full text-left p-1 rounded-md hover:bg-slate-100 transition-colors"
+                            className="grid grid-cols-5 items-center gap-3 group w-full text-left p-1 rounded-md hover:bg-slate-100/70 transition-all transform hover:scale-[1.02] hover:shadow-sm"
                           >
-                            <span className="col-span-2 text-slate-600 truncate" title={value}>{value}</span>
+                            <span className="col-span-2 font-medium text-slate-700 truncate" title={value}>{value}</span>
                             <div className="col-span-2 bg-slate-200 rounded-full h-2">
-                                <div className="bg-primary h-2 rounded-full transition-all duration-300 group-hover:bg-blue-400" style={{ width: `${percentage}%` }}></div>
+                                <div className="bg-gradient-to-r from-indigo-400 to-purple-400 h-2 rounded-full transition-all duration-300 group-hover:from-indigo-300 group-hover:to-purple-300" style={{ width: `${percentage}%` }}></div>
                             </div>
-                            <span className="text-slate-700 font-medium text-right tabular-nums">{count.toLocaleString()}</span>
+                            <span className="font-semibold text-slate-800 text-right tabular-nums">{count.toLocaleString()}</span>
                           </button>
                        )
                     })}

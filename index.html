@@ -23,7 +23,7 @@
         }
     </script>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha26-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
     <style>
         body {
             --checkbox-tick-svg: url('data:image/svg+xml,%3csvg viewBox=%270 0 16 16%27 fill=%27rgb(255, 255, 255)%27 xmlns=%27http://www.w3.org/2000/svg%27%3e%3cpath d=%27M12.207 4.793a1 1 0 010 1.414l-5 5a1 1 0 01-1.414 0l-2-2a1 1 0 011.414-1.414L6.5 9.086l4.293-4.293a1 1 0 011.414 0z%27/%3e%3c/svg%3e');
@@ -84,21 +84,22 @@
         }
         /* Custom Leaflet Popup Styles */
         .custom-leaflet-popup .leaflet-popup-content-wrapper {
-            background-color: #ffffff; /* white */
-            color: #1e293b; /* slate-800 */
-            border: 1px solid #e2e8f0; /* slate-200 */
-            border-radius: 0.5rem;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            background-color: rgb(248 250 252 / 0.92); /* slate-50 with opacity for a bright, clean look */
+            backdrop-filter: blur(10px);
+            color: #0f172a; /* slate-900 for dark, high-contrast text */
+            border: none;
+            border-radius: 0.75rem; /* rounded-xl */
+            box-shadow: 0 10px 30px -5px rgba(15, 23, 42, 0.1), 0 0 0 1px rgba(15, 23, 42, 0.05);
             padding: 1rem;
         }
         .custom-leaflet-popup .leaflet-popup-content {
             margin: 0;
             width: 100% !important;
             line-height: 1.5;
-            font-size: 13px;
+            font-size: 14px; /* Increased for readability */
         }
         .custom-leaflet-popup .leaflet-popup-tip {
-            background: #ffffff;
+             background: rgb(248 250 252 / 0.92); /* Match the new background */
         }
         .custom-leaflet-popup a.leaflet-popup-close-button {
             color: #64748b !important; /* slate-500 */
@@ -107,12 +108,11 @@
         .custom-leaflet-popup a.leaflet-popup-close-button:hover {
             color: #0f172a !important;
         }
-        .custom-leaflet-popup .text-green-500 { color: #22c55e; }
-        .custom-leaflet-popup .text-yellow-500 { color: #eab308; }
-        .custom-leaflet-popup .text-slate-500 { color: #64748b; }
+        .custom-leaflet-popup .text-green-500 { color: #16a34a; } /* Darker green for better contrast */
+        .custom-leaflet-popup .text-yellow-500 { color: #d97706; } /* Darker amber for better contrast */
+        .custom-leaflet-popup .text-slate-500 { color: #475569 !important; } /* Darker label color: slate-600 */
         .custom-leaflet-popup h3 { color: #0f172a !important; } /* slate-900 */
         .custom-leaflet-popup .border-slate-300 { border-color: #d1d5db; }
-        .custom-leaflet-popup .text-slate-500 { color: #64748b; }
 
         /* Measurement Tooltip Styles */
         .measure-tooltip {
