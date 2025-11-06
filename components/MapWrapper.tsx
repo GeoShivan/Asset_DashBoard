@@ -38,10 +38,10 @@ interface GeoJsonRendererProps {
   layers: GeoJsonLayer[];
   onFeatureSelect: (layer: GeoJsonLayer, feature: Feature) => void;
   selectedFeature: { layer: GeoJsonLayer; feature: Feature } | null;
-  isMeasuring: boolean;
+  isToolActive: boolean;
 }
 
-const GeoJsonRenderer: React.FC<GeoJsonRendererProps> = ({ layers, onFeatureSelect, selectedFeature, isMeasuring }) => {
+const GeoJsonRenderer: React.FC<GeoJsonRendererProps> = ({ layers, onFeatureSelect, selectedFeature, isToolActive }) => {
   const map = useMap();
   
   return (
@@ -50,7 +50,7 @@ const GeoJsonRenderer: React.FC<GeoJsonRendererProps> = ({ layers, onFeatureSele
         if (!layer.isVisible) return null;
 
         const onEachFeature = (feature: Feature, mapLayer: L.Layer) => {
-           if (!isMeasuring) {
+           if (!isToolActive) {
                 mapLayer.on({ 
                     click: (e: L.LeafletMouseEvent) => {
                     L.DomEvent.stop(e);
@@ -125,7 +125,7 @@ const GeoJsonRenderer: React.FC<GeoJsonRendererProps> = ({ layers, onFeatureSele
         };
         
         const selectedId = selectedFeature ? `${selectedFeature.layer.id}-${selectedFeature.feature.properties?.fid}` : 'none';
-        const key = `${layer.id}-${layer.isVisible}-${layer.color}-${layer.strokeOpacity}-${layer.fillOpacity}-${layer.dashArray}-${layer.data.features.length}-${selectedId}-${isMeasuring}`;
+        const key = `${layer.id}-${layer.isVisible}-${layer.color}-${layer.strokeOpacity}-${layer.fillOpacity}-${layer.dashArray}-${layer.data.features.length}-${selectedId}-${isToolActive}`;
 
         return (
           <GeoJSON
@@ -209,6 +209,30 @@ const DeleteIcon = () => (
         <path d="M8 6V4C8 3.46957 8.21071 2.96086 8.58579 2.58579C8.96086 2.21071 9.46957 2 10 2H14C14.5304 2 15.0391 2.21071 15.4142 2.58579C15.7893 2.96086 16 3.46957 16 4V6M19 6V20C19 20.5304 18.7893 21.0391 18.4142 21.4142C18.0391 21.7893 17.5304 22 17 22H7C6.46957 22 5.96086 21.7893 5.58579 21.4142C5.21071 21.0391 5 20.5304 5 20V6H19Z" stroke="#EF4444" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
     </svg>
 );
+const ZoomWindowIcon = () => (
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M15.5 15.5L20 20" stroke="#3B82F6" strokeWidth="2" strokeLinecap="round"/>
+        <circle cx="10" cy="10" r="7" stroke="#3B82F6" strokeWidth="2"/>
+        <rect x="6" y="6" width="8" height="8" fill="#3B82F6" fillOpacity="0.2" stroke="#3B82F6" strokeWidth="1.5" strokeDasharray="2 2"/>
+    </svg>
+);
+const MeasureToolIcon = () => (
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        {/* Ruler */}
+        <path d="M3 14H21V18H3V14Z" fill="#FBBF24" stroke="#111827" strokeWidth="2" strokeLinejoin="round" />
+        <path d="M7 14V16" stroke="#111827" strokeWidth="1.5" strokeLinecap="round" />
+        <path d="M10.5 14V15.5" stroke="#111827" strokeWidth="1.5" strokeLinecap="round" />
+        <path d="M14 14V16" stroke="#111827" strokeWidth="1.5" strokeLinecap="round" />
+        <path d="M17.5 14V15.5" stroke="#111827" strokeWidth="1.5" strokeLinecap="round" />
+
+        {/* Dimension Lines */}
+        <path d="M4 6V10" stroke="#111827" strokeWidth="2" strokeLinecap="round" />
+        <path d="M20 6V10" stroke="#111827" strokeWidth="2" strokeLinecap="round" />
+        <path d="M4 8L20 8" stroke="#111827" strokeWidth="2" strokeLinecap="round"/>
+        <path d="M7 6L4 8L7 10" stroke="#111827" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+        <path d="M17 6L20 8L17 10" stroke="#111827" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+    </svg>
+);
 // --- End Icons ---
 
 
@@ -220,9 +244,10 @@ interface MapControlsProps {
     setDistanceUnit: (unit: DistanceUnit) => void;
     areaUnit: AreaUnit;
     setAreaUnit: (unit: AreaUnit) => void;
+    setIsZooming: (isZooming: boolean) => void;
 }
 
-const MapControls: React.FC<MapControlsProps> = ({ map, measureMode, setMeasureMode, distanceUnit, setDistanceUnit, areaUnit, setAreaUnit }) => {
+const MapControls: React.FC<MapControlsProps> = ({ map, measureMode, setMeasureMode, distanceUnit, setDistanceUnit, areaUnit, setAreaUnit, setIsZooming }) => {
     const [isMeasurePanelOpen, setMeasurePanelOpen] = useState(false);
     const [points, setPoints] = useState<L.LatLng[]>([]);
     const pointsRef = useRef<L.LatLng[]>([]);
@@ -232,7 +257,7 @@ const MapControls: React.FC<MapControlsProps> = ({ map, measureMode, setMeasureM
     const measureLayersRef = useRef<L.FeatureGroup>(new L.FeatureGroup());
     const tempLayerRef = useRef<L.Layer | null>(null);
     const tooltipRef = useRef<L.Tooltip | null>(null);
-
+    
     const formatDistance = useCallback((meters: number) => {
         const unitConfig = DISTANCE_UNITS[distanceUnit];
         const convertedValue = meters * unitConfig.conversion;
@@ -335,19 +360,22 @@ const MapControls: React.FC<MapControlsProps> = ({ map, measureMode, setMeasureM
 
     const startMeasure = useCallback((mode: 'distance' | 'area') => {
         clearAllMeasurements();
+        setIsZooming(false);
         setMeasureMode(mode);
-    }, [clearAllMeasurements, setMeasureMode]);
+    }, [clearAllMeasurements, setMeasureMode, setIsZooming]);
     
     const toggleMeasurePanel = useCallback(() => {
         setMeasurePanelOpen(prev => {
             if (prev) { // When closing the panel
                 clearAllMeasurements();
                 setMeasureMode(null);
+            } else {
+                setIsZooming(false);
             }
             return !prev;
         });
-    }, [clearAllMeasurements, setMeasureMode]);
-    
+    }, [clearAllMeasurements, setMeasureMode, setIsZooming]);
+
     const handleMeasureButtonClick = (mode: 'distance' | 'area') => {
         if (measureMode === mode) {
             const minPoints = mode === 'distance' ? 2 : 3;
@@ -456,7 +484,7 @@ const MapControls: React.FC<MapControlsProps> = ({ map, measureMode, setMeasureM
         };
 
     }, [map, measureMode, finalizeMeasurement, clearInProgressMeasurement, formatDistance, formatArea]);
-
+    
     useEffect(() => {
         measureLayersRef.current.clearLayers();
         if (points.length > 0) {
@@ -471,26 +499,13 @@ const MapControls: React.FC<MapControlsProps> = ({ map, measureMode, setMeasureM
         }
     }, [points, measureMode]);
     
-    const handleZoomIn = () => map?.zoomIn();
-    const handleZoomOut = () => map?.zoomOut();
-
     const currentUnit = measureMode === 'distance' ? distanceUnit : areaUnit;
     const unitSet = measureMode === 'distance' ? DISTANCE_UNITS : AREA_UNITS;
     
     const controlButtonClasses = "flex size-10 items-center justify-center rounded-xl bg-white/80 backdrop-blur-md shadow-lg shadow-sky-200/50 border border-slate-200 hover:bg-sky-100/80 hover:border-sky-300 hover:shadow-sky-300/80 transition-all duration-200 ease-in-out";
 
     return (
-         <div className="absolute bottom-4 right-4 flex flex-col items-end gap-3 z-[1000]">
-            <div className="flex flex-col rounded-xl bg-white/95 backdrop-blur-md shadow-lg border border-slate-200 overflow-hidden">
-                <button onClick={handleZoomIn} title="Zoom In" className="group flex size-10 items-center justify-center hover:bg-slate-100 transition-all duration-200 ease-in-out">
-                    <ZoomInIcon />
-                </button>
-                <div className="h-px bg-slate-200"></div>
-                <button onClick={handleZoomOut} title="Zoom Out" className="group flex size-10 items-center justify-center hover:bg-slate-100 transition-all duration-200 ease-in-out">
-                    <ZoomOutIcon />
-                </button>
-            </div>
-            
+         <div className="flex items-end gap-3">
              <div className="flex flex-col items-end gap-2">
                 {isMeasurePanelOpen && (
                     <div className="flex items-center gap-2">
@@ -556,21 +571,7 @@ const MapControls: React.FC<MapControlsProps> = ({ map, measureMode, setMeasureM
                                 <path d="M5 12H19" stroke="#f43f5e" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
                             </svg>
                         ) : (
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M5 7V11" stroke="#1E293B" strokeWidth="1.5" strokeLinecap="round"/>
-                                <path d="M19 7V11" stroke="#1E293B" strokeWidth="1.5" strokeLinecap="round"/>
-                                <path d="M5 9L19 9" stroke="#1E293B" strokeWidth="1.5" strokeLinecap="round"/>
-                                <path d="M7 7.5L5 9L7 10.5" stroke="#1E293B" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                                <path d="M17 7.5L19 9L17 10.5" stroke="#1E293B" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                                <path d="M3.5 13.5H20.5C20.7761 13.5 21 13.7239 21 14V16C21 16.2761 20.7761 16.5 20.5 16.5H3.5C3.22386 16.5 3 16.2761 3 16V14C3 13.7239 3.22386 13.5 3.5 13.5Z" fill="#3B82F6" stroke="#1E293B" strokeWidth="1.5"/>
-                                <path d="M6 13.5V16.5" stroke="#1E293B" strokeWidth="1.5" strokeLinecap="round"/>
-                                <path d="M8 13.5V15.5" stroke="#1E293B" strokeWidth="1.5" strokeLinecap="round"/>
-                                <path d="M10 13.5V16.5" stroke="#1E293B" strokeWidth="1.5" strokeLinecap="round"/>
-                                <path d="M12 13.5V15.5" stroke="#1E293B" strokeWidth="1.5" strokeLinecap="round"/>
-                                <path d="M14 13.5V16.5" stroke="#1E293B" strokeWidth="1.5" strokeLinecap="round"/>
-                                <path d="M16 13.5V15.5" stroke="#1E293B" strokeWidth="1.5" strokeLinecap="round"/>
-                                <path d="M18 13.5V16.5" stroke="#1E293B" strokeWidth="1.5" strokeLinecap="round"/>
-                            </svg>
+                           <MeasureToolIcon />
                         )}
                     </div>
                 </button>
@@ -747,6 +748,23 @@ const NorthArrowControl: React.FC<{
     );
 };
 
+const MapZoomControl: React.FC<{ map: L.Map | null }> = ({ map }) => {
+    const handleZoomIn = () => map?.zoomIn();
+    const handleZoomOut = () => map?.zoomOut();
+
+    return (
+        <div className="flex flex-col rounded-xl bg-white/95 backdrop-blur-md shadow-lg border border-slate-200 overflow-hidden">
+            <button onClick={handleZoomIn} title="Zoom In" className="group flex size-10 items-center justify-center hover:bg-slate-100 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 ease-in-out" disabled={!map}>
+                <ZoomInIcon />
+            </button>
+            <div className="h-px bg-slate-200"></div>
+            <button onClick={handleZoomOut} title="Zoom Out" className="group flex size-10 items-center justify-center hover:bg-slate-100 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 ease-in-out" disabled={!map}>
+                <ZoomOutIcon />
+            </button>
+        </div>
+    )
+}
+
 interface MapWrapperProps {
   center: [number, number];
   zoom: number;
@@ -763,6 +781,10 @@ const MapWrapper: React.FC<MapWrapperProps> = ({ center, zoom, layers, boundsToF
   const [distanceUnit, setDistanceUnit] = useState<DistanceUnit>('m');
   const [areaUnit, setAreaUnit] = useState<AreaUnit>('m²');
   const [northArrowIcon, setNorthArrowIcon] = useState<string>(NORTH_ARROW_SVGS[0].name);
+  const [isZooming, setIsZooming] = useState(false);
+
+  const zoomRectRef = useRef<L.Rectangle | null>(null);
+  const zoomStartPointRef = useRef<L.LatLng | null>(null);
 
   useEffect(() => {
     const savedIcon = localStorage.getItem('northArrowIcon');
@@ -785,6 +807,80 @@ const MapWrapper: React.FC<MapWrapperProps> = ({ center, zoom, layers, boundsToF
     }
   };
 
+  const toggleZoomWindow = useCallback(() => {
+        if (!isZooming) {
+            setMeasureMode(null);
+        }
+        setIsZooming(prev => !prev);
+    }, [isZooming]);
+
+  useEffect(() => {
+      if (!map) return;
+
+      if (isZooming) {
+          map.dragging.disable();
+          (map.getContainer().style.cursor = 'crosshair');
+          
+          const handleMouseDown = (e: L.LeafletMouseEvent) => {
+              zoomStartPointRef.current = e.latlng;
+              zoomRectRef.current = L.rectangle([e.latlng, e.latlng], {
+                  color: '#3b82f6',
+                  weight: 2,
+                  fillOpacity: 0.1,
+                  dashArray: '5, 5'
+              }).addTo(map);
+          };
+
+          const handleMouseMove = (e: L.LeafletMouseEvent) => {
+              if (zoomRectRef.current && zoomStartPointRef.current) {
+                  zoomRectRef.current.setBounds(L.latLngBounds(zoomStartPointRef.current, e.latlng));
+              }
+          };
+
+          const handleMouseUp = () => {
+              if (zoomRectRef.current) {
+                  const bounds = zoomRectRef.current.getBounds();
+                  if (bounds.getNorthEast().distanceTo(bounds.getSouthWest()) > 10) {
+                        map.flyToBounds(bounds);
+                  }
+                  map.removeLayer(zoomRectRef.current);
+              }
+              zoomRectRef.current = null;
+              zoomStartPointRef.current = null;
+              setIsZooming(false);
+          };
+
+          const handleKeyDown = (e: KeyboardEvent) => {
+              if (e.key === 'Escape') {
+                  setIsZooming(false);
+              }
+          };
+          
+          map.on('mousedown', handleMouseDown);
+          map.on('mousemove', handleMouseMove);
+          map.on('mouseup', handleMouseUp);
+          document.addEventListener('keydown', handleKeyDown);
+
+          return () => {
+              map.off('mousedown', handleMouseDown);
+              map.off('mousemove', handleMouseMove);
+              map.off('mouseup', handleMouseUp);
+              document.removeEventListener('keydown', handleKeyDown);
+          };
+      } else {
+            map.dragging.enable();
+          (map.getContainer().style.cursor = '');
+            if (zoomRectRef.current) {
+              map.removeLayer(zoomRectRef.current);
+              zoomRectRef.current = null;
+            }
+            zoomStartPointRef.current = null;
+      }
+  }, [map, isZooming, setIsZooming]);
+  
+  const controlButtonClasses = "flex size-10 items-center justify-center rounded-xl bg-white/80 backdrop-blur-md shadow-lg shadow-sky-200/50 border border-slate-200 hover:bg-sky-100/80 hover:border-sky-300 hover:shadow-sky-300/80 transition-all duration-200 ease-in-out";
+
+
   return (
     <div className="relative flex-1 h-full rounded-xl overflow-hidden shadow-sm border border-slate-200">
       <MapContainer center={center} zoom={zoom} scrollWheelZoom={true} zoomControl={false} ref={setMap} doubleClickZoom={false}>
@@ -794,7 +890,7 @@ const MapWrapper: React.FC<MapWrapperProps> = ({ center, zoom, layers, boundsToF
           url={activeBasemap.url}
         />
         <MapUpdater boundsToFit={boundsToFit} />
-        <GeoJsonRenderer layers={layers} onFeatureSelect={onFeatureSelect} selectedFeature={selectedFeature} isMeasuring={!!measureMode} />
+        <GeoJsonRenderer layers={layers} onFeatureSelect={onFeatureSelect} selectedFeature={selectedFeature} isToolActive={!!measureMode || isZooming} />
       </MapContainer>
         
         <div className="absolute top-4 right-4 z-[1000] flex flex-col gap-3">
@@ -803,18 +899,29 @@ const MapWrapper: React.FC<MapWrapperProps> = ({ center, zoom, layers, boundsToF
                 selectedIcon={northArrowIcon}
                 onIconChange={handleNorthArrowIconChange}
             />
+            <MapZoomControl map={map} />
+            <button 
+                onClick={toggleZoomWindow} 
+                title="Zoom to Area" 
+                className={`${controlButtonClasses} ${isZooming ? '!bg-sky-100 !border-sky-400' : ''}`}
+            >
+                <ZoomWindowIcon />
+            </button>
             <BasemapControl activeBasemapKey={activeBasemapKey} onBasemapChange={setActiveBasemapKey} />
         </div>
         
-        <MapControls 
-            map={map}
-            measureMode={measureMode} 
-            setMeasureMode={setMeasureMode}
-            distanceUnit={distanceUnit}
-            setDistanceUnit={setDistanceUnit}
-            areaUnit={areaUnit}
-            setAreaUnit={setAreaUnit}
-        />
+        <div className="absolute bottom-4 right-4 z-[1000]">
+            <MapControls 
+                map={map}
+                measureMode={measureMode} 
+                setMeasureMode={setMeasureMode}
+                distanceUnit={distanceUnit}
+                setDistanceUnit={setDistanceUnit}
+                areaUnit={areaUnit}
+                setAreaUnit={setAreaUnit}
+                setIsZooming={setIsZooming}
+            />
+        </div>
     </div>
   );
 };

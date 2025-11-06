@@ -57,13 +57,20 @@ const App: React.FC = () => {
         try {
             const features = ('features' in geojson) ? geojson.features : [geojson];
             
-            // Filter for features that have valid, non-empty geometries.
-            const validFeatures = features.filter(f => 
-                f && f.geometry && Array.isArray(f.geometry.coordinates) && f.geometry.coordinates.length > 0
-            );
+            // A more robust filter to find features with actual, valid coordinate data.
+            const validFeatures = features.filter(f => {
+                if (!f?.geometry?.coordinates || f.geometry.coordinates.length === 0) {
+                    return false;
+                }
+                // Flatten the coordinates array completely. If it results in an empty array,
+                // or contains non-numeric/infinite values, the geometry is considered invalid.
+                const coords = f.geometry.coordinates.flat(Infinity);
+                return coords.length > 0 && coords.every(c => typeof c === 'number' && isFinite(c));
+            });
     
             if (validFeatures.length === 0) {
                 // No valid features to calculate bounds for.
+                console.warn("No valid features found to calculate bounds from.");
                 return;
             }
     

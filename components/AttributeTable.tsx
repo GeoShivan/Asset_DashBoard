@@ -14,22 +14,43 @@ type SortConfig = {
   direction: 'ascending' | 'descending';
 } | null;
 
-const ValueDisplay: React.FC<{ value: any }> = ({ value }) => {
+const Highlight: React.FC<{ text: string; highlight: string }> = ({ text, highlight }) => {
+  if (!highlight.trim()) {
+    return <>{text}</>;
+  }
+  const regex = new RegExp(`(${highlight.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&')})`, 'gi');
+  const parts = String(text).split(regex);
+  return (
+    <>
+      {parts.map((part, i) =>
+        part.toLowerCase() === highlight.toLowerCase() ? (
+          <mark key={i} className="bg-yellow-200 text-slate-900 px-0.5 py-0 rounded-sm">
+            {part}
+          </mark>
+        ) : (
+          part
+        )
+      )}
+    </>
+  );
+};
+
+const ValueDisplay: React.FC<{ value: any; searchTerm: string }> = ({ value, searchTerm }) => {
     if (value === null || value === undefined) {
         return <span className="text-slate-400">null</span>;
     }
     const lowerValue = String(value).toLowerCase();
     if (typeof value === 'number') {
-        return <span className="text-sky-600 font-mono">{value.toLocaleString()}</span>;
+        return <span className="text-sky-600 font-mono"><Highlight text={value.toLocaleString()} highlight={searchTerm} /></span>;
     }
     if (lowerValue === 'yes') {
-        return <span className="text-emerald-600 font-semibold">Yes</span>;
+        return <span className="text-emerald-600 font-semibold"><Highlight text="Yes" highlight={searchTerm} /></span>;
     }
     if (lowerValue === 'no') {
-        return <span className="text-rose-600 font-semibold">No</span>;
+        return <span className="text-rose-600 font-semibold"><Highlight text="No" highlight={searchTerm} /></span>;
     }
 
-    return <span className="text-slate-700">{String(value)}</span>;
+    return <span className="text-slate-700"><Highlight text={String(value)} highlight={searchTerm} /></span>;
 };
 
 
@@ -106,6 +127,9 @@ const AttributeTable: React.FC<AttributeTableProps> = ({ layer, onClose, onFeatu
     if (searchTerm) {
       const lowercasedFilter = searchTerm.toLowerCase();
       featureData = featureData.filter(feature => {
+        if (getFeatureDisplayName(feature).toLowerCase().includes(lowercasedFilter)) {
+            return true;
+        }
         if (!feature.properties) return false;
         return Object.values(feature.properties).some(value =>
           String(value).toLowerCase().includes(lowercasedFilter)
@@ -226,8 +250,8 @@ const AttributeTable: React.FC<AttributeTableProps> = ({ layer, onClose, onFeatu
                            {headers.map((header, idx) => (
                                 <td key={header} className={`px-4 py-3 whitespace-nowrap max-w-xs truncate ${idx === 0 ? 'sticky left-0 bg-white group-even:bg-slate-50/50 group-hover:bg-indigo-50 border-r border-slate-200 font-semibold text-indigo-600' : ''}`} title={String(header === 'Display Name' ? getFeatureDisplayName(feature) : (feature.properties?.[header] || ''))}>
                                     {header === 'Display Name' 
-                                        ? getFeatureDisplayName(feature)
-                                        : <ValueDisplay value={feature.properties?.[header]} />
+                                        ? <Highlight text={getFeatureDisplayName(feature)} highlight={searchTerm} />
+                                        : <ValueDisplay value={feature.properties?.[header]} searchTerm={searchTerm} />
                                     }
                                 </td>
                            ))}
