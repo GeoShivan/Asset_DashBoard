@@ -154,9 +154,9 @@ const LeftSidebar: React.FC<LeftSidebarProps> = ({
                                     onClick={onCalculateArea}
                                     disabled={selectedPolygons.length === 0}
                                     title="Calculate Area of Selected"
-                                    className="p-1.5 rounded-md text-slate-500 hover:bg-slate-200 hover:text-slate-800 disabled:text-slate-400 disabled:bg-transparent disabled:cursor-not-allowed transition-colors"
+                                    className="p-1.5 rounded-md text-cyan-600 hover:bg-cyan-100 disabled:text-slate-400 disabled:hover:bg-transparent disabled:cursor-not-allowed transition-colors"
                                 >
-                                    <span className="material-symbols-outlined" style={{ fontSize: '24px' }}>calculate</span>
+                                    <span className="material-symbols-outlined" style={{ fontSize: '24px' }}>square_foot</span>
                                 </button>
                                 <button 
                                     onClick={() => setSidebarView('statistics')} 
