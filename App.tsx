@@ -1,19 +1,18 @@
 import React, { useState, useMemo, useCallback, useEffect } from 'react';
 import type { Feature, FeatureCollection } from 'geojson';
 import L from 'leaflet';
-import { bbox } from '@turf/turf';
+import { bbox, BBox } from '@turf/turf';
 
 import LeftSidebar from './components/ControlPanel';
 import MapWrapper from './components/MapWrapper';
-import AssetDetailsPanel from './components/FeatureInspector';
 import AttributeTable from './components/AttributeTable';
 import type { GeoJsonLayer } from './types';
 import { getFeatureDisplayName } from './utils';
 
 const Header: React.FC = () => (
-    <header className="flex shrink-0 items-center justify-between whitespace-nowrap border-b border-slate-800 bg-slate-900 px-6 py-3 z-[1200]">
+    <header className="flex shrink-0 items-center justify-between whitespace-nowrap border-b border-slate-200 bg-white px-6 py-3 z-[1200]">
         <div className="flex items-center gap-8">
-            <div className="flex items-center gap-3 text-white">
+            <div className="flex items-center gap-3 text-slate-800">
                 <div className="size-8 text-primary">
                     <svg fill="none" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
                         <g clipPath="url(#clip0_6_543)">
@@ -25,12 +24,12 @@ const Header: React.FC = () => (
                 </div>
                 <h2 className="text-lg font-bold leading-tight tracking-[-0.015em]">GeoAsset Dashboard</h2>
             </div>
-            <div className="flex items-center gap-9 text-slate-300">
+            <div className="flex items-center gap-9 text-slate-600">
                 <a className="text-sm font-medium leading-normal text-primary" href="#">Dashboard</a>
             </div>
         </div>
         <div className="flex flex-1 justify-end gap-4">
-            <button className="flex max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 w-10 bg-slate-800 text-slate-300 gap-2 text-sm font-bold leading-normal tracking-[0.015em] min-w-0">
+            <button className="flex max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 w-10 bg-slate-100 text-slate-600 hover:bg-slate-200 gap-2 text-sm font-bold leading-normal tracking-[0.015em] min-w-0">
                 <span className="material-symbols-outlined" style={{ fontSize: '20px' }}>notifications</span>
             </button>
             <div className="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10" style={{ backgroundImage: `url("https://lh3.googleusercontent.com/a/ACg8ocK_gS2g_2YUN2a-wYp5c_NslloT2Sg_Nl4K6s5i-w=s96-c")` }}></div>
@@ -53,6 +52,41 @@ const App: React.FC = () => {
     const [propertySearchKey, setPropertySearchKey] = useState('');
     const [propertySearchValue, setPropertySearchValue] = useState('');
     const [attributeTableLayerId, setAttributeTableLayerId] = useState<string | null>(null);
+
+    const calculateBounds = useCallback((geojson: Feature | FeatureCollection) => {
+        try {
+            const features = ('features' in geojson) ? geojson.features : [geojson];
+            
+            // Filter for features that have valid, non-empty geometries.
+            const validFeatures = features.filter(f => 
+                f && f.geometry && Array.isArray(f.geometry.coordinates) && f.geometry.coordinates.length > 0
+            );
+    
+            if (validFeatures.length === 0) {
+                // No valid features to calculate bounds for.
+                return;
+            }
+    
+            const tempFc: FeatureCollection = { type: 'FeatureCollection', features: validFeatures as Feature[] };
+            const boundingBox = bbox(tempFc) as BBox;
+            
+            const [minX, minY, maxX, maxY] = boundingBox;
+    
+            // Rigorous validation: ensure all bbox coordinates are valid, finite numbers.
+            if (boundingBox.length === 4 && isFinite(minX) && isFinite(minY) && isFinite(maxX) && isFinite(maxY)) {
+                // Additional check for valid bounds range
+                if (minX <= maxX && minY <= maxY) {
+                     setBoundsToFit(L.latLngBounds(L.latLng(minY, minX), L.latLng(maxY, maxX)));
+                } else {
+                    console.warn("Calculated bounds are inverted:", boundingBox);
+                }
+            } else {
+                console.warn("Calculated bounds from turf.js are not valid:", boundingBox);
+            }
+        } catch (error) {
+            console.error("Error calculating bounds:", error);
+        }
+    }, []);
 
     useEffect(() => {
         const loadInitialData = async () => {
@@ -90,8 +124,7 @@ const App: React.FC = () => {
                 };
                 
                 if (combinedData.features.length > 0) {
-                    const [minX, minY, maxX, maxY] = bbox(combinedData);
-                    setBoundsToFit(L.latLngBounds(L.latLng(minY, minX), L.latLng(maxY, maxX)));
+                    calculateBounds(combinedData);
                 }
             } catch (error) {
                 console.error("Error loading initial data:", error);
@@ -99,7 +132,7 @@ const App: React.FC = () => {
         };
 
         loadInitialData();
-    }, []);
+    }, [calculateBounds]);
 
     const handleVisibilityChange = useCallback((layerName: string, isVisible: boolean) => {
         setLayerVisibility(prev => ({ ...prev, [layerName]: isVisible }));
@@ -111,26 +144,18 @@ const App: React.FC = () => {
         // do nothing if same asset is clicked
       } else {
         setSelectedAsset({ layerId, feature });
-        try {
-            const [minX, minY, maxX, maxY] = bbox(feature);
-            setBoundsToFit(L.latLngBounds(L.latLng(minY, minX), L.latLng(maxY, maxX)));
-        } catch (e) {
-            console.error("Could not calculate bounds for feature:", e);
+        if (feature.geometry) {
+            calculateBounds(feature);
         }
       }
-    }, [selectedAsset]);
+    }, [selectedAsset, calculateBounds]);
 
     const handleZoomToLayer = useCallback((layerId: string) => {
         const layer = layers.find(l => l.id === layerId);
         if (layer && layer.data.features.length > 0) {
-            try {
-                const [minX, minY, maxX, maxY] = bbox(layer.data);
-                setBoundsToFit(L.latLngBounds(L.latLng(minY, minX), L.latLng(maxY, maxX)));
-            } catch (e) {
-                console.error("Could not calculate bounds for layer:", e);
-            }
+            calculateBounds(layer.data);
         }
-    }, [layers]);
+    }, [layers, calculateBounds]);
 
     const handleOpenAttributeTable = (layerId: string) => {
         setAttributeTableLayerId(layerId);
@@ -235,7 +260,7 @@ const App: React.FC = () => {
                     sidebarView={sidebarView}
                     setSidebarView={setSidebarView}
                 />
-                <main className="flex flex-1 flex-col bg-background-dark p-4">
+                <main className="flex flex-1 flex-col bg-slate-100 p-4">
                     <MapWrapper
                         center={[13.267, 80.329]}
                         zoom={15}
@@ -245,11 +270,6 @@ const App: React.FC = () => {
                         selectedFeature={displayedAsset}
                     />
                 </main>
-                <AssetDetailsPanel
-                    layer={displayedAsset?.layer}
-                    feature={displayedAsset?.feature}
-                    onClose={() => setSelectedAsset(null)}
-                />
             </div>
             {layerForAttributeTable && (
                 <AttributeTable

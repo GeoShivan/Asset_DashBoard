@@ -16,10 +16,10 @@ export const getFeatureStatus = (feature: Feature): { status: string; color: str
     const statusProp = feature.properties?.Status || 'Unknown';
     switch(String(statusProp).toLowerCase()) {
         case 'comp':
-            return { status: 'Good Condition', color: 'text-green-400'};
+            return { status: 'Good Condition', color: 'text-green-500'};
         case 'requires maintenance':
-            return { status: 'Requires Maintenance', color: 'text-yellow-400'};
+            return { status: 'Requires Maintenance', color: 'text-yellow-500'};
         default:
-            return { status: 'Unknown', color: 'text-slate-400'};
+            return { status: 'Unknown', color: 'text-slate-500'};
     }
 }

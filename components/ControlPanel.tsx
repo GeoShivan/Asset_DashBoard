@@ -39,9 +39,9 @@ const layerIcons: Record<string, string> = {
 };
 
 const layerIconColors: Record<string, string> = {
-    'Buildings': 'text-orange-400',
-    'Horticulture': 'text-green-400',
-    'Roads': 'text-slate-400',
+    'Buildings': 'text-orange-500',
+    'Horticulture': 'text-green-500',
+    'Roads': 'text-slate-500',
 };
 
 const AssetCard: React.FC<{ asset: Asset; isSelected: boolean; onSelect: () => void; }> = ({ asset, isSelected, onSelect }) => {
@@ -54,14 +54,14 @@ const AssetCard: React.FC<{ asset: Asset; isSelected: boolean; onSelect: () => v
         <div 
             onClick={onSelect}
             style={borderStyle}
-            className={`flex flex-col gap-1 p-3 rounded-md cursor-pointer transition-all ${isSelected ? 'bg-primary/20' : 'bg-slate-800/50 hover:bg-slate-800'}`}
+            className={`flex flex-col gap-1 p-3 rounded-md cursor-pointer transition-all ${isSelected ? 'bg-primary/10' : 'bg-white hover:bg-slate-50'}`}
         >
             <div className="flex justify-between items-start">
-                <p className="text-sm font-semibold text-white truncate pr-2" title={displayName}>{displayName}</p>
-                <span className="text-xs font-medium text-slate-300 bg-slate-700/80 px-2 py-0.5 rounded-full shrink-0">{asset.layerName}</span>
+                <p className="text-sm font-semibold text-slate-800 truncate pr-2" title={displayName}>{displayName}</p>
+                <span className="text-xs font-medium text-slate-600 bg-slate-100 px-2 py-0.5 rounded-full shrink-0">{asset.layerName}</span>
             </div>
             <div className="flex justify-between items-center text-xs">
-                <p className="text-slate-400">ID: {asset.feature.properties?.fid || 'N/A'}</p>
+                <p className="text-slate-500">ID: {asset.feature.properties?.fid || 'N/A'}</p>
                 <p className={`font-medium ${color}`}>{status}</p>
             </div>
         </div>
@@ -77,15 +77,15 @@ const LeftSidebar: React.FC<LeftSidebarProps> = ({
     const activeLayer = layers.find(l => l.name === activeLayerTab);
     
     return (
-        <aside className="flex w-80 shrink-0 flex-col border-r border-slate-800 bg-slate-900 z-10">
+        <aside className="flex w-80 shrink-0 flex-col border-r border-slate-200 bg-slate-50 z-10">
             <div className="p-4 space-y-6 shrink-0">
                 <div>
-                    <h3 className="text-lg font-bold leading-tight tracking-[-0.015em] px-2 text-white">Layers</h3>
-                    <div className="flex flex-col gap-1 mt-3 px-2 text-slate-200">
+                    <h3 className="text-lg font-bold leading-tight tracking-[-0.015em] px-2 text-slate-800">Layers</h3>
+                    <div className="flex flex-col gap-1 mt-3 px-2 text-slate-700">
                         {layers.map(layer => (
                             <div 
                                 key={layer.id}
-                                className={`group flex items-center justify-between gap-3 px-3 py-2.5 rounded-lg cursor-pointer ${activeLayerTab === layer.name ? 'bg-primary/20 text-white' : 'hover:bg-slate-800/50'}`}
+                                className={`group flex items-center justify-between gap-3 px-3 py-2.5 rounded-lg cursor-pointer ${activeLayerTab === layer.name ? 'bg-primary/10 text-slate-800' : 'hover:bg-slate-200/50'}`}
                             >
                                 <div 
                                     className="flex items-center gap-3 flex-1"
@@ -94,7 +94,7 @@ const LeftSidebar: React.FC<LeftSidebarProps> = ({
                                         setSidebarView('assets');
                                     }}
                                 >
-                                    <span className={`material-symbols-outlined ${layerIconColors[layer.name] || 'text-slate-400'}`} style={{ fontSize: '24px' }}>{layerIcons[layer.name] || 'layers'}</span>
+                                    <span className={`material-symbols-outlined ${layerIconColors[layer.name] || 'text-slate-500'}`} style={{ fontSize: '24px' }}>{layerIcons[layer.name] || 'layers'}</span>
                                     <p className={`text-sm font-medium leading-normal`}>{layer.name}</p>
                                 </div>
                                 <div className="flex items-center">
@@ -104,7 +104,7 @@ const LeftSidebar: React.FC<LeftSidebarProps> = ({
                                             onVisibilityChange(layer.name, !layerVisibility[layer.name]);
                                         }}
                                         title={layerVisibility[layer.name] ? "Hide layer" : "Show layer"}
-                                        className={`p-1 rounded-md ${layerVisibility[layer.name] ? 'text-slate-300' : 'text-slate-600'} hover:bg-slate-700 hover:text-white transition-all`}
+                                        className={`p-1 rounded-md ${layerVisibility[layer.name] ? 'text-slate-600' : 'text-slate-400'} hover:bg-slate-300/50 hover:text-slate-800 transition-all`}
                                     >
                                         <span className="material-symbols-outlined" style={{ fontSize: '20px' }}>
                                             {layerVisibility[layer.name] ? 'visibility' : 'visibility_off'}
@@ -117,7 +117,7 @@ const LeftSidebar: React.FC<LeftSidebarProps> = ({
                                         }}
                                         disabled={layer.data.features.length === 0}
                                         title="Open attribute table"
-                                        className={`p-1 rounded-md text-slate-400 opacity-0 group-hover:opacity-100 ${activeLayerTab === layer.name ? 'opacity-100' : ''} hover:bg-slate-700 hover:text-white disabled:text-slate-600 disabled:bg-transparent disabled:cursor-not-allowed transition-all`}
+                                        className={`p-1 rounded-md text-slate-500 opacity-0 group-hover:opacity-100 ${activeLayerTab === layer.name ? 'opacity-100' : ''} hover:bg-slate-300/50 hover:text-slate-800 disabled:text-slate-400 disabled:bg-transparent disabled:cursor-not-allowed transition-all`}
                                     >
                                         <span className="material-symbols-outlined" style={{ fontSize: '20px' }}>table_chart</span>
                                     </button>
@@ -128,7 +128,7 @@ const LeftSidebar: React.FC<LeftSidebarProps> = ({
                                         }}
                                         disabled={layer.data.features.length === 0}
                                         title="Zoom to layer"
-                                        className={`p-1 rounded-md text-slate-400 opacity-0 group-hover:opacity-100 ${activeLayerTab === layer.name ? 'opacity-100' : ''} hover:bg-slate-700 hover:text-white disabled:text-slate-600 disabled:bg-transparent disabled:cursor-not-allowed transition-all`}
+                                        className={`p-1 rounded-md text-slate-500 opacity-0 group-hover:opacity-100 ${activeLayerTab === layer.name ? 'opacity-100' : ''} hover:bg-slate-300/50 hover:text-slate-800 disabled:text-slate-400 disabled:bg-transparent disabled:cursor-not-allowed transition-all`}
                                     >
                                         <span className="material-symbols-outlined" style={{ fontSize: '20px' }}>travel_explore</span>
                                     </button>
@@ -139,16 +139,16 @@ const LeftSidebar: React.FC<LeftSidebarProps> = ({
                 </div>
             </div>
 
-            <div className="flex flex-col min-h-0 border-t border-slate-800 flex-1">
+            <div className="flex flex-col min-h-0 border-t border-slate-200 flex-1 bg-white">
                 {sidebarView === 'assets' && (
                     <div className="p-4 flex flex-col gap-4 h-full">
                         <div className="px-2 flex justify-between items-center shrink-0">
-                            <h3 className="text-lg font-bold leading-tight tracking-[-0.015em] text-white">Assets ({assets.length})</h3>
+                            <h3 className="text-lg font-bold leading-tight tracking-[-0.015em] text-slate-800">Assets ({assets.length})</h3>
                              <button 
                                 onClick={() => setSidebarView('statistics')} 
                                 title="Analyze Layer"
                                 disabled={!activeLayer || activeLayer.data.features.length === 0}
-                                className="p-1.5 rounded-md text-slate-400 hover:bg-slate-800 hover:text-white disabled:text-slate-600 disabled:bg-transparent disabled:cursor-not-allowed transition-colors"
+                                className="p-1.5 rounded-md text-slate-500 hover:bg-slate-200 hover:text-slate-800 disabled:text-slate-400 disabled:bg-transparent disabled:cursor-not-allowed transition-colors"
                             >
                                 <span className="material-symbols-outlined" style={{ fontSize: '24px' }}>bar_chart</span>
                             </button>
@@ -156,12 +156,12 @@ const LeftSidebar: React.FC<LeftSidebarProps> = ({
 
                         <div className="px-2 space-y-3 shrink-0">
                             <label className="flex flex-col min-w-40 !h-10 max-w-full">
-                                <div className="flex w-full flex-1 items-stretch rounded-lg h-full bg-slate-800">
-                                    <div className="text-slate-400 flex items-center justify-center pl-3">
+                                <div className="flex w-full flex-1 items-stretch rounded-lg h-full bg-slate-100 border border-slate-200">
+                                    <div className="text-slate-500 flex items-center justify-center pl-3">
                                         <span className="material-symbols-outlined" style={{ fontSize: '20px' }}>search</span>
                                     </div>
                                     <input 
-                                        className="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-lg text-white focus:outline-0 focus:ring-0 border-none bg-transparent h-full placeholder:text-slate-400 px-2 text-sm font-normal leading-normal" 
+                                        className="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-lg text-slate-800 focus:outline-0 focus:ring-0 border-none bg-transparent h-full placeholder:text-slate-500 px-2 text-sm font-normal leading-normal" 
                                         placeholder="Search by name or ID..." 
                                         value={assetSearchTerm}
                                         onChange={(e) => onAssetSearchChange(e.target.value)}
@@ -170,7 +170,7 @@ const LeftSidebar: React.FC<LeftSidebarProps> = ({
                             </label>
 
                              {propertySearchKey && propertySearchValue && (
-                                <div className="flex items-center justify-between text-xs bg-primary/10 text-primary-300 p-2 rounded-md">
+                                <div className="flex items-center justify-between text-xs bg-primary/10 text-primary-700 p-2 rounded-md">
                                     <span className="font-medium truncate">
                                         Filter: {propertySearchKey} = "{propertySearchValue}"
                                     </span>
