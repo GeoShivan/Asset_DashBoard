@@ -140,14 +140,14 @@ const App: React.FC = () => {
     }, []);
 
     const handleAssetSelect = useCallback((layerId: string, feature: Feature) => {
-      if (selectedAsset && selectedAsset.layerId === layerId && getFeatureDisplayName(selectedAsset.feature) === getFeatureDisplayName(feature)) {
-        // do nothing if same asset is clicked
-      } else {
-        setSelectedAsset({ layerId, feature });
-        if (feature.geometry) {
-            calculateBounds(feature);
+        if (selectedAsset && selectedAsset.layerId === layerId && selectedAsset.feature.properties?.fid === feature.properties?.fid) {
+            // do nothing if same asset is clicked
+        } else {
+            setSelectedAsset({ layerId, feature });
+            if (feature.geometry) {
+                calculateBounds(feature);
+            }
         }
-      }
     }, [selectedAsset, calculateBounds]);
 
     const handleZoomToLayer = useCallback((layerId: string) => {

@@ -185,7 +185,7 @@ const LeftSidebar: React.FC<LeftSidebarProps> = ({
                                 <AssetCard 
                                     key={`${asset.layerId}-${asset.feature.properties?.fid || index}`} 
                                     asset={asset}
-                                    isSelected={selectedAsset?.layerId === asset.layerId && getFeatureDisplayName(selectedAsset.feature) === getFeatureDisplayName(asset.feature)}
+                                    isSelected={selectedAsset?.layerId === asset.layerId && selectedAsset?.feature.properties?.fid === asset.feature.properties?.fid}
                                     onSelect={() => onAssetSelect(asset.layerId, asset.feature)}
                                 />
                            ))}

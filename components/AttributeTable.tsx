@@ -20,16 +20,16 @@ const ValueDisplay: React.FC<{ value: any }> = ({ value }) => {
     }
     const lowerValue = String(value).toLowerCase();
     if (typeof value === 'number') {
-        return <span className="text-cyan-600 font-mono">{value.toLocaleString()}</span>;
+        return <span className="text-sky-600 font-mono">{value.toLocaleString()}</span>;
     }
     if (lowerValue === 'yes') {
-        return <span className="text-green-600 font-semibold">Yes</span>;
+        return <span className="text-emerald-600 font-semibold">Yes</span>;
     }
     if (lowerValue === 'no') {
-        return <span className="text-red-600 font-semibold">No</span>;
+        return <span className="text-rose-600 font-semibold">No</span>;
     }
 
-    return <span>{String(value)}</span>;
+    return <span className="text-slate-700">{String(value)}</span>;
 };
 
 
@@ -160,7 +160,7 @@ const AttributeTable: React.FC<AttributeTableProps> = ({ layer, onClose, onFeatu
         return <span className="material-symbols-outlined text-slate-400 group-hover:text-slate-600" style={{ fontSize: '16px' }}>unfold_more</span>;
     }
     const icon = sortConfig.direction === 'ascending' ? 'expand_less' : 'expand_more';
-    return <span className="material-symbols-outlined text-teal-500" style={{ fontSize: '16px' }}>{icon}</span>;
+    return <span className="material-symbols-outlined text-indigo-500" style={{ fontSize: '16px' }}>{icon}</span>;
   };
   
   const panelClasses = `absolute top-0 left-0 bg-white border border-slate-200 rounded-xl shadow-2xl w-[80vw] max-w-6xl h-[70vh] flex flex-col overflow-hidden z-[2000] ring-1 ring-black/5 ${!isDragging ? 'transition-transform duration-300 ease-out' : ''}`;
@@ -179,17 +179,17 @@ const AttributeTable: React.FC<AttributeTableProps> = ({ layer, onClose, onFeatu
             onMouseDown={handleMouseDown}
         >
             <div>
-                <h2 className="text-lg font-bold text-transparent bg-clip-text bg-gradient-to-r from-sky-500 to-blue-600">Attribute Table</h2>
-                <p className="text-sm text-slate-500">Layer: {layer.name}</p>
+                <h2 className="text-lg font-bold text-transparent bg-clip-text bg-gradient-to-r from-indigo-500 to-purple-500">Attribute Table</h2>
+                <p className="text-sm text-slate-600">Layer: <span className="font-semibold text-slate-800">{layer.name}</span></p>
             </div>
             <div className="flex items-center gap-4">
-                 <label className="flex flex-col min-w-40 !h-10 max-w-full rounded-lg bg-slate-100 transition-all focus-within:ring-2 focus-within:ring-primary/50 border border-slate-200">
+                 <label className="flex flex-col min-w-40 !h-10 max-w-full rounded-lg bg-slate-100 transition-all focus-within:ring-2 focus-within:ring-indigo-500/50 border border-slate-200">
                     <div className="flex w-full flex-1 items-stretch h-full">
                         <div className="text-slate-500 flex items-center justify-center pl-3">
                             <span className="material-symbols-outlined" style={{ fontSize: '20px' }}>search</span>
                         </div>
                         <input 
-                            className="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-r-lg text-slate-800 focus:outline-0 focus:ring-0 border-none bg-transparent h-full placeholder:text-slate-500 px-2 text-sm font-normal leading-normal" 
+                            className="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-r-lg text-slate-900 focus:outline-0 focus:ring-0 border-none bg-transparent h-full placeholder:text-slate-500 px-2 text-sm font-normal leading-normal" 
                             placeholder="Filter data..." 
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
@@ -203,11 +203,11 @@ const AttributeTable: React.FC<AttributeTableProps> = ({ layer, onClose, onFeatu
         </header>
 
         <div className="flex-1 overflow-auto">
-            <table className="w-full text-sm text-left text-slate-600">
-                <thead className="text-xs text-slate-500 uppercase bg-slate-50 sticky top-0 z-10">
+            <table className="w-full text-sm text-left text-slate-800">
+                <thead className="text-xs text-slate-600 uppercase bg-slate-100 sticky top-0 z-10">
                     <tr>
                         {headers.map((header, idx) => (
-                            <th key={header} scope="col" className={`px-4 py-3 whitespace-nowrap font-semibold border-b-2 ${sortConfig?.key === header ? 'border-teal-400 border-dashed' : 'border-slate-200'} ${idx === 0 ? 'sticky left-0 bg-slate-50 border-r border-slate-200' : ''}`}>
+                            <th key={header} scope="col" className={`px-4 py-3 whitespace-nowrap font-semibold border-b-2 ${sortConfig?.key === header ? 'border-indigo-400' : 'border-slate-200'} ${idx === 0 ? 'sticky left-0 bg-slate-100 border-r border-slate-200' : ''}`}>
                                 <div className="flex items-center gap-1 cursor-pointer group" onClick={() => requestSort(header)}>
                                     {header}
                                     {getSortIcon(header)}
@@ -220,11 +220,11 @@ const AttributeTable: React.FC<AttributeTableProps> = ({ layer, onClose, onFeatu
                     {rows.map((feature, index) => (
                         <tr 
                             key={feature.properties?.fid || index} 
-                            className="group border-b border-slate-200 hover:bg-primary/10 even:bg-slate-50/50 cursor-pointer transition-colors"
+                            className="group border-b border-slate-200 hover:bg-indigo-50 even:bg-slate-50/50 cursor-pointer transition-colors"
                             onClick={() => onFeatureSelect(feature)}
                         >
                            {headers.map((header, idx) => (
-                                <td key={header} className={`px-4 py-3 whitespace-nowrap max-w-xs truncate ${idx === 0 ? 'sticky left-0 bg-white group-even:bg-slate-50/50 group-hover:bg-primary/10 border-r border-slate-200 font-medium text-teal-600' : ''}`} title={String(header === 'Display Name' ? getFeatureDisplayName(feature) : (feature.properties?.[header] || ''))}>
+                                <td key={header} className={`px-4 py-3 whitespace-nowrap max-w-xs truncate ${idx === 0 ? 'sticky left-0 bg-white group-even:bg-slate-50/50 group-hover:bg-indigo-50 border-r border-slate-200 font-semibold text-indigo-600' : ''}`} title={String(header === 'Display Name' ? getFeatureDisplayName(feature) : (feature.properties?.[header] || ''))}>
                                     {header === 'Display Name' 
                                         ? getFeatureDisplayName(feature)
                                         : <ValueDisplay value={feature.properties?.[header]} />
@@ -237,13 +237,15 @@ const AttributeTable: React.FC<AttributeTableProps> = ({ layer, onClose, onFeatu
             </table>
             {rows.length === 0 && (
                 <div className="text-center py-16 text-slate-500">
-                    <p>No matching features found.</p>
+                     <span className="material-symbols-outlined text-4xl text-slate-400 mb-2">table_view</span>
+                    <p className="font-semibold text-slate-700">No Matching Features</p>
+                    <p className="text-xs">Your search or filter did not return any results.</p>
                 </div>
             )}
         </div>
 
-        <footer className="p-3 bg-slate-50 border-t border-slate-200 text-xs text-slate-500 shrink-0">
-            Showing <span className="font-semibold text-slate-800">{rows.length.toLocaleString()}</span> of <span className="font-semibold text-slate-800">{layer.data.features.length.toLocaleString()}</span> features.
+        <footer className="p-3 bg-slate-50 border-t border-slate-200 text-xs text-slate-600 shrink-0">
+            Showing <span className="font-semibold text-slate-900">{rows.length.toLocaleString()}</span> of <span className="font-semibold text-slate-900">{layer.data.features.length.toLocaleString()}</span> features.
         </footer>
     </div>
   );

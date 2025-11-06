@@ -43,11 +43,7 @@ interface GeoJsonRendererProps {
 
 const GeoJsonRenderer: React.FC<GeoJsonRendererProps> = ({ layers, onFeatureSelect, selectedFeature, isMeasuring }) => {
   const map = useMap();
-  const selectedFeatureId = useMemo(() => {
-    if (!selectedFeature) return null;
-    return getFeatureDisplayName(selectedFeature.feature) + selectedFeature.layer.id;
-  }, [selectedFeature]);
-
+  
   return (
     <>
       {layers.map(layer => {
@@ -58,6 +54,8 @@ const GeoJsonRenderer: React.FC<GeoJsonRendererProps> = ({ layers, onFeatureSele
                 mapLayer.on({ 
                     click: (e: L.LeafletMouseEvent) => {
                     L.DomEvent.stop(e);
+                    onFeatureSelect(layer, feature);
+                    
                     const displayName = getFeatureDisplayName(feature);
                     
                     const container = L.DomUtil.create('div', 'font-display text-slate-800');
@@ -77,7 +75,7 @@ const GeoJsonRenderer: React.FC<GeoJsonRendererProps> = ({ layers, onFeatureSele
                     
                     if (feature.properties) {
                         const propertiesToShow = Object.entries(feature.properties)
-                            .filter(([key]) => !['Name', 'name', 'Status', 'fid', 'Shape_Length', 'Shape_Area', 'Bldg_Id', 'Link'].includes(key))
+                            .filter(([key]) => !['Name', 'name', 'fid', 'Shape_Length', 'Shape_Area', 'Bldg_Id', 'Link'].includes(key))
                             .sort(([keyA], [keyB]) => keyA.localeCompare(keyB));
 
                         for (const [key, value] of propertiesToShow) {
@@ -109,17 +107,25 @@ const GeoJsonRenderer: React.FC<GeoJsonRendererProps> = ({ layers, onFeatureSele
         };
 
         const style = (feature?: Feature): L.PathOptions => {
-          const isSelected = !!(feature && selectedFeatureId === getFeatureDisplayName(feature) + layer.id);
+          const isSelected = !!(
+            selectedFeature &&
+            feature &&
+            feature.properties &&
+            selectedFeature.layer.id === layer.id &&
+            selectedFeature.feature.properties?.fid === feature.properties.fid
+          );
           return {
-            color: isSelected ? '#3b82f6' : layer.color, // primary for selected
-            weight: isSelected ? 3 : 1.5,
-            opacity: 1,
+            color: isSelected ? '#3b82f6' : layer.color,
+            weight: isSelected ? 3 : 2,
+            opacity: layer.strokeOpacity,
+            dashArray: layer.dashArray,
             fillColor: isSelected ? '#3b82f6' : layer.color,
-            fillOpacity: isSelected ? 0.7 : 0.4,
+            fillOpacity: isSelected ? 0.7 : layer.fillOpacity,
           };
         };
         
-        const key = `${layer.id}-${layer.isVisible}-${layer.color}-${layer.data.features.length}-${isMeasuring}`;
+        const selectedId = selectedFeature ? `${selectedFeature.layer.id}-${selectedFeature.feature.properties?.fid}` : 'none';
+        const key = `${layer.id}-${layer.isVisible}-${layer.color}-${layer.strokeOpacity}-${layer.fillOpacity}-${layer.dashArray}-${layer.data.features.length}-${selectedId}-${isMeasuring}`;
 
         return (
           <GeoJSON
@@ -165,6 +171,46 @@ const AREA_UNITS: Record<AreaUnit, { label: string; conversion: number; format: 
   'ft²': { label: 'Square Feet', conversion: 10.7639, format: (val) => `${val.toFixed(0)} ft²` },
   acres: { label: 'Acres', conversion: 0.000247105, format: (val) => `${val.toFixed(3)} acres` },
 };
+
+// --- Colorful SVG Icons ---
+const ZoomInIcon = () => (
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="text-blue-500 group-hover:text-blue-600 transition-colors">
+        <path d="M12 5V19" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
+        <path d="M5 12H19" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
+    </svg>
+);
+const ZoomOutIcon = () => (
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="text-purple-500 group-hover:text-purple-600 transition-colors">
+        <path d="M5 12H19" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
+    </svg>
+);
+const LayersIcon = () => (
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M12 2L2 7L12 12L22 7L12 2Z" fill="#34D399" fillOpacity="0.8"/>
+        <path d="M2 12L12 17L22 12L12 7L2 12Z" fill="#3B82F6" fillOpacity="0.8"/>
+        <path d="M2 17L12 22L22 17L12 12L2 17Z" fill="#FBBF24" fillOpacity="0.8"/>
+    </svg>
+);
+const MeasureDistanceIcon = () => (
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="6" cy="18" r="2" stroke="#10B981" strokeWidth="2"/>
+        <circle cx="18" cy="6" r="2" stroke="#10B981" strokeWidth="2"/>
+        <path d="M8 16L16 8" stroke="#10B981" strokeWidth="2" strokeLinecap="round" strokeDasharray="4 4"/>
+    </svg>
+);
+const MeasureAreaIcon = () => (
+     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M3 3H21V21H3V3Z" fill="#F97316" fillOpacity="0.2" stroke="#F97316" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+    </svg>
+);
+const DeleteIcon = () => (
+     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M3 6H5H21" stroke="#EF4444" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+        <path d="M8 6V4C8 3.46957 8.21071 2.96086 8.58579 2.58579C8.96086 2.21071 9.46957 2 10 2H14C14.5304 2 15.0391 2.21071 15.4142 2.58579C15.7893 2.96086 16 3.46957 16 4V6M19 6V20C19 20.5304 18.7893 21.0391 18.4142 21.4142C18.0391 21.7893 17.5304 22 17 22H7C6.46957 22 5.96086 21.7893 5.58579 21.4142C5.21071 21.0391 5 20.5304 5 20V6H19Z" stroke="#EF4444" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+    </svg>
+);
+// --- End Icons ---
+
 
 interface MapControlsProps {
     map: L.Map | null;
@@ -430,57 +476,59 @@ const MapControls: React.FC<MapControlsProps> = ({ map, measureMode, setMeasureM
 
     const currentUnit = measureMode === 'distance' ? distanceUnit : areaUnit;
     const unitSet = measureMode === 'distance' ? DISTANCE_UNITS : AREA_UNITS;
+    
+    const controlButtonClasses = "flex size-10 items-center justify-center rounded-xl bg-white/80 backdrop-blur-md shadow-lg shadow-sky-200/50 border border-slate-200 hover:bg-sky-100/80 hover:border-sky-300 hover:shadow-sky-300/80 transition-all duration-200 ease-in-out";
 
     return (
          <div className="absolute bottom-4 right-4 flex flex-col items-end gap-3 z-[1000]">
-            <div className="flex flex-col rounded-xl bg-white/90 backdrop-blur-md shadow-lg border border-slate-200/80 overflow-hidden">
-                <button onClick={handleZoomIn} title="Zoom In" className="flex size-11 items-center justify-center text-slate-700 hover:bg-primary/10 hover:text-primary transition-all duration-200 ease-in-out">
-                    <span className="material-symbols-outlined" style={{ fontSize: '22px' }}>add</span>
+            <div className="flex flex-col rounded-xl bg-white/95 backdrop-blur-md shadow-lg border border-slate-200 overflow-hidden">
+                <button onClick={handleZoomIn} title="Zoom In" className="group flex size-10 items-center justify-center hover:bg-slate-100 transition-all duration-200 ease-in-out">
+                    <ZoomInIcon />
                 </button>
-                <div className="h-px bg-slate-200/80"></div>
-                <button onClick={handleZoomOut} title="Zoom Out" className="flex size-11 items-center justify-center text-slate-700 hover:bg-primary/10 hover:text-primary transition-all duration-200 ease-in-out">
-                    <span className="material-symbols-outlined" style={{ fontSize: '22px' }}>remove</span>
+                <div className="h-px bg-slate-200"></div>
+                <button onClick={handleZoomOut} title="Zoom Out" className="group flex size-10 items-center justify-center hover:bg-slate-100 transition-all duration-200 ease-in-out">
+                    <ZoomOutIcon />
                 </button>
             </div>
             
              <div className="flex flex-col items-end gap-2">
                 {isMeasurePanelOpen && (
                     <div className="flex items-center gap-2">
-                         <div className="flex gap-1 bg-white/90 backdrop-blur-md p-1 rounded-xl shadow-lg border border-slate-200/80">
+                         <div className="flex gap-1 bg-white/95 backdrop-blur-md p-1 rounded-xl shadow-lg border border-slate-200">
                             <button 
                                 title="Measure Distance" 
-                                className={`flex items-center justify-center size-9 rounded-lg transition-colors ${measureMode === 'distance' ? 'bg-primary text-white' : 'text-slate-600 hover:bg-slate-200'}`} 
+                                className={`flex items-center justify-center size-9 rounded-lg transition-all ${measureMode === 'distance' ? 'bg-green-100 ring-2 ring-green-400' : 'text-slate-600 hover:bg-slate-200'}`} 
                                 onClick={() => handleMeasureButtonClick('distance')}
                             >
-                                <span className="material-symbols-outlined" style={{ fontSize: '20px' }}>linear_scale</span>
+                                <MeasureDistanceIcon />
                             </button>
                             <button 
                                 title="Measure Area" 
-                                className={`flex items-center justify-center size-9 rounded-lg transition-colors ${measureMode === 'area' ? 'bg-primary text-white' : 'text-slate-600 hover:bg-slate-200'}`} 
+                                className={`flex items-center justify-center size-9 rounded-lg transition-all ${measureMode === 'area' ? 'bg-orange-100 ring-2 ring-orange-400' : 'text-slate-600 hover:bg-slate-200'}`} 
                                 onClick={() => handleMeasureButtonClick('area')}
                             >
-                                <span className="material-symbols-outlined" style={{ fontSize: '20px' }}>square_foot</span>
+                                <MeasureAreaIcon />
                             </button>
-                            <div className="w-px bg-slate-200/80 my-1"></div>
+                            <div className="w-px bg-slate-200 my-1"></div>
                             <button 
                                 title="Clear All Measurements" 
-                                className="flex items-center justify-center size-9 rounded-lg text-slate-600 hover:bg-slate-200 hover:text-red-500 transition-colors" 
+                                className="flex items-center justify-center size-9 rounded-lg text-slate-600 hover:bg-red-100 transition-colors" 
                                 onClick={clearAllMeasurements}
                             >
-                                <span className="material-symbols-outlined" style={{ fontSize: '20px' }}>delete</span>
+                                <DeleteIcon />
                             </button>
                         </div>
                         {measureMode && (
                             <div ref={unitDropdownRef} className="relative">
                                 <button
                                     onClick={() => setUnitSelectorOpen(!isUnitSelectorOpen)}
-                                     className="flex items-center justify-center h-11 px-3 rounded-xl bg-white/90 backdrop-blur-md shadow-lg border border-slate-200/80 text-slate-700 hover:bg-primary/10"
+                                     className="flex items-center justify-center h-10 px-3 rounded-xl bg-white/95 backdrop-blur-md shadow-lg border border-slate-200 text-slate-700 hover:bg-slate-100"
                                 >
                                     <span className="text-sm font-semibold">{currentUnit}</span>
                                     <span className="material-symbols-outlined text-slate-500" style={{ fontSize: '20px' }}>arrow_drop_down</span>
                                 </button>
                                 {isUnitSelectorOpen && (
-                                    <div className="absolute bottom-full right-0 mb-2 w-40 rounded-xl bg-white/90 backdrop-blur-md shadow-xl border border-slate-200/80 p-1">
+                                    <div className="absolute bottom-full right-0 mb-2 w-40 rounded-xl bg-white/95 backdrop-blur-md shadow-xl border border-slate-200 p-1">
                                         {Object.entries(unitSet).map(([key, { label }]) => (
                                             <button
                                                 key={key}
@@ -500,10 +548,31 @@ const MapControls: React.FC<MapControlsProps> = ({ map, measureMode, setMeasureM
                         )}
                     </div>
                 )}
-                <button onClick={toggleMeasurePanel} title="Measurement Tools" className="flex size-11 items-center justify-center rounded-xl bg-white/90 backdrop-blur-md shadow-lg border border-slate-200/80 text-slate-700 hover:bg-primary/10 hover:text-primary transition-all duration-200 ease-in-out">
-                    <span className="material-symbols-outlined transition-transform duration-300" style={{ fontSize: '22px', transform: isMeasurePanelOpen ? 'rotate(135deg)' : 'rotate(0deg)'}}>
-                        {isMeasurePanelOpen ? 'add' : 'rule'}
-                    </span>
+                <button onClick={toggleMeasurePanel} title="Measurement Tools" className={controlButtonClasses}>
+                    <div className="transition-transform duration-300" style={{ transform: isMeasurePanelOpen ? 'rotate(135deg)' : 'rotate(0deg)'}}>
+                        {isMeasurePanelOpen ? (
+                             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M12 5V19" stroke="#f43f5e" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
+                                <path d="M5 12H19" stroke="#f43f5e" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
+                            </svg>
+                        ) : (
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M5 7V11" stroke="#1E293B" strokeWidth="1.5" strokeLinecap="round"/>
+                                <path d="M19 7V11" stroke="#1E293B" strokeWidth="1.5" strokeLinecap="round"/>
+                                <path d="M5 9L19 9" stroke="#1E293B" strokeWidth="1.5" strokeLinecap="round"/>
+                                <path d="M7 7.5L5 9L7 10.5" stroke="#1E293B" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                                <path d="M17 7.5L19 9L17 10.5" stroke="#1E293B" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                                <path d="M3.5 13.5H20.5C20.7761 13.5 21 13.7239 21 14V16C21 16.2761 20.7761 16.5 20.5 16.5H3.5C3.22386 16.5 3 16.2761 3 16V14C3 13.7239 3.22386 13.5 3.5 13.5Z" fill="#3B82F6" stroke="#1E293B" strokeWidth="1.5"/>
+                                <path d="M6 13.5V16.5" stroke="#1E293B" strokeWidth="1.5" strokeLinecap="round"/>
+                                <path d="M8 13.5V15.5" stroke="#1E293B" strokeWidth="1.5" strokeLinecap="round"/>
+                                <path d="M10 13.5V16.5" stroke="#1E293B" strokeWidth="1.5" strokeLinecap="round"/>
+                                <path d="M12 13.5V15.5" stroke="#1E293B" strokeWidth="1.5" strokeLinecap="round"/>
+                                <path d="M14 13.5V16.5" stroke="#1E293B" strokeWidth="1.5" strokeLinecap="round"/>
+                                <path d="M16 13.5V15.5" stroke="#1E293B" strokeWidth="1.5" strokeLinecap="round"/>
+                                <path d="M18 13.5V16.5" stroke="#1E293B" strokeWidth="1.5" strokeLinecap="round"/>
+                            </svg>
+                        )}
+                    </div>
                 </button>
             </div>
         </div>
@@ -513,6 +582,8 @@ const MapControls: React.FC<MapControlsProps> = ({ map, measureMode, setMeasureM
 const BasemapControl: React.FC<{ onBasemapChange: (key: string) => void, activeBasemapKey: string }> = ({ onBasemapChange, activeBasemapKey }) => {
     const [isOpen, setIsOpen] = useState(false);
     const dropdownRef = useRef<HTMLDivElement>(null);
+    const controlButtonClasses = "flex size-10 items-center justify-center rounded-xl bg-white/80 backdrop-blur-md shadow-lg shadow-sky-200/50 border border-slate-200 hover:bg-sky-100/80 hover:border-sky-300 hover:shadow-sky-300/80 transition-all duration-200 ease-in-out";
+
 
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
@@ -528,13 +599,13 @@ const BasemapControl: React.FC<{ onBasemapChange: (key: string) => void, activeB
         <div ref={dropdownRef} className="relative">
             <button
                 onClick={() => setIsOpen(!isOpen)}
-                className="flex size-11 items-center justify-center rounded-xl bg-white/90 backdrop-blur-md shadow-lg border border-slate-200/80 text-slate-700 hover:bg-primary/10 hover:text-primary transition-all duration-200 ease-in-out"
+                className={controlButtonClasses}
                 title="Change Basemap"
             >
-                <span className="material-symbols-outlined" style={{ fontSize: '22px' }}>layers</span>
+                <LayersIcon />
             </button>
             {isOpen && (
-                <div className="absolute top-full right-0 mt-2 w-48 rounded-xl bg-white/90 backdrop-blur-md shadow-xl border border-slate-200/80 p-2">
+                <div className="absolute top-full right-0 mt-2 w-48 rounded-xl bg-white/95 backdrop-blur-md shadow-xl border border-slate-200 p-2">
                     {Object.entries(BASEMAPS).map(([key, basemap]) => (
                         <button
                             key={key}
@@ -555,13 +626,32 @@ const BasemapControl: React.FC<{ onBasemapChange: (key: string) => void, activeB
 };
 
 const NORTH_ARROW_SVGS = [
+     {
+        name: 'vibrant',
+        label: 'Vibrant',
+        svg: (
+            <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" className="size-7 transition-transform group-hover:scale-110">
+                <path d="M16 12 L28 30 L16 24 L4 30 Z" fill="#f4511e" />
+                <text 
+                    x="16" y="9" 
+                    textAnchor="middle" 
+                    dominantBaseline="central" 
+                    fontSize="12" 
+                    fontWeight="bold" 
+                    fill="#0288d1"
+                    style={{ textShadow: '0 0 1px #29b6f6, 0 0 3px #29b6f6' }}
+                >
+                    N
+                </text>
+            </svg>
+        )
+    },
     {
         name: 'sleek',
         label: 'Sleek',
         svg: (
             <svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg" className="size-6 transition-transform group-hover:rotate-12">
-                <path d="M12 3L4 21l8-5 8 5L12 3zm0 2.55L17.94 18l-5.94-3.71L12 16.84V5.55z" />
-                <path d="M12 3l-8 18 8-5z" fillOpacity="0.4" />
+                <path fillRule="evenodd" clipRule="evenodd" d="M12 3.25L4.75 20.75L12 17L19.25 20.75L12 3.25ZM12 5.5L17.15 18.5L12 15.6L6.85 18.5L12 5.5Z" />
             </svg>
         )
     },
@@ -570,7 +660,7 @@ const NORTH_ARROW_SVGS = [
         label: 'Sharp',
         svg: (
             <svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg" className="size-6 transition-transform group-hover:rotate-12">
-                <path d="M12 2L6 22l6-4 6 4L12 2z" />
+                 <path d="M12 2L4 14H11V22H13V14H20L12 2Z" />
             </svg>
         )
     },
@@ -579,7 +669,11 @@ const NORTH_ARROW_SVGS = [
         label: 'Classic',
         svg: (
             <svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg" className="size-6 transition-transform group-hover:rotate-12">
-                <path d="M12 2L2 12h7v10h2V12h7L12 2z" />
+                <path d="M12 2L15 9H9L12 2Z" />
+                <path d="M12 22L9 15H15L12 22Z" fillOpacity="0.6"/>
+                <path d="M2 12L9 15V9L2 12Z" fillOpacity="0.6"/>
+                <path d="M22 12L15 9V15L22 12Z" fillOpacity="0.6"/>
+                <circle cx="12" cy="12" r="1.5" className="fill-white group-hover:fill-primary/20 transition-colors"/>
             </svg>
         )
     },
@@ -588,8 +682,8 @@ const NORTH_ARROW_SVGS = [
         label: 'Compass',
         svg: (
              <svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg" className="size-6 transition-transform group-hover:rotate-12">
-                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v5h-2zm0 6h2v2h-2z"/>
-                <path d="m12.01 6-2.5 6.5 6.5-2.5L12.01 6z" />
+                <path fillRule="evenodd" clipRule="evenodd" d="M12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2ZM12 4C7.58172 4 4 7.58172 4 12C4 16.4183 7.58172 20 12 20C16.4183 20 20 16.4183 20 12C20 7.58172 16.4183 4 12 4Z" />
+                <path d="M12 5L15 12H9L12 5Z" />
             </svg>
         )
     }
@@ -603,6 +697,7 @@ const NorthArrowControl: React.FC<{
     const [isSelectorOpen, setSelectorOpen] = useState(false);
     const selectorRef = useRef<HTMLDivElement>(null);
     const selectedIconData = NORTH_ARROW_SVGS.find(icon => icon.name === selectedIcon) || NORTH_ARROW_SVGS[0];
+    const controlButtonClasses = "flex size-10 items-center justify-center rounded-xl bg-white/80 backdrop-blur-md shadow-lg shadow-sky-200/50 border border-slate-200 hover:bg-sky-100/80 hover:border-sky-300 hover:shadow-sky-300/80 transition-all duration-200 ease-in-out";
 
     const handleRightClick = (e: React.MouseEvent) => {
         e.preventDefault();
@@ -624,13 +719,13 @@ const NorthArrowControl: React.FC<{
             <button
                 onClick={onResetView}
                 onContextMenu={handleRightClick}
-                className="flex size-11 items-center justify-center rounded-xl bg-white/90 backdrop-blur-md shadow-lg border border-slate-200/80 text-slate-700 hover:bg-primary/10 hover:text-primary transition-all duration-200 ease-in-out"
+                className={controlButtonClasses}
                 title="Reset View (Right-click to change icon)"
             >
                 {selectedIconData.svg}
             </button>
             {isSelectorOpen && (
-                 <div className="absolute top-full right-0 mt-2 w-auto rounded-xl bg-white/90 backdrop-blur-md shadow-xl border border-slate-200/80">
+                 <div className="absolute top-full right-0 mt-2 w-auto rounded-xl bg-white/95 backdrop-blur-md shadow-xl border border-slate-200">
                      <div className="north-arrow-selector">
                         {NORTH_ARROW_SVGS.map(icon => (
                             <button
