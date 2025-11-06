@@ -170,19 +170,29 @@ const LeftSidebar: React.FC<LeftSidebarProps> = ({
                         </div>
 
                         <div className="px-2 space-y-3 shrink-0">
-                            <label className="flex flex-col min-w-40 !h-10 max-w-full">
-                                <div className="flex w-full flex-1 items-stretch rounded-lg h-full bg-slate-100 border border-slate-200">
-                                    <div className="text-slate-500 flex items-center justify-center pl-3">
-                                        <span className="material-symbols-outlined" style={{ fontSize: '20px' }}>search</span>
-                                    </div>
-                                    <input 
-                                        className="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-lg text-slate-800 focus:outline-0 focus:ring-0 border-none bg-transparent h-full placeholder:text-slate-500 px-2 text-sm font-normal leading-normal" 
-                                        placeholder="Search by name or ID..." 
-                                        value={assetSearchTerm}
-                                        onChange={(e) => onAssetSearchChange(e.target.value)}
-                                    />
+                            <div className="relative h-10 w-full">
+                                <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+                                    <span className="material-symbols-outlined text-slate-400" style={{ fontSize: '20px' }}>search</span>
                                 </div>
-                            </label>
+                                <input 
+                                    type="text"
+                                    className="form-input block w-full h-full rounded-lg border-slate-200 bg-slate-100 pl-10 pr-10 text-sm text-slate-800 placeholder:text-slate-500 focus:border-primary focus:ring-primary/20 transition"
+                                    placeholder="Search by name or ID..." 
+                                    value={assetSearchTerm}
+                                    onChange={(e) => onAssetSearchChange(e.target.value)}
+                                />
+                                {assetSearchTerm && (
+                                    <div className="absolute inset-y-0 right-0 flex items-center pr-3">
+                                        <button 
+                                            onClick={() => onAssetSearchChange('')}
+                                            className="rounded-full p-1 text-slate-500 transition-colors hover:bg-slate-200 hover:text-slate-700 focus:outline-none"
+                                            aria-label="Clear search"
+                                        >
+                                            <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>close</span>
+                                        </button>
+                                    </div>
+                                )}
+                            </div>
 
                              {propertySearchKey && propertySearchValue && (
                                 <div className="flex items-center justify-between text-xs bg-primary/10 text-primary-700 p-2 rounded-md">

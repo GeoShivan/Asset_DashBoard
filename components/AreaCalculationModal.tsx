@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useState, useRef, useEffect, MouseEvent } from 'react';
 import type { Feature } from 'geojson';
 import { area as turfArea } from '@turf/turf';
 
@@ -21,6 +21,61 @@ interface AreaCalculationModalProps {
 const AreaCalculationModal: React.FC<AreaCalculationModalProps> = ({ isOpen, onClose, assets }) => {
     const [areaUnit, setAreaUnit] = useState<AreaUnit>('m²');
 
+    const panelRef = useRef<HTMLDivElement>(null);
+    const [position, setPosition] = useState({ x: 0, y: 0 });
+    const [isDragging, setIsDragging] = useState(false);
+    const dragStartOffset = useRef({ x: 0, y: 0 });
+
+    const handleMouseDown = (e: MouseEvent<HTMLElement>) => {
+        if (panelRef.current) {
+            setIsDragging(true);
+            dragStartOffset.current = {
+                x: e.clientX - position.x,
+                y: e.clientY - position.y,
+            };
+            window.addEventListener('mousemove', handleMouseMove);
+            window.addEventListener('mouseup', handleMouseUp);
+            e.preventDefault();
+        }
+    };
+
+    const handleMouseMove = (e: globalThis.MouseEvent) => {
+        setPosition({
+            x: e.clientX - dragStartOffset.current.x,
+            y: e.clientY - dragStartOffset.current.y,
+        });
+    };
+
+    const handleMouseUp = () => {
+        setIsDragging(false);
+        window.removeEventListener('mousemove', handleMouseMove);
+        window.removeEventListener('mouseup', handleMouseUp);
+    };
+  
+    useEffect(() => {
+        const setInitialPosition = () => {
+            if (panelRef.current) {
+                const { innerWidth, innerHeight } = window;
+                const { offsetWidth, offsetHeight } = panelRef.current;
+                setPosition({
+                    x: innerWidth - offsetWidth - 40,
+                    y: innerHeight - offsetHeight - 40,
+                });
+            }
+        }
+        if (isOpen) {
+             const timer = setTimeout(setInitialPosition, 50);
+             return () => clearTimeout(timer);
+        }
+    }, [isOpen]);
+
+    useEffect(() => {
+        return () => {
+            window.removeEventListener('mousemove', handleMouseMove);
+            window.removeEventListener('mouseup', handleMouseUp);
+        }
+    }, []);
+
     const calculation = useMemo(() => {
         const polygonAssets = assets.filter(
             a => a.feature.geometry && (a.feature.geometry.type === 'Polygon' || a.feature.geometry.type === 'MultiPolygon')
@@ -41,65 +96,84 @@ const AreaCalculationModal: React.FC<AreaCalculationModalProps> = ({ isOpen, onC
         return { totalArea, count: polygonAssets.length };
     }, [assets]);
     
-    const formattedArea = useMemo(() => {
+    const formattedParts = useMemo(() => {
         const unitConfig = AREA_UNITS[areaUnit];
         const convertedValue = calculation.totalArea * unitConfig.conversion;
-        return unitConfig.format(convertedValue);
+        const formatted = unitConfig.format(convertedValue);
+        const parts = formatted.split(' ');
+        return {
+            value: parts[0],
+            unit: parts.slice(1).join(' ')
+        };
     }, [calculation.totalArea, areaUnit]);
 
     if (!isOpen) return null;
 
+    const panelClasses = `absolute bg-gradient-to-br from-white via-slate-50 to-slate-100 rounded-2xl shadow-2xl w-80 flex flex-col z-[3000] ring-1 ring-black/5 transition-all duration-300 ease-out transform ${isDragging ? 'scale-105 shadow-sky-500/20' : ''}`;
+
     return (
-        <div 
-            className="fixed inset-0 bg-black/30 backdrop-blur-sm z-[3000] flex items-center justify-center"
-            onClick={onClose}
-        >
+        <div className="fixed inset-0 bg-black/10 backdrop-blur-sm z-[2999]">
             <div 
-                className="bg-white rounded-xl shadow-2xl w-full max-w-md m-4 flex flex-col"
-                onClick={e => e.stopPropagation()}
+                ref={panelRef}
+                className={panelClasses}
+                style={{
+                    transform: `translate(${position.x}px, ${position.y}px)`,
+                    opacity: 1
+                }}
             >
-                <header className="p-4 border-b border-slate-200 flex justify-between items-center shrink-0">
-                    <div className="flex items-center gap-3">
-                        <span className="material-symbols-outlined text-primary text-2xl">calculate</span>
-                        <h2 className="text-lg font-bold text-slate-800">Area Calculation</h2>
+                <header 
+                    className="px-4 pt-4 pb-2 flex justify-between items-center shrink-0 cursor-move"
+                    onMouseDown={handleMouseDown}
+                >
+                    <div className="flex items-center gap-2.5">
+                        <div className="size-8 rounded-full bg-primary/10 flex items-center justify-center">
+                            <span className="material-symbols-outlined text-primary text-xl">calculate</span>
+                        </div>
+                        <h2 className="text-base font-bold text-slate-800">Area Calculation</h2>
                     </div>
-                    <button onClick={onClose} className="p-2 rounded-full text-slate-500 hover:bg-red-500/10 hover:text-red-500 transition-colors">
-                        <span className="material-symbols-outlined" style={{ fontSize: '24px' }}>close</span>
+                    <button onClick={onClose} className="size-7 flex items-center justify-center rounded-full text-slate-500 hover:bg-red-500/10 hover:text-red-500 transition-colors">
+                        <span className="material-symbols-outlined" style={{ fontSize: '20px' }}>close</span>
                     </button>
                 </header>
                 
-                <div className="p-6 text-center">
-                    <p className="text-sm text-slate-600">
+                <div className="px-5 pt-2 pb-5 text-center">
+                    <p className="text-xs text-slate-600 mb-2">
                         Total area for <span className="font-bold text-primary">{calculation.count}</span> selected feature{calculation.count !== 1 ? 's' : ''}
                     </p>
-                    <p className="text-5xl font-bold tracking-tight text-slate-900 my-4">
-                        {formattedArea}
-                    </p>
                     
-                    <div className="inline-block relative">
-                        <select
-                            value={areaUnit}
-                            onChange={(e) => setAreaUnit(e.target.value as AreaUnit)}
-                            className="form-select appearance-none block w-full bg-slate-100 border-slate-300 hover:border-slate-400 px-4 py-2 pr-8 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary text-sm font-medium"
-                        >
-                            {Object.entries(AREA_UNITS).map(([key, { label }]) => (
-                                <option key={key} value={key}>{label}</option>
-                            ))}
-                        </select>
-                        <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-slate-700">
-                            <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
-                        </div>
+                    <div className="bg-white/50 rounded-lg p-4 border border-slate-200/80 shadow-inner">
+                        <p className="text-4xl font-bold tracking-tight text-slate-900">
+                           {formattedParts.value}
+                        </p>
+                         <p className="text-sm font-medium text-slate-500">
+                           {formattedParts.unit}
+                        </p>
+                    </div>
+                    
+                    <div className="mt-4 text-xs font-medium text-slate-500">Change Units</div>
+                    <div className="mt-1 grid grid-cols-3 gap-1 p-1 bg-slate-200/70 rounded-lg">
+                        {(Object.keys(AREA_UNITS) as AreaUnit[]).slice(0, 3).map((key) => (
+                            <button 
+                                key={key}
+                                onClick={() => setAreaUnit(key)}
+                                className={`px-2 py-1.5 rounded-md text-xs font-semibold transition-all ${areaUnit === key ? 'bg-white shadow-sm text-primary' : 'text-slate-600 hover:bg-white/60'}`}
+                            >
+                                {key}
+                            </button>
+                        ))}
+                    </div>
+                     <div className="mt-1 grid grid-cols-2 gap-1 p-1 bg-slate-200/70 rounded-lg">
+                        {(Object.keys(AREA_UNITS) as AreaUnit[]).slice(3).map((key) => (
+                            <button 
+                                key={key}
+                                onClick={() => setAreaUnit(key)}
+                                className={`px-2 py-1.5 rounded-md text-xs font-semibold transition-all ${areaUnit === key ? 'bg-white shadow-sm text-primary' : 'text-slate-600 hover:bg-white/60'}`}
+                            >
+                                {key}
+                            </button>
+                        ))}
                     </div>
                 </div>
-
-                <footer className="p-4 bg-slate-50 border-t border-slate-200 text-right">
-                    <button
-                        onClick={onClose}
-                        className="px-4 py-2 rounded-lg bg-primary text-white font-semibold text-sm hover:bg-blue-600 transition-colors shadow-sm hover:shadow-md"
-                    >
-                        Done
-                    </button>
-                </footer>
             </div>
         </div>
     );
