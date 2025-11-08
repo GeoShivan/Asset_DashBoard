@@ -936,9 +936,11 @@ const MapWrapper: React.FC<MapWrapperProps> = ({ center, zoom, layers, boundsToF
                 if (layer.isVisible && layer.data.features) {
                     layer.data.features.forEach(feature => {
                         try {
-                            const featureBounds = L.geoJSON(feature.geometry).getBounds();
-                            if (selectionBounds.intersects(featureBounds)) {
-                                foundAssets.push({ layerId: layer.id, feature });
+                            if (feature.geometry) {
+                                const featureBounds = L.geoJSON(feature.geometry).getBounds();
+                                if (featureBounds.isValid() && selectionBounds.intersects(featureBounds)) {
+                                    foundAssets.push({ layerId: layer.id, feature });
+                                }
                             }
                         } catch (err) {
                             // Ignore features with invalid geometry for bounds calculation

@@ -1,3 +1,4 @@
+
 import React, { useState, useMemo, useCallback, useEffect } from 'react';
 import type { Feature, FeatureCollection } from 'geojson';
 import L from 'leaflet';
@@ -11,7 +12,7 @@ import type { GeoJsonLayer } from './types';
 import { getFeatureDisplayName } from './utils';
 
 const Header: React.FC = () => (
-    <header className="flex shrink-0 items-center justify-between whitespace-nowrap bg-gradient-to-r from-white to-blue-50 px-6 py-3 z-[1200] shadow-lg transition-shadow duration-300 hover:shadow-xl">
+    <header className="flex shrink-0 items-center justify-between whitespace-nowrap bg-[rgb(135,186,195)] px-6 py-3 z-[1200] shadow-xl transition-shadow duration-300 hover:shadow-2xl">
         <div className="flex items-center gap-8">
             <div className="flex items-center gap-3 text-slate-900">
                 <div className="size-8 text-primary">
